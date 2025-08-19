@@ -682,50 +682,74 @@ function Projects() {
     {
       title: 'Yelp Recommendation Challenge',
       badge: { text: 'Top 3/120 Students', color: '#27ae60' },
-      description: 'Built a hybrid Spark RDD + XGBoost recommender with 40+ engineered features. Designed cold start features using check-in counts, photo frequency, tip sentiment, and business category embeddings.',
+      description: 'Built a high-performance hybrid recommender leveraging Spark RDD and XGBoost with 40+ engineered features. Designed cold-start solutions using check-in data, photo frequency, tip sentiment, and business category embeddings. Achieved Top 3 ranking among 120 students.',
+      role: 'Lead developer, feature engineer, ML modeler',
+      challenge: 'Creating accurate recommendations for new users and items',
+      outcome: 'Ranked top 3/120; robust business insights via feature engineering',
       tech: ['Spark RDD', 'XGBoost', 'Python', 'Feature Engineering'],
       gradient: 'linear-gradient(135deg, #667eea, #764ba2)',
-      icon: ''
+      icon: '',
+      github: 'https://github.com/DHYEY166/yelp-recommendation-challenge'
     },
     {
       title: 'ChatDB',
       badge: { text: 'LLM Integration', color: '#3498db' },
-      description: 'Database management and visualization tool with LLM integration. Converts natural language inputs into SQL queries, supporting multiple databases with user-friendly connection interface.',
+      description: 'Developed an interactive database management and visualization platform. Integrated LLM-powered natural language querying, allowing users to convert NL inputs to SQL, support multiple databases, and generate instant data visualizations.',
+      role: 'Full-stack & AI engineer, product architect',
+      challenge: 'Bridging natural language interfaces with secure, multi-database management',
+      outcome: 'Live deployment; improved accessibility for non-technical users',
       tech: ['LLMs', 'SQL', 'SQLite', 'MySQL', 'PostgreSQL'],
       gradient: 'linear-gradient(135deg, #4facfe, #00f2fe)',
-      icon: ''
+      icon: '',
+      github: 'https://github.com/DHYEY166/chatdb'
     },
     {
       title: 'Hate Speech Detection',
       badge: { text: '96% F1-Score', color: '#e67e22' },
-      description: 'Trained BERT-based classifier with NER and TF-IDF. Implemented bias-aware NLP pipeline with strong sentiment detection performance and optimized models for inference efficiency.',
+      description: 'Engineered a bias-aware NLP pipeline with BERT and TF-IDF for detecting hate speech and offensive language. Tuned NER and sentiment models for efficient real-time inference, achieving 96% F1-score.',
+      role: 'ML developer, model optimizer',
+      challenge: 'Ensuring both fairness and efficiency of detection models',
+      outcome: '96% F1-score; production-ready models for content moderation',
       tech: ['BERT', 'NLP', 'TF-IDF', 'Python', 'Machine Learning'],
       gradient: 'linear-gradient(135deg, #f093fb, #f5576c)',
-      icon: ''
+      icon: '',
+      github: 'https://github.com/DHYEY166/hate-speech-detection'
     },
     {
       title: 'Breast Cancer Segmentation',
       badge: { text: '97.53% Accuracy', color: '#2ecc71' },
-      description: 'Developed deep learning models for medical image analysis achieving high accuracy in breast cancer detection. Implemented advanced preprocessing and model optimization techniques.',
+      description: 'Created deep learning models for medical image segmentation of breast cancer tumors. Implemented advanced preprocessing and optimization techniques to achieve 97.53% accuracy.',
+      role: 'Deep learning engineer',
+      challenge: 'Accurately segmenting tumors in heterogeneous medical images',
+      outcome: '97.53% accuracy; supports early diagnosis in clinical workflows',
       tech: ['Deep Learning', 'Computer Vision', 'Medical Imaging', 'Python'],
       gradient: 'linear-gradient(135deg, #a8edea, #fed6e3)',
-      icon: ''
+      icon: '',
+      github: 'https://github.com/DHYEY166/breast-cancer-segmentation'
     },
     {
       title: 'Multiple Sclerosis Detection',
       badge: { text: '99% Diagnostic Accuracy', color: '#9b59b6' },
-      description: 'Built deep learning models for Multiple Sclerosis detection using MRI images. Achieved exceptional diagnostic accuracy through advanced CNN architectures and image preprocessing.',
+      description: 'Designed CNN-based diagnostic tools for Multiple Sclerosis using MRI scans. Employed sophisticated preprocessing to attain 99% diagnostic accuracy across varied datasets.',
+      role: 'Researcher, DL practitioner',
+      challenge: 'Extracting reliable diagnostic signals from complex medical imagery',
+      outcome: '99% accuracy; improved early detection for neurologists',
       tech: ['CNN', 'TensorFlow', 'MRI Analysis', 'Medical AI'],
       gradient: 'linear-gradient(135deg, #fa709a, #fee140)',
-      icon: ''
+      icon: '',
+      github: 'https://github.com/DHYEY166/multiple-sclerosis-detection'
     },
     {
-      title: 'Privacy-Preserving Facial Analysis',
+      title: 'Autism Detection Using Deep Learning Techniques',
       badge: { text: 'Research Project', color: '#e74c3c' },
-      description: 'Conducted research at NUS on privacy-preserving facial analysis, improving accuracy by 10% while reducing bias. Architected systems that reduced inference time by 40% for larger batches.',
+      description: 'Conducted research on AI-driven facial analysis for early autism diagnosis. Enhanced model accuracy by 10% while developing bias-reduction architectures and improving batch inference by 40%.',
+      role: 'Researcher, system architect',
+      challenge: 'Reducing dataset bias and improving real-time performance',
+      outcome: 'Improved diagnostic precision and efficiency in batch inference',
       tech: ['Privacy AI', 'Facial Recognition', 'TensorFlow', 'Research'],
       gradient: 'linear-gradient(135deg, #ff9a9e, #fecfef)',
-      icon: ''
+      icon: '',
+      github: 'https://github.com/DHYEY166/autism-detection'
     }
   ];
 
@@ -776,6 +800,24 @@ function Projects() {
               <h3 style={{color: '#2c3e50', fontSize: 20, fontWeight: 700, margin: 0, flex: 1}}>
                 {project.title}
               </h3>
+              {project.github && (
+                <a href={project.github} target="_blank" rel="noopener noreferrer" 
+                   style={{
+                     marginLeft: 12,
+                     padding: '6px 12px',
+                     background: 'linear-gradient(135deg, #333, #555)',
+                     color: '#fff',
+                     borderRadius: 12,
+                     textDecoration: 'none',
+                     fontSize: 12,
+                     fontWeight: 600,
+                     transition: 'all 0.3s ease'
+                   }}
+                   onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                   onMouseOut={(e) => e.target.style.transform = 'scale(1)'}>
+                  GitHub
+                </a>
+              )}
             </div>
             
             <div style={{
@@ -795,11 +837,44 @@ function Projects() {
             <p style={{
               color: '#4a5568',
               lineHeight: 1.6,
-              marginBottom: 25,
+              marginBottom: 20,
               fontSize: 14
             }}>
               {project.description}
             </p>
+
+            {project.role && (
+              <div style={{marginBottom: 15}}>
+                <div style={{fontWeight: 700, color: '#2c3e50', marginBottom: 6, fontSize: 13}}>
+                  Role:
+                </div>
+                <div style={{color: '#5a6c7d', fontSize: 13}}>
+                  {project.role}
+                </div>
+              </div>
+            )}
+
+            {project.challenge && (
+              <div style={{marginBottom: 15}}>
+                <div style={{fontWeight: 700, color: '#2c3e50', marginBottom: 6, fontSize: 13}}>
+                  Challenge:
+                </div>
+                <div style={{color: '#5a6c7d', fontSize: 13}}>
+                  {project.challenge}
+                </div>
+              </div>
+            )}
+
+            {project.outcome && (
+              <div style={{marginBottom: 20}}>
+                <div style={{fontWeight: 700, color: '#2c3e50', marginBottom: 6, fontSize: 13}}>
+                  Outcome:
+                </div>
+                <div style={{color: '#5a6c7d', fontSize: 13}}>
+                  {project.outcome}
+                </div>
+              </div>
+            )}
             
             <div style={{
               borderTop: '2px solid #f1f3f4',
@@ -907,8 +982,7 @@ function Resume() {
           Resume
         </h1>
         <p style={{fontSize: 18, color: '#7f8c8d', fontWeight: 300}}>
-          DHYEY DESAI<br/>
-          Los Angeles, California | dhyeydes@usc.edu | (213) 608-2504 | <a href="https://github.com/DHYEY166" target="_blank" rel="noopener noreferrer">GitHub</a> | <a href="https://linkedin.com/in/dhyey-desai-80659a216" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          Complete professional background and achievements
         </p>
       </div>
 
