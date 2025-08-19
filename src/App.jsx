@@ -445,21 +445,54 @@ function About() {
           <h3 style={{fontSize: 24, fontWeight: 700, color: '#2c3e50', marginBottom: 25, textAlign: 'center'}}>
             About Me
           </h3>
-          {[
-            "I am a Data Scientist with a focus on applying AI and machine learning to solve complex problems. As an MSc student in Applied Data Science at USC, I integrate interdisciplinary approaches to advance the field and tackle real-world challenges.",
-            "At Genpact, I contributed to the Gen AI Finance Project, enhancing financial decision-making through AI and ML, achieving a 20% efficiency increase and a 15% improvement in decision accuracy. This role expanded my expertise in computer vision and NLP, developed during my research assistantship at Manipal University.",
-            "My projects include developing a high-accuracy hate speech detection system (95% accuracy), breast cancer semantic segmentation (97.53% accuracy), and achieving 99% diagnostic accuracy for Multiple Sclerosis detection using deep learning models on MRI images."
-          ].map((paragraph, index) => (
-            <p key={index} style={{
-              fontSize: 16, 
-              lineHeight: 1.7, 
-              color: '#4a5568', 
-              textAlign: 'justify',
-              marginBottom: 20
-            }}>
-              {paragraph}
-            </p>
-          ))}
+          <p style={{
+            fontSize: 16, 
+            lineHeight: 1.7, 
+            color: '#4a5568', 
+            textAlign: 'justify',
+            marginBottom: 20
+          }}>
+            I am a Data Scientist and AI/ML Engineer passionate about leveraging advanced machine learning and generative AI to solve real-world challenges across healthcare, finance, and multimedia analytics. Currently, I'm pursuing my MS in Applied Data Science at USC, where I also serve as a teaching assistant for graduate and undergraduate data management courses.
+          </p>
+          <p style={{
+            fontSize: 16, 
+            lineHeight: 1.7, 
+            color: '#4a5568', 
+            textAlign: 'justify',
+            marginBottom: 20
+          }}>
+            Professionally, I have developed and deployed AI solutions at leading organizations such as nala, Genpact, and the National University of Singapore. My experience at nala involved building real-time retrieval-augmented generation (RAG) systems and multimodal AI pipelines for actionable analytics. At Genpact, I drove Generative AI projects in finance, optimizing AI-powered automation workflows and inference performance. During my research internship at NUS, I spearheaded privacy-preserving facial analysis, improving model accuracy and efficiency.
+          </p>
+          <p style={{
+            fontSize: 16, 
+            lineHeight: 1.7, 
+            color: '#4a5568', 
+            textAlign: 'justify',
+            marginBottom: 20
+          }}>
+            My technical skill set includes Python, SQL, Java, machine learning engineering, natural language processing (NLP), computer vision, model deployment, and modern ML frameworks like TensorFlow and PyTorch. I excel in bridging technical innovation with practical deployment—developing solutions such as:
+          </p>
+          <ul style={{
+            fontSize: 16, 
+            lineHeight: 1.7, 
+            color: '#4a5568', 
+            marginBottom: 20,
+            paddingLeft: 25
+          }}>
+            <li style={{ marginBottom: 12 }}>A top-ranked recommender system using Spark RDD + XGBoost for the Yelp Recommendation Challenge.</li>
+            <li style={{ marginBottom: 12 }}>An intelligent, user-friendly database management tool (ChatDB) translating natural language to SQL queries.</li>
+            <li style={{ marginBottom: 12 }}>Advanced deep learning pipelines for hate speech detection (96% F1-score), early breast cancer diagnosis (97.53% accuracy), and multiple sclerosis detection (99% diagnostic accuracy).</li>
+            <li style={{ marginBottom: 12 }}>Research on privacy-preserving and bias-resistant facial analysis methods in partnership with NUS researchers.</li>
+          </ul>
+          <p style={{
+            fontSize: 16, 
+            lineHeight: 1.7, 
+            color: '#4a5568', 
+            textAlign: 'justify',
+            marginBottom: 0
+          }}>
+            I am recognized for my strong interdisciplinary approach, research-minded problem solving, and a commitment to building scalable and responsible AI systems. My goal is to continue developing impactful AI solutions and collaborate on projects that shape a data-driven, ethical future.
+          </p>
         </div>
       </div>
     </div>
