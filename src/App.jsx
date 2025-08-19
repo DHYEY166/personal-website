@@ -234,12 +234,12 @@ function TopNavigation() {
       
       <div style={menuStyle}>
         {[
-          { path: '/chatbot', icon: '🤖', label: 'Ask Dhyey' },
-          { path: '/about', icon: '👨‍💼', label: 'About' },
-          { path: '/skills', icon: '🚀', label: 'Skills' },
-          { path: '/projects', icon: '💡', label: 'Projects' },
-          { path: '/resume', icon: '📋', label: 'Resume' },
-          { path: '/contact', icon: '📞', label: 'Contact' }
+          { path: '/chatbot', icon: '', label: 'Ask Dhyey' },
+          { path: '/about', icon: '', label: 'About' },
+          { path: '/skills', icon: '', label: 'Skills' },
+          { path: '/projects', icon: '', label: 'Projects' },
+          { path: '/resume', icon: '', label: 'Resume' },
+          { path: '/contact', icon: '', label: 'Contact' }
         ].map((item) => (
           <Link 
             key={item.path}
@@ -370,7 +370,7 @@ function About() {
           textShadow: '0 4px 8px rgba(0,0,0,0.3)',
           animation: 'float 3s ease-in-out infinite'
         }}>
-          Hello, I'm Dhyey 👋
+          Hello, I'm Dhyey
         </h1>
         <p style={{
           fontSize: 20, 
@@ -405,11 +405,11 @@ function About() {
       >
         <div style={infoGridStyle}>
           {[
-            { icon: '🎂', label: 'Birthday', value: '6th December 2002' },
-            { icon: '📍', label: 'Location', value: 'Los Angeles, California' },
-            { icon: '📧', label: 'Email', value: 'dhyeydes@usc.edu' },
-            { icon: '🎓', label: 'Degree', value: 'MS Applied Data Science, USC' },
-            { icon: '🎯', label: 'Age', value: '22 years old' }
+            { icon: '', label: 'Birthday', value: '6th December 2002' },
+            { icon: '', label: 'Location', value: 'Los Angeles, California' },
+            { icon: '', label: 'Email', value: 'dhyeydes@usc.edu' },
+            { icon: '', label: 'Degree', value: 'MS Applied Data Science, USC' },
+            { icon: '', label: 'Age', value: '22 years old' }
           ].map((item, index) => (
             <div key={index} style={{
               background: 'linear-gradient(135deg, #f6f9fc, #ffffff)',
@@ -516,7 +516,7 @@ function Skills() {
   const skillCategories = [
     {
       title: 'Programming Languages',
-      icon: '💻',
+      icon: '',
       color: 'linear-gradient(135deg, #667eea, #764ba2)',
       skills: [
         { name: 'Python', color: '#3776ab' },
@@ -527,7 +527,7 @@ function Skills() {
     },
     {
       title: 'Machine Learning & AI',
-      icon: '🤖',
+      icon: '',
       color: 'linear-gradient(135deg, #f093fb, #f5576c)',
       skills: [
         { name: 'TensorFlow', color: '#ff6f00' },
@@ -539,7 +539,7 @@ function Skills() {
     },
     {
       title: 'Data Analysis',
-      icon: '📊',
+      icon: '',
       color: 'linear-gradient(135deg, #4facfe, #00f2fe)',
       skills: [
         { name: 'Pandas', color: '#150458' },
@@ -551,7 +551,7 @@ function Skills() {
     },
     {
       title: 'Tools & Platforms',
-      icon: '🛠️',
+      icon: '',
       color: 'linear-gradient(135deg, #fa709a, #fee140)',
       skills: [
         { name: 'Git', color: '#f05032' },
@@ -685,7 +685,7 @@ function Projects() {
       description: 'Built a hybrid Spark RDD + XGBoost recommender with 40+ engineered features. Designed cold start features using check-in counts, photo frequency, tip sentiment, and business category embeddings.',
       tech: ['Spark RDD', 'XGBoost', 'Python', 'Feature Engineering'],
       gradient: 'linear-gradient(135deg, #667eea, #764ba2)',
-      icon: '🏆'
+      icon: ''
     },
     {
       title: 'ChatDB',
@@ -693,7 +693,7 @@ function Projects() {
       description: 'Database management and visualization tool with LLM integration. Converts natural language inputs into SQL queries, supporting multiple databases with user-friendly connection interface.',
       tech: ['LLMs', 'SQL', 'SQLite', 'MySQL', 'PostgreSQL'],
       gradient: 'linear-gradient(135deg, #4facfe, #00f2fe)',
-      icon: '💬'
+      icon: ''
     },
     {
       title: 'Hate Speech Detection',
@@ -701,7 +701,7 @@ function Projects() {
       description: 'Trained BERT-based classifier with NER and TF-IDF. Implemented bias-aware NLP pipeline with strong sentiment detection performance and optimized models for inference efficiency.',
       tech: ['BERT', 'NLP', 'TF-IDF', 'Python', 'Machine Learning'],
       gradient: 'linear-gradient(135deg, #f093fb, #f5576c)',
-      icon: '🛡️'
+      icon: ''
     },
     {
       title: 'Breast Cancer Segmentation',
@@ -709,7 +709,7 @@ function Projects() {
       description: 'Developed deep learning models for medical image analysis achieving high accuracy in breast cancer detection. Implemented advanced preprocessing and model optimization techniques.',
       tech: ['Deep Learning', 'Computer Vision', 'Medical Imaging', 'Python'],
       gradient: 'linear-gradient(135deg, #a8edea, #fed6e3)',
-      icon: '🔬'
+      icon: ''
     },
     {
       title: 'Multiple Sclerosis Detection',
@@ -717,7 +717,7 @@ function Projects() {
       description: 'Built deep learning models for Multiple Sclerosis detection using MRI images. Achieved exceptional diagnostic accuracy through advanced CNN architectures and image preprocessing.',
       tech: ['CNN', 'TensorFlow', 'MRI Analysis', 'Medical AI'],
       gradient: 'linear-gradient(135deg, #fa709a, #fee140)',
-      icon: '🧠'
+      icon: ''
     },
     {
       title: 'Privacy-Preserving Facial Analysis',
@@ -725,7 +725,7 @@ function Projects() {
       description: 'Conducted research at NUS on privacy-preserving facial analysis, improving accuracy by 10% while reducing bias. Architected systems that reduced inference time by 40% for larger batches.',
       tech: ['Privacy AI', 'Facial Recognition', 'TensorFlow', 'Research'],
       gradient: 'linear-gradient(135deg, #ff9a9e, #fecfef)',
-      icon: '🔒'
+      icon: ''
     }
   ];
 
@@ -865,15 +865,15 @@ function Resume() {
   };
 
   const headingStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-    fontSize: 26,
-    fontWeight: 800,
-    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    marginBottom: 25,
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
+  fontSize: 26,
+  fontWeight: 800,
+  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  marginBottom: 25,
   };
 
   const subheadingStyle = { 
@@ -915,7 +915,7 @@ function Resume() {
       <div style={sectionStyle}
            onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
            onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-        <div style={headingStyle}>🎓 Education</div>
+  <div style={headingStyle}>Education</div>
         <div style={subheadingStyle}>University of Southern California</div>
         <div style={{fontSize: 16, color: '#2c3e50', marginBottom: 12}}>
           Master of Science in Applied Data Science <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(08/24 – 05/26)</span>
@@ -930,7 +930,7 @@ function Resume() {
       <div style={sectionStyle}
            onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
            onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-        <div style={headingStyle}>🛠️ Technical Skills</div>
+  <div style={headingStyle}>Technical Skills</div>
         <ul style={listStyle}>
           <li><b>ML & GenAI:</b> Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models</li>
           <li><b>Multimodal & NLP:</b> CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL</li>
@@ -943,7 +943,7 @@ function Resume() {
       <div style={sectionStyle}
            onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
            onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-        <div style={headingStyle}>💼 Professional Experience</div>
+  <div style={headingStyle}>Professional Experience</div>
         
         <div style={subheadingStyle}>nala, United States | AI/ML Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(05/25 – 07/25)</span></div>
         <ul style={listStyle}>
@@ -971,7 +971,7 @@ function Resume() {
       <div style={sectionStyle}
            onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
            onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-        <div style={headingStyle}>🚀 Projects</div>
+  <div style={headingStyle}>Projects</div>
         
         <div style={subheadingStyle}>Yelp Recommendation Challenge <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(01/25 – 05/25)</span></div>
         <ul style={listStyle}>
@@ -999,7 +999,7 @@ function Resume() {
       <div style={sectionStyle}
            onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
            onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-        <div style={headingStyle}>📚 Publications</div>
+  <div style={headingStyle}>Publications</div>
         <div style={subheadingStyle}>Brain Stroke Detection using M.L. Models | IEEE Xplore, Feb 2023</div>
         <ul style={listStyle}>
           <li>Analyzed 8 ML and DL models with advanced preprocessing techniques for improved feature extraction.</li>
@@ -1011,7 +1011,7 @@ function Resume() {
       <div style={sectionStyle}
            onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
            onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-        <div style={headingStyle}>🏆 Achievements</div>
+  <div style={headingStyle}>Achievements</div>
         <ul style={listStyle}>
           <li>Appointed Teaching Assistant for DSCI 551 (Graduate) & DSCI 351 (Undergrad) - Foundations of Data Management at USC.</li>
           <li>Recognized as University Champion for excellence in PwC Launchpad Program.</li>
@@ -1054,21 +1054,21 @@ function Contact() {
 
   const contactItems = [
     {
-      icon: '📧',
+      icon: '',
       title: 'Email',
       value: 'dhyeydes@usc.edu',
       link: 'mailto:dhyeydes@usc.edu',
       color: '#e74c3c'
     },
     {
-      icon: '💼',
+      icon: '',
       title: 'LinkedIn',
       value: 'dhyey-desai-80659a216',
       link: 'https://www.linkedin.com/in/dhyey-desai-80659a216',
       color: '#0077b5'
     },
     {
-      icon: '💻',
+      icon: '',
       title: 'GitHub',
       value: 'DHYEY166',
       link: 'https://github.com/DHYEY166',
@@ -1369,7 +1369,7 @@ function ChatbotPage() {
 
       <div style={chatContainerStyle}>
         <div style={chatHeaderStyle}>
-          <span style={{fontSize: 28}}>🤖</span>
+          {/* Removed emoji for professionalism */}
           <div>
             <h3 style={{margin: 0, fontSize: 20, fontWeight: 700}}>Dhyey's AI Assistant</h3>
             <p style={{margin: 0, opacity: 0.9, fontSize: 14}}>Powered by Hugging Face AI</p>
