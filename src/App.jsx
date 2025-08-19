@@ -520,45 +520,62 @@ function Skills() {
       color: 'linear-gradient(135deg, #667eea, #764ba2)',
       skills: [
         { name: 'Python', color: '#3776ab' },
-        { name: 'R', color: '#276dc3' },
         { name: 'SQL', color: '#f29111' },
-        { name: 'JavaScript', color: '#f7df1e' }
+        { name: 'Java', color: '#f89820' }
       ]
     },
     {
-      title: 'Machine Learning & AI',
+      title: 'ML & GenAI',
       icon: '',
       color: 'linear-gradient(135deg, #f093fb, #f5576c)',
       skills: [
-        { name: 'TensorFlow', color: '#ff6f00' },
-        { name: 'PyTorch', color: '#ee4c2c' },
-        { name: 'Scikit-Learn', color: '#f7931e' },
-        { name: 'OpenAI API', color: '#412991' },
-        { name: 'Transformers', color: '#ffd21e' }
+        { name: 'Recommender Systems', color: '#ff6f00' },
+        { name: 'Transformers', color: '#ee4c2c' },
+        { name: 'CNN/RNN/LSTM', color: '#f7931e' },
+        { name: 'RAG', color: '#412991' },
+        { name: 'Generative AI', color: '#ffd21e' },
+        { name: 'Foundation Models', color: '#8e44ad' }
       ]
     },
     {
-      title: 'Data Analysis',
+      title: 'Multimodal & NLP',
       icon: '',
       color: 'linear-gradient(135deg, #4facfe, #00f2fe)',
       skills: [
-        { name: 'Pandas', color: '#150458' },
-        { name: 'NumPy', color: '#013243' },
-        { name: 'Matplotlib', color: '#11557c' },
-        { name: 'Seaborn', color: '#4c72b0' },
-        { name: 'Databricks', color: '#ff3621' }
+        { name: 'Computer Vision', color: '#150458' },
+        { name: 'NLP', color: '#013243' },
+        { name: 'NER', color: '#11557c' },
+        { name: 'Sentiment Analysis', color: '#4c72b0' },
+        { name: 'Multimodal Pretraining', color: '#ff3621' },
+        { name: 'Text-to-SQL', color: '#27ae60' }
       ]
     },
     {
-      title: 'Tools & Platforms',
+      title: 'ML Engineering',
       icon: '',
       color: 'linear-gradient(135deg, #fa709a, #fee140)',
       skills: [
-        { name: 'Git', color: '#f05032' },
-        { name: 'Docker', color: '#2496ed' },
-        { name: 'Jupyter', color: '#f37626' },
+        { name: 'Model Deployment', color: '#f05032' },
+        { name: 'Spark RDD', color: '#e25a1c' },
+        { name: 'Hadoop', color: '#2496ed' },
+        { name: 'ETL', color: '#f37626' },
+        { name: 'Quantization', color: '#47a248' },
+        { name: 'Optimization', color: '#9b59b6' }
+      ]
+    },
+    {
+      title: 'Tools & APIs',
+      icon: '',
+      color: 'linear-gradient(135deg, #667eea, #764ba2)',
+      skills: [
+        { name: 'TensorFlow', color: '#ff6f00' },
+        { name: 'OpenAI/Gemini API', color: '#412991' },
         { name: 'MongoDB', color: '#47a248' },
-        { name: 'Spark', color: '#e25a1c' }
+        { name: 'Databricks', color: '#ff3621' },
+        { name: 'Git', color: '#f05032' },
+        { name: 'Tableau', color: '#e97627' },
+        { name: 'Microsoft Excel', color: '#217346' },
+        { name: 'PowerPoint', color: '#d24726' }
       ]
     }
   ];
