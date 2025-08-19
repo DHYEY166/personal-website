@@ -689,7 +689,7 @@ function Projects() {
       tech: ['Spark RDD', 'XGBoost', 'Python', 'Feature Engineering'],
       gradient: 'linear-gradient(135deg, #667eea, #764ba2)',
       icon: '',
-      github: 'https://github.com/DHYEY166/yelp-recommendation-challenge'
+      github: 'https://github.com/DHYEY166/yelp-hybrid-recommender'
     },
     {
       title: 'ChatDB',
@@ -701,7 +701,7 @@ function Projects() {
       tech: ['LLMs', 'SQL', 'SQLite', 'MySQL', 'PostgreSQL'],
       gradient: 'linear-gradient(135deg, #4facfe, #00f2fe)',
       icon: '',
-      github: 'https://github.com/DHYEY166/chatdb'
+      github: 'https://github.com/DHYEY166/ChatDB'
     },
     {
       title: 'Hate Speech Detection',
@@ -713,7 +713,7 @@ function Projects() {
       tech: ['BERT', 'NLP', 'TF-IDF', 'Python', 'Machine Learning'],
       gradient: 'linear-gradient(135deg, #f093fb, #f5576c)',
       icon: '',
-      github: 'https://github.com/DHYEY166/hate-speech-detection'
+      github: 'https://github.com/DHYEY166/Hate-Speech-and-Offensive-Language-Detection'
     },
     {
       title: 'Breast Cancer Segmentation',
@@ -725,7 +725,7 @@ function Projects() {
       tech: ['Deep Learning', 'Computer Vision', 'Medical Imaging', 'Python'],
       gradient: 'linear-gradient(135deg, #a8edea, #fed6e3)',
       icon: '',
-      github: 'https://github.com/DHYEY166/breast-cancer-segmentation'
+      github: 'https://github.com/DHYEY166/BREAST_CANCER_SEMANTIC_SEGMENTATION'
     },
     {
       title: 'Multiple Sclerosis Detection',
@@ -737,7 +737,7 @@ function Projects() {
       tech: ['CNN', 'TensorFlow', 'MRI Analysis', 'Medical AI'],
       gradient: 'linear-gradient(135deg, #fa709a, #fee140)',
       icon: '',
-      github: 'https://github.com/DHYEY166/multiple-sclerosis-detection'
+      github: 'https://github.com/DHYEY166/Multiple_Sclerosis_Detection'
     },
     {
       title: 'Autism Detection Using Deep Learning Techniques',
@@ -749,7 +749,7 @@ function Projects() {
       tech: ['Privacy AI', 'Facial Recognition', 'TensorFlow', 'Research'],
       gradient: 'linear-gradient(135deg, #ff9a9e, #fecfef)',
       icon: '',
-      github: 'https://github.com/DHYEY166/autism-detection'
+      github: 'https://github.com/DHYEY166/AUTISM-DETECTION'
     }
   ];
 
