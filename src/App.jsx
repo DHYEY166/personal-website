@@ -5,7 +5,19 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react
 const HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium";
 const HUGGINGFACE_API_KEY = import.meta.env.VITE_HUGGINGFACE_API_KEY;
 
-const QA_CONTEXT = `Dhyey Desai is an AI/ML Engineer and Data Scientist based in Los Angeles, California. Email: dhyeydes@usc.edu. Education: M.S. in Applied Data Science (USC, 2024–2026), B.Tech in Computer Science (Manipal University Jaipur, 2020–2024). Skills: Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models, CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL, Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization, PyTorch, TensorFlow, OpenAI API, Gemini API, SQL, MongoDB, Databricks, Git. Experience: nala (AI/ML Engineer Intern, 2025), Genpact (Generative AI Intern, 2024), NUS (Deep Learning Research Intern, 2022). Projects: Yelp Recommendation Challenge (Top 3/120), ChatDB, Hate Speech Detection. Publications: Brain Stroke Detection (IEEE Xplore, 2023). Achievements: Teaching Assistant at USC, PwC Launchpad Champion, Top 3 in recommender competition.`;
+const QA_CONTEXT = `Dhyey Desai is an AI/ML Engineer and Data Scientist based in Los Angeles, California. Email: dhyeydes@usc.edu. Education: M.S. in Applied Data Science (USC, 2024–2026), B.Tech in Computer Science (Manipal University Jaipur, 2020–2024). 
+
+Technical Skills: Programming Languages (Python, SQL, Java), ML & GenAI (Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models), Multimodal & NLP (CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL), ML Engineering (Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization), Tools & APIs (TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint).
+
+Professional Experience: nala (AI/ML Engineer Intern, 05/25 – 08/25) - Built RAG system with OpenAI Function Calling + Firebase for pet health analytics, developed multimodal AI pipeline with real-time speech transcription, created dynamic visualization engine with 12+ chart types. Genpact (Generative AI Engineer Intern, 04/24 – 06/24) - Built AI-powered PO Automation conversational AI, designed prompt sets for system testing, contributed to scalable deployment workflows. National University of Singapore (Deep Learning Research Intern, 06/22 – 08/22) - Spearheaded privacy-preserving facial analysis research improving accuracy by 10%, architected deep learning systems reducing inference time by 40%.
+
+Key Projects: Yelp Recommendation Challenge (Top 3/120) - Created Spark RDD + XGBoost recommender with 40+ features, achieved RMSE of 0.9734. ChatDB - LLM-powered database management tool converting natural language to SQL, supports multiple databases with data visualization. Hate Speech Detection - BERT-based classifier with 96% F1-score, bias-aware NLP pipeline. Breast Cancer Segmentation - Deep learning models achieving 97.53% accuracy for medical image analysis. Multiple Sclerosis Detection - CNN-based diagnostic tools with 99% diagnostic accuracy. Autism Detection - AI-driven facial analysis research improving model accuracy by 10% and batch inference by 40%.
+
+Publications: Brain Stroke Detection using M.L. Models (IEEE Xplore, Feb 2023). 
+
+Achievements: Teaching Assistant for DSCI 551 (Graduate) & DSCI 351 (Undergraduate) - Foundations of Data Management at USC, University Champion for PwC Launchpad Program.
+
+About: Passionate about leveraging advanced machine learning and generative AI to solve real-world challenges across healthcare, finance, and multimedia analytics. Currently pursuing MS in Applied Data Science at USC while serving as teaching assistant. Developed AI solutions at nala, Genpact, and NUS. Specializes in bridging technical innovation with practical deployment, building scalable and responsible AI systems.`;
 
 // Fallback responses for common questions
 const getFallbackResponse = (question) => {
