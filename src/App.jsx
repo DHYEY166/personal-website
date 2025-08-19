@@ -897,8 +897,8 @@ function Resume() {
     <div style={containerStyle}>
       <div style={{textAlign: 'center', marginBottom: 50}}>
         <h1 style={{
-          fontSize: 42, 
-          fontWeight: 800, 
+          fontSize: 42,
+          fontWeight: 800,
           background: 'linear-gradient(135deg, #667eea, #764ba2)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
@@ -907,58 +907,51 @@ function Resume() {
           Resume
         </h1>
         <p style={{fontSize: 18, color: '#7f8c8d', fontWeight: 300}}>
-          Complete professional background and achievements
+          DHYEY DESAI<br/>
+          Los Angeles, California | dhyeydes@usc.edu | (213) 608-2504 | <a href="https://github.com/DHYEY166" target="_blank" rel="noopener noreferrer">GitHub</a> | <a href="https://linkedin.com/in/dhyey-desai-80659a216" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </p>
       </div>
 
       {/* Education */}
-      <div style={sectionStyle}
-           onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
-           onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-  <div style={headingStyle}>Education</div>
-        <div style={subheadingStyle}>University of Southern California</div>
+      <div style={sectionStyle}>
+        <div style={headingStyle}>Education</div>
+        <div style={subheadingStyle}>University of Southern California <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(08/24 – 05/26)</span></div>
         <div style={{fontSize: 16, color: '#2c3e50', marginBottom: 12}}>
-          Master of Science in Applied Data Science <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(08/24 – 05/26)</span>
+          Master of Science in Applied Data Science
         </div>
-        <div style={subheadingStyle}>Manipal University Jaipur, Rajasthan</div>
+        <div style={subheadingStyle}>Manipal University Jaipur, Rajasthan <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(07/20 – 05/24)</span></div>
         <div style={{fontSize: 16, color: '#2c3e50'}}>
-          Bachelor of Technology in Computer Science and Engineering <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(07/20 – 05/24)</span>
+          Bachelor of Technology in Computer Science and Engineering
         </div>
       </div>
 
       {/* Technical Skills */}
-      <div style={sectionStyle}
-           onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
-           onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-  <div style={headingStyle}>Technical Skills</div>
+      <div style={sectionStyle}>
+        <div style={headingStyle}>Technical Skills</div>
         <ul style={listStyle}>
+          <li><b>Programming Languages:</b> Python, SQL, Java</li>
           <li><b>ML & GenAI:</b> Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models</li>
           <li><b>Multimodal & NLP:</b> CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL</li>
           <li><b>ML Engineering:</b> Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization</li>
-          <li><b>Tools & APIs:</b> PyTorch, TensorFlow, OpenAI API, Gemini API, SQL, MongoDB, Databricks, Git</li>
+          <li><b>Tools & APIs:</b> TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint</li>
         </ul>
       </div>
 
       {/* Professional Experience */}
-      <div style={sectionStyle}
-           onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
-           onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-  <div style={headingStyle}>Professional Experience</div>
-        
-        <div style={subheadingStyle}>nala, United States | AI/ML Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(05/25 – 07/25)</span></div>
+      <div style={sectionStyle}>
+        <div style={headingStyle}>Professional Experience</div>
+        <div style={subheadingStyle}>nala, United States | AI/ML Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(05/25 – 08/25)</span></div>
         <ul style={listStyle}>
-          <li>Developing an intelligent RAG system with OpenAI Function Calling and Firebase for comprehensive pet health analytics.</li>
-          <li>Building a multimodal AI pipeline with real-time speech transcription, PDF analysis, and intelligent summarization.</li>
-          <li>Creating a dynamic visualization engine with 12+ chart types and intelligent caching for optimal performance.</li>
+          <li>Built RAG system with OpenAI Function Calling + Firebase, delivering actionable pet health analytics for cross-team insights.</li>
+          <li>Developed multimodal AI pipeline with real-time speech transcription, PDF analysis, and intelligent summarization.</li>
+          <li>Created dynamic visualization engine with 12+ chart types and intelligent caching for optimal performance.</li>
         </ul>
-        
-        <div style={subheadingStyle}>Genpact, India | Generative AI Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(04/24 – 06/24)</span></div>
+        <div style={subheadingStyle}>Genpact, India | Generative AI Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(04/24 – 06/24)</span></div>
         <ul style={listStyle}>
-          <li>Built privacy-safe GenAI models for finance, improving demographic fairness and accuracy.</li>
-          <li>Designed evaluation metrics for bias, and accelerated ML pipelines by 20%.</li>
-          <li>Contributed to scalable deployment workflows with optimized inference performance.</li>
+          <li>Built AI-powered PO Automation conversational AI to analyze large purchase orders and enable multi-document querying.</li>
+          <li>Designed and optimized prompt sets to test system accuracy, relevance, and robustness in production environments.</li>
+          <li>Contributed to scalable deployment workflows, improving inference performance and reliability for enterprise use.</li>
         </ul>
-        
         <div style={subheadingStyle}>National University of Singapore (NUS), Singapore | Deep Learning Research Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(06/22 – 08/22)</span></div>
         <ul style={listStyle}>
           <li>Spearheaded privacy-preserving facial analysis research, improving accuracy by 10% while reducing bias.</li>
@@ -968,26 +961,21 @@ function Resume() {
       </div>
 
       {/* Projects */}
-      <div style={sectionStyle}
-           onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
-           onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-  <div style={headingStyle}>Projects</div>
-        
-        <div style={subheadingStyle}>Yelp Recommendation Challenge <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(01/25 – 05/25)</span></div>
+      <div style={sectionStyle}>
+        <div style={headingStyle}>Projects</div>
+        <div style={subheadingStyle}>Yelp Recommendation Challenge | Ranked Top 3 out of 120 <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(01/25 – 05/25)</span></div>
         <ul style={listStyle}>
-          <li>Built a hybrid Spark RDD + XGBoost recommender with 40+ engineered features from user, business, and behavioral data.</li>
+          <li>Created Spark RDD + XGBoost recommender with 40+ features, applying GLM techniques to rank top 3/120 in accuracy.</li>
           <li>Designed cold start features using check-in counts, photo frequency, tip sentiment, and business category embeddings.</li>
           <li>Tuned model with confidence-weighted biases and transforms, achieving RMSE of 0.9745 (val) and 0.9734 (test).</li>
         </ul>
-        
         <div style={subheadingStyle}>ChatDB | Database Management and Visualization Tool <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(08/24 – 01/25)</span></div>
         <ul style={listStyle}>
           <li>Integrated LLMs to convert natural language inputs into SQL queries, enhancing user accessibility.</li>
           <li>Supported multiple databases (SQLite, MySQL, PostgreSQL) with a user-friendly connection interface.</li>
-          <li>Enabled data visualization, allowing users to generate bar charts, line charts, and scatter plots from SQL query results.</li>
+          <li>Enabled data visualization using Matplotlib to generate bar, line, and scatter plots from SQL query results.</li>
         </ul>
-        
-        <div style={subheadingStyle}>Hate Speech and Offensive Language Detection <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(10/23 – 07/24)</span></div>
+        <div style={subheadingStyle}>Hate Speech and Offensive Language Detection | NLP, Python, Machine Learning <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(10/23 – 07/24)</span></div>
         <ul style={listStyle}>
           <li>Trained BERT-based classifier with NER and TF-IDF, reaching 96% F1-score.</li>
           <li>Implemented bias-aware NLP pipeline with strong sentiment detection performance.</li>
@@ -996,10 +984,8 @@ function Resume() {
       </div>
 
       {/* Publications */}
-      <div style={sectionStyle}
-           onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
-           onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-  <div style={headingStyle}>Publications</div>
+      <div style={sectionStyle}>
+        <div style={headingStyle}>Publications</div>
         <div style={subheadingStyle}>Brain Stroke Detection using M.L. Models | IEEE Xplore, Feb 2023</div>
         <ul style={listStyle}>
           <li>Analyzed 8 ML and DL models with advanced preprocessing techniques for improved feature extraction.</li>
@@ -1008,14 +994,11 @@ function Resume() {
       </div>
 
       {/* Achievements */}
-      <div style={sectionStyle}
-           onMouseOver={(e) => e.currentTarget.style.boxShadow = '0 20px 60px rgba(102, 126, 234, 0.15)'}
-           onMouseOut={(e) => e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)'}>
-  <div style={headingStyle}>Achievements</div>
+      <div style={sectionStyle}>
+        <div style={headingStyle}>Achievements</div>
         <ul style={listStyle}>
           <li>Appointed Teaching Assistant for DSCI 551 (Graduate) & DSCI 351 (Undergrad) - Foundations of Data Management at USC.</li>
           <li>Recognized as University Champion for excellence in PwC Launchpad Program.</li>
-          <li>Ranked Top 3 out of 120 students in a university-scale recommender competition for accuracy and efficiency.</li>
         </ul>
       </div>
     </div>
