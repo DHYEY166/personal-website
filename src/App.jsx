@@ -35,6 +35,46 @@ PRIMARY LANGUAGES:
 EXPERIENCE:
 Python is his primary language for machine learning, data science, and AI projects. SQL for database management and data analysis. Java for enterprise-level applications and system development.`;
   }
+
+  if (q.includes('nala')) {
+    return `DHYEY'S WORK AT NALA
+
+POSITION: AI/ML Engineer Intern (May 2025 - August 2025)
+
+KEY ACHIEVEMENTS:
+• Built RAG system with OpenAI Function Calling + Firebase, delivering actionable pet health analytics for cross-team insights
+• Developed multimodal AI pipeline with real-time speech transcription, PDF analysis, and intelligent summarization  
+• Created dynamic visualization engine with 12+ chart types and intelligent caching for optimal performance
+
+IMPACT: Specialized in building real-time AI systems for pet health analytics, combining multiple AI technologies for comprehensive solutions.`;
+  }
+
+  if (q.includes('genpact')) {
+    return `DHYEY'S WORK AT GENPACT
+
+POSITION: Generative AI Engineer Intern (April 2024 - June 2024)
+
+KEY ACHIEVEMENTS:
+• Built AI-powered PO Automation conversational AI to analyze large purchase orders and enable multi-document querying
+• Designed and optimized prompt sets to test system accuracy, relevance, and robustness in production environments
+• Contributed to scalable deployment workflows, improving inference performance and reliability for enterprise use
+
+IMPACT: Focused on enterprise AI automation, specifically in finance sector with emphasis on conversational AI and document processing.`;
+  }
+
+  if (q.includes('nus') || q.includes('singapore')) {
+    return `DHYEY'S WORK AT NUS
+
+POSITION: Deep Learning Research Intern (June 2022 - August 2022)
+LOCATION: National University of Singapore
+
+KEY ACHIEVEMENTS:
+• Spearheaded privacy-preserving facial analysis research, improving accuracy by 10% while reducing bias
+• Architected deep learning systems in TensorFlow, reducing inference time by 40% for 3x larger batches
+• Pioneered with research team and NUS professors on novel CNN architectures for image analysis
+
+IMPACT: Research-focused role advancing privacy-preserving AI techniques and optimization of deep learning systems for facial analysis applications.`;
+  }
   
   if (q.includes('skill') || q.includes('technology') || q.includes('technical')) {
     return `DHYEY'S TECHNICAL SKILLS
