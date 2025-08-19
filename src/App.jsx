@@ -24,6 +24,37 @@ const getFallbackResponse = (question) => {
   const q = question.toLowerCase();
   
   // Check for specific questions first (most specific to least specific)
+  if (q.includes('programming') || q.includes('coding') || q.includes('language') || q.includes('python') || q.includes('java') || q.includes('sql')) {
+    return `DHYEY'S PROGRAMMING LANGUAGES
+
+PRIMARY LANGUAGES:
+• Python - Advanced proficiency for ML/AI development, data analysis, and backend systems
+• SQL - Expert level for database management, queries, and data manipulation  
+• Java - Proficient for enterprise applications and system development
+
+EXPERIENCE:
+Python is his primary language for machine learning, data science, and AI projects. SQL for database management and data analysis. Java for enterprise-level applications and system development.`;
+  }
+  
+  if (q.includes('skill') || q.includes('technology') || q.includes('technical')) {
+    return `DHYEY'S TECHNICAL SKILLS
+
+PROGRAMMING LANGUAGES:
+Python, SQL, Java
+
+ML & GENERATIVE AI:
+Recommender Systems, Transformers, CNN/RNN/LSTM, RAG (Retrieval Augmented Generation), Foundation Models, Generative AI
+
+MULTIMODAL & NLP:
+Computer Vision, Natural Language Processing, Named Entity Recognition, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL
+
+ML ENGINEERING:
+Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization
+
+TOOLS & APIs:
+TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint`;
+  }
+  
   if (q.includes('project') || q.includes('yelp') || q.includes('chatdb') || q.includes('hate speech')) {
     return `DHYEY'S KEY PROJECTS
 
@@ -149,7 +180,7 @@ RESEARCH CONTRIBUTIONS:
 Published research in IEEE Xplore, Brain Stroke Detection using Machine Learning Models, Contributing to academic knowledge in healthcare AI`;
   }
   
-  return "I can help you learn about Dhyey's background! Try asking: 'Give me a summary of his resume', 'What are his technical skills?', 'Tell me about his projects', or 'What's his experience?'";
+  return "I can help you learn about Dhyey's background! Try asking: 'What programming languages does he know?', 'Give me a summary of his resume', 'What are his technical skills?', 'Tell me about his projects', or 'What's his experience?'";
 };
 
 // NEW: Top Navigation Bar Component
