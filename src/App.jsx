@@ -321,6 +321,7 @@ function TopNavigation() {
           { path: '/about', icon: '', label: 'About' },
           { path: '/skills', icon: '', label: 'Skills' },
           { path: '/projects', icon: '', label: 'Projects' },
+          { path: '/certifications', icon: '', label: 'Certifications' },
           { path: '/resume', icon: '', label: 'Resume' },
           { path: '/contact', icon: '', label: 'Contact' }
         ].map((item) => (
@@ -1051,6 +1052,298 @@ function Projects() {
   );
 }
 
+// Enhanced Certifications Component
+function Certifications() {
+  const containerStyle = {
+    maxWidth: '100%',
+    margin: '0 auto',
+    padding: '50px 40px',
+    animation: 'fadeIn 1s ease-out',
+  };
+
+  const headerStyle = {
+    textAlign: 'center',
+    marginBottom: 60,
+  };
+
+  const yearSectionStyle = {
+    marginBottom: 50,
+  };
+
+  const yearHeaderStyle = {
+    fontSize: 32,
+    fontWeight: 800,
+    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    marginBottom: 30,
+    textAlign: 'center',
+  };
+
+  const certificationsGridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+    gap: 25,
+  };
+
+  const certCardStyle = {
+    background: 'linear-gradient(145deg, #ffffff, #f8f9fa)',
+    borderRadius: 20,
+    padding: 25,
+    boxShadow: '0 15px 50px rgba(0,0,0,0.08)',
+    border: '1px solid rgba(255,255,255,0.2)',
+    transition: 'all 0.3s ease',
+    position: 'relative',
+    overflow: 'hidden',
+  };
+
+  const certifications = {
+    2024: [
+      {
+        title: 'Introducing Generative AI with AWS',
+        institution: 'Udacity',
+        date: 'September 4, 2024',
+        hasVerification: false,
+        color: '#ff9900'
+      },
+      {
+        title: 'Data Visualization with Python',
+        institution: 'IBM / Coursera',
+        date: 'March 5, 2024',
+        hasVerification: true,
+        color: '#0f62fe'
+      }
+    ],
+    2023: [
+      {
+        title: 'AWS Academy Graduate – AWS Academy Machine Learning for Natural Language Processing',
+        institution: 'AWS Academy',
+        date: 'August 15, 2023',
+        hasVerification: true,
+        badge: 'Digital Badge',
+        color: '#ff9900'
+      },
+      {
+        title: 'AWS Academy Graduate – AWS Academy Machine Learning Foundations',
+        institution: 'AWS Academy',
+        date: 'July 30, 2023',
+        hasVerification: true,
+        badge: 'Digital Badge',
+        color: '#ff9900'
+      },
+      {
+        title: 'Introduction to Generative AI',
+        institution: 'Google Cloud / Coursera',
+        date: 'August 15, 2023',
+        hasVerification: true,
+        color: '#4285f4'
+      },
+      {
+        title: 'Data Collection and Processing with Python',
+        institution: 'University of Michigan / Coursera',
+        date: 'June 6, 2023',
+        hasVerification: true,
+        color: '#00274c'
+      },
+      {
+        title: 'Organizational Behavior: How to Manage People',
+        institution: 'IESE Business School, University of Navarra / Coursera',
+        date: 'April 19, 2023',
+        hasVerification: true,
+        color: '#8b0000'
+      },
+      {
+        title: 'FinTech and the Transformation in Financial Services',
+        institution: 'Copenhagen Business School / Coursera',
+        date: 'March 31, 2023',
+        hasVerification: true,
+        color: '#a50034'
+      },
+      {
+        title: 'Python Classes and Inheritance',
+        institution: 'University of Michigan / Coursera',
+        date: 'August 10, 2023',
+        hasVerification: true,
+        color: '#00274c'
+      }
+    ],
+    2022: [
+      {
+        title: 'Machine Learning',
+        institution: 'Stanford University / Coursera',
+        date: 'December 26, 2022',
+        hasVerification: true,
+        color: '#8c1515'
+      },
+      {
+        title: 'Supervised Machine Learning: Regression and Classification',
+        institution: 'DeepLearning.AI & Stanford University / Coursera',
+        date: 'December 27, 2022',
+        hasVerification: true,
+        color: '#8c1515'
+      },
+      {
+        title: 'Dynamic Programming, Greedy Algorithms',
+        institution: 'University of Colorado Boulder / Coursera',
+        date: 'December 27, 2022',
+        hasVerification: true,
+        color: '#cfb87c'
+      },
+      {
+        title: 'CCNAv7: Introduction to Networks',
+        institution: 'Cisco Networking Academy / Manipal University Jaipur',
+        date: 'November 2, 2022',
+        hasVerification: false,
+        color: '#1ba0d7'
+      },
+      {
+        title: 'CCNAv7: Switching, Routing, and Wireless Essentials',
+        institution: 'Cisco Networking Academy / Manipal University Jaipur',
+        date: 'November 2, 2022',
+        hasVerification: false,
+        color: '#1ba0d7'
+      },
+      {
+        title: 'Database Foundations',
+        institution: 'Oracle Academy',
+        date: 'March 4, 2022',
+        hasVerification: false,
+        color: '#f80000'
+      },
+      {
+        title: 'Introduction to Basic Game Development using Scratch',
+        institution: 'Coursera Project Network',
+        date: 'January 17, 2022',
+        hasVerification: true,
+        color: '#0056d3'
+      }
+    ],
+    2021: [
+      {
+        title: 'Introduction to Object-Oriented Programming with Java',
+        institution: 'LearnQuest / Coursera',
+        date: 'October 6, 2021',
+        hasVerification: true,
+        color: '#ed8b00'
+      },
+      {
+        title: 'Python Basics',
+        institution: 'University of Michigan / Coursera',
+        date: 'July 5, 2021',
+        hasVerification: true,
+        color: '#00274c'
+      }
+    ]
+  };
+
+  return (
+    <div style={containerStyle}>
+      <div style={headerStyle}>
+        <h1 style={{
+          fontSize: 42, 
+          fontWeight: 800, 
+          background: 'linear-gradient(135deg, #667eea, #764ba2)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          marginBottom: 18
+        }}>
+          Certifications
+        </h1>
+        <p style={{fontSize: 18, color: '#7f8c8d', fontWeight: 300}}>
+          Professional certifications and continuous learning achievements
+        </p>
+      </div>
+
+      {Object.entries(certifications).reverse().map(([year, certs]) => (
+        <div key={year} style={yearSectionStyle}>
+          <h2 style={yearHeaderStyle}>{year}</h2>
+          <div style={certificationsGridStyle}>
+            {certs.map((cert, index) => (
+              <div 
+                key={index}
+                style={certCardStyle}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-8px)';
+                  e.currentTarget.style.boxShadow = '0 25px 70px rgba(0,0,0,0.12)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.08)';
+                }}
+              >
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 4,
+                  background: `linear-gradient(135deg, ${cert.color}, ${cert.color}dd)`,
+                  borderRadius: '20px 20px 0 0'
+                }}></div>
+                
+                <h3 style={{
+                  color: '#2c3e50',
+                  fontSize: 18,
+                  fontWeight: 700,
+                  marginBottom: 15,
+                  lineHeight: 1.4
+                }}>
+                  {cert.title}
+                </h3>
+                
+                <div style={{
+                  color: '#5a6c7d',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginBottom: 10
+                }}>
+                  {cert.institution}
+                </div>
+                
+                <div style={{
+                  color: '#7f8c8d',
+                  fontSize: 13,
+                  marginBottom: 15
+                }}>
+                  {cert.date}
+                </div>
+                
+                <div style={{display: 'flex', gap: 10, alignItems: 'center'}}>
+                  {cert.hasVerification && (
+                    <div style={{
+                      background: 'linear-gradient(135deg, #27ae60, #2ecc71)',
+                      color: '#fff',
+                      padding: '4px 12px',
+                      borderRadius: 12,
+                      fontSize: 11,
+                      fontWeight: 600
+                    }}>
+                      Verified
+                    </div>
+                  )}
+                  
+                  {cert.badge && (
+                    <div style={{
+                      background: 'linear-gradient(135deg, #3498db, #5dade2)',
+                      color: '#fff',
+                      padding: '4px 12px',
+                      borderRadius: 12,
+                      fontSize: 11,
+                      fontWeight: 600
+                    }}>
+                      {cert.badge}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // Enhanced Resume Component (Reduced sizes)
 function Resume() {
   const containerStyle = {
@@ -1746,8 +2039,9 @@ export default function App() {
             <Route path="/chatbot" element={<ChatbotPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/skills" element={<Skills />} />
-            <Route path="/resume" element={<Resume />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/certifications" element={<Certifications />} />
+            <Route path="/resume" element={<Resume />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </main>
