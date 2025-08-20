@@ -13,6 +13,8 @@ Professional Experience: nala (AI/ML Engineer Intern, 05/25 – 08/25) - Built R
 
 Key Projects: Yelp Recommendation Challenge (Top 3/120) - Created Spark RDD + XGBoost recommender with 40+ features, achieved RMSE of 0.9734. ChatDB - LLM-powered database management tool converting natural language to SQL, supports multiple databases with data visualization. Hate Speech Detection - BERT-based classifier with 96% F1-score, bias-aware NLP pipeline. Breast Cancer Segmentation - Deep learning models achieving 97.53% accuracy for medical image analysis. Multiple Sclerosis Detection - CNN-based diagnostic tools with 99% diagnostic accuracy. Autism Detection - AI-driven facial analysis research improving model accuracy by 10% and batch inference by 40%.
 
+Certifications: 18+ professional certifications including AWS Academy ML for NLP & ML Foundations (verified digital badges), Stanford Machine Learning, DeepLearning.AI Supervised ML, Google Cloud Generative AI, IBM Data Visualization with Python, University of Michigan Python courses, Cisco CCNA networking, Oracle Database Foundations, FinTech transformation, organizational behavior. Recent: AWS Generative AI (2024), multiple AI/ML and cloud certifications from top institutions.
+
 Publications: Brain Stroke Detection using M.L. Models (IEEE Xplore, Feb 2023). 
 
 Achievements: Teaching Assistant for DSCI 551 (Graduate) & DSCI 351 (Undergraduate) - Foundations of Data Management at USC, University Champion for PwC Launchpad Program.
@@ -74,6 +76,39 @@ KEY ACHIEVEMENTS:
 • Pioneered with research team and NUS professors on novel CNN architectures for image analysis
 
 IMPACT: Research-focused role advancing privacy-preserving AI techniques and optimization of deep learning systems for facial analysis applications.`;
+  }
+
+  if (q.includes('certification') || q.includes('certificate') || q.includes('aws') || q.includes('coursera') || q.includes('stanford') || q.includes('learning')) {
+    return `DHYEY'S PROFESSIONAL CERTIFICATIONS
+
+RECENT (2024):
+• Introducing Generative AI with AWS (Udacity, Sept 2024)
+• Data Visualization with Python (IBM/Coursera, March 2024)
+
+AI & MACHINE LEARNING (2023):
+• AWS Academy Graduate – ML for Natural Language Processing (Digital Badge)
+• AWS Academy Graduate – ML Foundations (Digital Badge)
+• Introduction to Generative AI (Google Cloud/Coursera)
+• Data Collection and Processing with Python (University of Michigan)
+• Python Classes and Inheritance (University of Michigan)
+
+CORE ML FOUNDATIONS (2022):
+• Machine Learning (Stanford University/Coursera) - Classic Andrew Ng course
+• Supervised Machine Learning: Regression and Classification (DeepLearning.AI & Stanford)
+• Dynamic Programming, Greedy Algorithms (University of Colorado Boulder)
+• CCNAv7: Introduction to Networks & Switching/Routing (Cisco Networking Academy)
+• Database Foundations (Oracle Academy)
+• Introduction to Basic Game Development using Scratch (Coursera)
+
+PROGRAMMING FOUNDATIONS (2021):
+• Introduction to Object-Oriented Programming with Java (LearnQuest/Coursera)
+• Python Basics (University of Michigan/Coursera)
+
+BUSINESS & FINANCE (2023):
+• Organizational Behavior: How to Manage People (IESE Business School)
+• FinTech and the Transformation in Financial Services (Copenhagen Business School)
+
+TOTAL: 18+ verified professional certifications from top institutions including Stanford, AWS Academy, Google Cloud, IBM, University of Michigan, and leading business schools. All major certifications include verification links and many feature digital badges.`;
   }
   
   if (q.includes('skill') || q.includes('technology') || q.includes('technical')) {
