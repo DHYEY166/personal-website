@@ -1103,7 +1103,8 @@ function Certifications() {
         title: 'Introducing Generative AI with AWS',
         institution: 'Udacity',
         date: 'September 4, 2024',
-        hasVerification: false,
+        hasVerification: true,
+        verificationLink: 'https://confirm.udacity.com/e/1bdd297c-5f6b-11ef-b28b-432c9a38a205',
         color: '#ff9900'
       },
       {
@@ -1111,6 +1112,7 @@ function Certifications() {
         institution: 'IBM / Coursera',
         date: 'March 5, 2024',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/5CNDL729TLLT',
         color: '#0f62fe'
       }
     ],
@@ -1120,6 +1122,7 @@ function Certifications() {
         institution: 'AWS Academy',
         date: 'August 15, 2023',
         hasVerification: true,
+        verificationLink: 'https://www.credly.com/go/l2VNJYda',
         badge: 'Digital Badge',
         color: '#ff9900'
       },
@@ -1128,6 +1131,7 @@ function Certifications() {
         institution: 'AWS Academy',
         date: 'July 30, 2023',
         hasVerification: true,
+        verificationLink: 'https://www.credly.com/go/5HzDMyCN',
         badge: 'Digital Badge',
         color: '#ff9900'
       },
@@ -1136,6 +1140,7 @@ function Certifications() {
         institution: 'Google Cloud / Coursera',
         date: 'August 15, 2023',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/N7MQUN933DHC',
         color: '#4285f4'
       },
       {
@@ -1143,6 +1148,7 @@ function Certifications() {
         institution: 'University of Michigan / Coursera',
         date: 'June 6, 2023',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/RRR3EV7682NΑ',
         color: '#00274c'
       },
       {
@@ -1150,6 +1156,7 @@ function Certifications() {
         institution: 'IESE Business School, University of Navarra / Coursera',
         date: 'April 19, 2023',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/8QDEE97WYXJR',
         color: '#8b0000'
       },
       {
@@ -1157,6 +1164,7 @@ function Certifications() {
         institution: 'Copenhagen Business School / Coursera',
         date: 'March 31, 2023',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/3LXTCD7UMJL9',
         color: '#a50034'
       },
       {
@@ -1164,6 +1172,7 @@ function Certifications() {
         institution: 'University of Michigan / Coursera',
         date: 'August 10, 2023',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/TQCKRSX6R4VV',
         color: '#00274c'
       }
     ],
@@ -1173,6 +1182,7 @@ function Certifications() {
         institution: 'Stanford University / Coursera',
         date: 'December 26, 2022',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/D2Y9U5XZVJ7W',
         color: '#8c1515'
       },
       {
@@ -1180,6 +1190,7 @@ function Certifications() {
         institution: 'DeepLearning.AI & Stanford University / Coursera',
         date: 'December 27, 2022',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/49RW3JQLH4J8',
         color: '#8c1515'
       },
       {
@@ -1187,6 +1198,7 @@ function Certifications() {
         institution: 'University of Colorado Boulder / Coursera',
         date: 'December 27, 2022',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/WZXVTSEF2P9J',
         color: '#cfb87c'
       },
       {
@@ -1215,6 +1227,7 @@ function Certifications() {
         institution: 'Coursera Project Network',
         date: 'January 17, 2022',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/GWNR9SE6ZMGN',
         color: '#0056d3'
       }
     ],
@@ -1224,6 +1237,7 @@ function Certifications() {
         institution: 'LearnQuest / Coursera',
         date: 'October 6, 2021',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/634XAL9WR4F3',
         color: '#ed8b00'
       },
       {
@@ -1231,6 +1245,7 @@ function Certifications() {
         institution: 'University of Michigan / Coursera',
         date: 'July 5, 2021',
         hasVerification: true,
+        verificationLink: 'https://coursera.org/verify/M5DT8XDQGBZQ',
         color: '#00274c'
       }
     ]
@@ -1310,16 +1325,44 @@ function Certifications() {
                 
                 <div style={{display: 'flex', gap: 10, alignItems: 'center'}}>
                   {cert.hasVerification && (
-                    <div style={{
-                      background: 'linear-gradient(135deg, #27ae60, #2ecc71)',
-                      color: '#fff',
-                      padding: '4px 12px',
-                      borderRadius: 12,
-                      fontSize: 11,
-                      fontWeight: 600
-                    }}>
-                      Verified
-                    </div>
+                    cert.verificationLink ? (
+                      <a 
+                        href={cert.verificationLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        style={{
+                          background: 'linear-gradient(135deg, #27ae60, #2ecc71)',
+                          color: '#fff',
+                          padding: '4px 12px',
+                          borderRadius: 12,
+                          fontSize: 11,
+                          fontWeight: 600,
+                          textDecoration: 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseOver={(e) => {
+                          e.target.style.transform = 'scale(1.05)';
+                          e.target.style.boxShadow = '0 4px 15px rgba(39, 174, 96, 0.4)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.target.style.transform = 'scale(1)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      >
+                        View Certificate
+                      </a>
+                    ) : (
+                      <div style={{
+                        background: 'linear-gradient(135deg, #27ae60, #2ecc71)',
+                        color: '#fff',
+                        padding: '4px 12px',
+                        borderRadius: 12,
+                        fontSize: 11,
+                        fontWeight: 600
+                      }}>
+                        Verified
+                      </div>
+                    )
                   )}
                   
                   {cert.badge && (
