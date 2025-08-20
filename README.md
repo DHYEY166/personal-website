@@ -2,12 +2,13 @@
 
 A modern, interactive personal portfolio website showcasing Dhyey Desai's skills, experience, and projects in AI/ML Engineering and Data Science.
 
-## 🌟 Features
+## Features
 
 ### Interactive Sections
 - **About Me** - Personal background and information
 - **Skills** - Technical expertise and technologies
 - **Projects** - Featured AI/ML projects with achievements
+- **Certifications** - Professional certifications and achievements
 - **Resume** - Complete professional background
 - **Contact** - Professional contact information
 - **AI Chatbot** - Interactive Q&A about Dhyey's background (powered by Hugging Face)
@@ -19,7 +20,7 @@ A modern, interactive personal portfolio website showcasing Dhyey Desai's skills
 - **Environment Variables** - Secure API key management
 - **Vite Build** - Fast development and optimized production builds
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend:** React 18, Vite
 - **Styling:** Inline CSS with modern gradients and animations
@@ -28,11 +29,11 @@ A modern, interactive personal portfolio website showcasing Dhyey Desai's skills
 - **Deployment:** Vercel
 - **Version Control:** Git/GitHub
 
-## 🚀 Live Website
+## Live Website
 
 **Visit:** [https://personal-website-dun-eta-72.vercel.app/](https://personal-website-dun-eta-72.vercel.app/)
 
-## 📦 Installation & Development
+## Installation & Development
 
 ```bash
 # Clone the repository
@@ -53,7 +54,7 @@ npm run dev
 npm run build
 ```
 
-## 🔧 Environment Variables
+## Environment Variables
 
 Create a `.env` file in the root directory:
 
@@ -61,7 +62,7 @@ Create a `.env` file in the root directory:
 VITE_HUGGINGFACE_API_KEY=your_huggingface_api_key_here
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 personal-website/
@@ -78,7 +79,7 @@ personal-website/
 └── .env                 # Environment variables (not in repo)
 ```
 
-## 🚀 Deployment
+## Deployment
 
 This project is deployed on **Vercel** with automatic deployments from GitHub:
 
@@ -91,22 +92,23 @@ This project is deployed on **Vercel** with automatic deployments from GitHub:
 - **GitHub Pages:** Use GitHub Actions for deployment
 - **Firebase Hosting:** Google's hosting platform
 
-## 🤖 AI Chatbot
+## AI Chatbot
 
 The website features an intelligent chatbot that can answer questions about:
 - Dhyey's background and experience
 - Technical skills and expertise
 - Projects and achievements
+- Professional certifications
 - Education and publications
 - Contact information
 
 Powered by Hugging Face's DialoGPT model with custom context about Dhyey's professional background.
 
-## 📝 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 👨‍💻 About Dhyey Desai
+## About Dhyey Desai
 
 AI/ML Engineer and Data Scientist based in Los Angeles, California. Currently pursuing MS in Applied Data Science at USC with experience at companies like nala, Genpact, and NUS.
 
