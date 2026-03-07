@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react
 const HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium";
 const HUGGINGFACE_API_KEY = import.meta.env.VITE_HUGGINGFACE_API_KEY;
 
-const QA_CONTEXT = `Dhyey Desai is an AI/ML Engineer based in Los Angeles, California. Phone: (213) 608-2504. Email: dhyeydes@usc.edu. Education: M.S. in Applied Data Science (USC, GPA: 3.73, 2024–2026), B.Tech in Computer Science and Engineering (Manipal University Jaipur, GPA: 3.85, 2020–2024). 
+const QA_CONTEXT = `Dhyey Desai is an AI/ML Engineer based in Los Angeles, California. Email: dhyeydes@usc.edu. Education: M.S. in Applied Data Science (USC, GPA: 3.73, 2024–2026), B.Tech in Computer Science and Engineering (Manipal University Jaipur, GPA: 3.85, 2020–2024). 
 
 Technical Skills: Programming Languages (Python, SQL, Java, C, Scala), ML & GenAI (Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models, Statistical Modeling, Data Mining), Multimodal & NLP (CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL), ML Engineering (Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization), Tools & APIs (TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint), Cloud (AWS - Certified Cloud Practitioner).
 
@@ -533,7 +533,6 @@ function About() {
           {[
             { icon: '', label: 'Birthday', value: '6th December 2002' },
             { icon: '', label: 'Location', value: 'Los Angeles, California' },
-            { icon: '', label: 'Phone', value: '(213) 608-2504' },
             { icon: '', label: 'Email', value: 'dhyeydes@usc.edu' },
             { icon: '', label: 'Degree', value: 'MS Applied Data Science, USC (GPA: 3.73)' },
             { icon: '', label: 'Age', value: '23 years old' }
@@ -871,7 +870,7 @@ function Projects() {
     {
       title: 'MultiLLM',
       badge: { text: 'Deployed Website', color: '#8e44ad' },
-      description: 'Built privacy-first AI platform with real-time streaming chat interface, intelligent task classification routing across 5+ local Ollama models (Llama 3.2, DeepSeek Coder, Phi3), dynamic model selection with latency tracking, and extensible architecture for future cloud LLM integration (GPT-4, Claude, Gemini). Engineered multi-format knowledge base system supporting 10+ file types (PDF, DOCX, Jupyter notebooks, Python/JS/TS/Java/Go/Rust/C++/C#/Ruby/PHP) with semantic chunking, intelligent context retrieval, automatic relevance scoring, and user-controlled streaming responses with stop/reset capabilities. Deployed production-ready system with Google OAuth + email/password authentication, per-user data isolation with automatic cleanup, Redis session management with bcrypt hashing, rate limiting (100 req/15min), helmet security headers, CORS policies, and GDPR/HIPAA compliance features for enterprise deployment.',
+      description: 'Privacy-first AI platform routing tasks across 5+ local Ollama models (Llama 3.2, DeepSeek Coder, Phi3) with real-time streaming chat and dynamic model selection. Multi-format knowledge base supporting 10+ file types with semantic chunking and intelligent context retrieval. Production-deployed with Google OAuth, Redis session management, rate limiting, and GDPR/HIPAA compliance.',
       role: 'Full-stack AI engineer, system architect',
       challenge: 'Building a privacy-first multi-model AI system with enterprise-grade security and multi-format knowledge retrieval',
       outcome: 'Production-deployed platform with 5+ model routing, 10+ file type support, and enterprise security compliance',
@@ -1190,6 +1189,7 @@ function Certifications() {
         date: 'November 21, 2025',
         expires: 'November 21, 2028',
         hasVerification: true,
+        verificationLink: 'https://www.credly.com/badges/f0d1aa9a-498e-4810-adbc-1df67bbe0e05/linked_in_profile',
         badge: 'Certification – Foundational',
         color: '#ff9900'
       }
@@ -1554,78 +1554,85 @@ function Resume() {
       {/* Education */}
       <div style={sectionStyle}>
         <div style={headingStyle}>Education</div>
-        <div style={subheadingStyle}>University of Southern California <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(08/24 – 05/26)</span></div>
-        <div style={{fontSize: 16, color: '#2c3e50', marginBottom: 12}}>
-          Master of Science in Applied Data Science
+        <div style={subheadingStyle}>University of Southern California <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(Aug 2024 – May 2026)</span></div>
+        <div style={{fontSize: 16, color: '#2c3e50', marginBottom: 4}}>
+          Master of Science, Applied Data Science • GPA: 3.73
         </div>
-        <div style={subheadingStyle}>Manipal University Jaipur, Rajasthan <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(07/20 – 05/24)</span></div>
-        <div style={{fontSize: 16, color: '#2c3e50'}}>
-          Bachelor of Technology in Computer Science and Engineering
+        <ul style={listStyle}>
+          <li>Coursework: Foundations of Data Management, Machine Learning for Data Science, Foundations and Applications of Data Mining</li>
+        </ul>
+        <div style={subheadingStyle}>Manipal University Jaipur, Rajasthan <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(Jul 2020 – May 2024)</span></div>
+        <div style={{fontSize: 16, color: '#2c3e50', marginBottom: 4}}>
+          Bachelor of Technology, Computer Science and Engineering • GPA: 3.85
         </div>
+        <ul style={listStyle}>
+          <li>Coursework: Data Science And Machine Learning, Image Processing And Pattern Analysis, Artificial Intelligence, Regression Analysis And Forecasting</li>
+        </ul>
       </div>
 
       {/* Technical Skills */}
       <div style={sectionStyle}>
         <div style={headingStyle}>Technical Skills</div>
         <ul style={listStyle}>
-          <li><b>Programming Languages:</b> Python, SQL, Java</li>
-          <li><b>ML & GenAI:</b> Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models</li>
+          <li><b>Programming Languages:</b> Python, SQL, Java, C, Scala</li>
+          <li><b>ML & GenAI:</b> Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models, Statistical Modeling, Data Mining</li>
           <li><b>Multimodal & NLP:</b> CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL</li>
           <li><b>ML Engineering:</b> Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization</li>
           <li><b>Tools & APIs:</b> TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint</li>
+          <li><b>Cloud:</b> AWS (Certified Cloud Practitioner)</li>
         </ul>
       </div>
 
       {/* Professional Experience */}
       <div style={sectionStyle}>
         <div style={headingStyle}>Professional Experience</div>
-        <div style={subheadingStyle}>nala, United States | AI/ML Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(05/25 – 08/25)</span></div>
+        <div style={subheadingStyle}>Starcycle, United States | Data Science Co-op <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(Feb 2026 – May 2026)</span></div>
         <ul style={listStyle}>
-          <li>Built RAG system with OpenAI Function Calling + Firebase, delivering actionable pet health analytics for cross-team insights.</li>
-          <li>Developed multimodal AI pipeline with real-time speech transcription, PDF analysis, and intelligent summarization.</li>
-          <li>Created dynamic visualization engine with 12+ chart types and intelligent caching for optimal performance.</li>
+          <li>Prototyping Python tools and ETL pipelines that parse 1K+ inputs and automate entity and tax data enrichment to cut manual ops effort.</li>
+          <li>Generating synthetic and knowledge-graph-backed datasets and building 5+ dashboards that surface platform and funnel bottlenecks.</li>
+          <li>Designing and evaluating 50+ prompts, context strategies, and API/MCP integrations to improve internal AI tool quality and reliability.</li>
         </ul>
-        <div style={subheadingStyle}>Genpact, India | Generative AI Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(04/24 – 06/24)</span></div>
+        <div style={subheadingStyle}>nala, United States | AI/ML Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(May 2025 – Aug 2025)</span></div>
         <ul style={listStyle}>
-          <li>Built AI-powered PO Automation conversational AI to analyze large purchase orders and enable multi-document querying.</li>
-          <li>Designed and optimized prompt sets to test system accuracy, relevance, and robustness in production environments.</li>
-          <li>Contributed to scalable deployment workflows, improving inference performance and reliability for enterprise use.</li>
+          <li>Built RAG system with OpenAI Function Calling + Firebase handling 500+ voice notes, delivering actionable pet health analytics across 3 cross-team dashboards to inform product decisions.</li>
+          <li>Developed a multimodal AI pipeline processing 200+ audio files with real-time speech transcription, PDF analysis, and summarization using TensorFlow and Transformers, reducing manual document review time by 60%.</li>
+          <li>Created a visualization engine in Scala supporting 12+ chart types with Redis caching, cutting data representation render time by 45% and enabling real-time analytics for 100+ daily queries.</li>
         </ul>
-        <div style={subheadingStyle}>National University of Singapore (NUS), Singapore | Deep Learning Research Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(06/22 – 08/22)</span></div>
+        <div style={subheadingStyle}>Genpact, India | Generative AI Engineer Intern <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(Apr 2024 – Jun 2024)</span></div>
         <ul style={listStyle}>
-          <li>Spearheaded privacy-preserving facial analysis research, improving accuracy by 10% while reducing bias.</li>
-          <li>Architected deep learning systems in TensorFlow, reducing inference time by 40% for 3x larger batches.</li>
-          <li>Pioneered with research team and NUS professors on novel CNN architectures for image analysis.</li>
+          <li>Built an AI-powered PO Automation conversational AI to analyze large purchase orders and enable multi-document querying, resulting in streamlined processing and improved data accessibility.</li>
+          <li>Designed and optimized prompt sets with GPT-4 and custom evaluation metrics to test system accuracy, relevance, and robustness in production, resulting in higher query precision and more reliable responses.</li>
+          <li>Contributed to scalable deployment workflows, improving inference performance and reliability for enterprise use, which led to increased system efficiency and reduced downtime.</li>
         </ul>
       </div>
 
       {/* Projects */}
       <div style={sectionStyle}>
         <div style={headingStyle}>Projects</div>
-        <div style={subheadingStyle}>Yelp Recommendation Challenge | Ranked Top 3 out of 120 <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(01/25 – 05/25)</span></div>
+        <div style={subheadingStyle}>MultiLLM | Intelligent Multi-Model AI System | Deployed Website <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(Sep 2025 – Dec 2025)</span></div>
+        <ul style={listStyle}>
+          <li>Built privacy-first AI platform with real-time streaming chat, intelligent task routing across 5+ local Ollama models (Llama 3.2, DeepSeek Coder, Phi3), and dynamic model selection with latency tracking.</li>
+          <li>Engineered multi-format knowledge base supporting 10+ file types with semantic chunking, intelligent context retrieval, and user-controlled streaming responses.</li>
+          <li>Deployed production-ready system with Google OAuth, per-user data isolation, Redis session management, rate limiting (100 req/15min), and GDPR/HIPAA compliance features.</li>
+        </ul>
+        <div style={subheadingStyle}>Yelp Recommendation System <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(Jan 2025 – May 2025)</span></div>
         <ul style={listStyle}>
           <li>Created Spark RDD + XGBoost recommender with 40+ features, applying GLM techniques to rank top 3/120 in accuracy.</li>
           <li>Designed cold start features using check-in counts, photo frequency, tip sentiment, and business category embeddings.</li>
           <li>Tuned model with confidence-weighted biases and transforms, achieving RMSE of 0.9745 (val) and 0.9734 (test).</li>
         </ul>
-        <div style={subheadingStyle}>ChatDB | Database Management and Visualization Tool <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(08/24 – 01/25)</span></div>
+        <div style={subheadingStyle}>ChatDB | Database Management and Visualization Tool <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(Aug 2024 – Jan 2025)</span></div>
         <ul style={listStyle}>
           <li>Integrated LLMs to convert natural language inputs into SQL queries, enhancing user accessibility.</li>
           <li>Supported multiple databases (SQLite, MySQL, PostgreSQL) with a user-friendly connection interface.</li>
           <li>Enabled data visualization using Matplotlib to generate bar, line, and scatter plots from SQL query results.</li>
-        </ul>
-        <div style={subheadingStyle}>Hate Speech and Offensive Language Detection | NLP, Python, Machine Learning <span style={{color:'#7f8c8d', fontStyle: 'italic'}}>(10/23 – 07/24)</span></div>
-        <ul style={listStyle}>
-          <li>Trained BERT-based classifier with NER and TF-IDF, reaching 96% F1-score.</li>
-          <li>Implemented bias-aware NLP pipeline with strong sentiment detection performance.</li>
-          <li>Deployed models optimized for inference efficiency and memory usage.</li>
         </ul>
       </div>
 
       {/* Publications */}
       <div style={sectionStyle}>
         <div style={headingStyle}>Publications</div>
-        <div style={subheadingStyle}>Brain Stroke Detection using M.L. Models | IEEE Xplore, Feb 2023</div>
+        <div style={subheadingStyle}>Brain Stroke Detection using M.L. Models | IEEE Xplore</div>
         <ul style={listStyle}>
           <li>Analyzed 8 ML and DL models with advanced preprocessing techniques for improved feature extraction.</li>
           <li>Improved brain stroke detection accuracy by 15% using ensemble methods and advanced preprocessing.</li>
@@ -1636,8 +1643,9 @@ function Resume() {
       <div style={sectionStyle}>
         <div style={headingStyle}>Achievements</div>
         <ul style={listStyle}>
-          <li>Appointed Teaching Assistant for DSCI 551 (Graduate) & DSCI 351 (Undergrad) - Foundations of Data Management at USC.</li>
-          <li>Recognized as University Champion for excellence in PwC Launchpad Program.</li>
+          <li><b>Origin Weekend: IMPACT S26 – First Place:</b> Won a USC startup launch sprint organised with Google and TIE Hub – USC Viterbi.</li>
+          <li><b>Teaching Assistant, Foundations of Data Management:</b> Appointed Teaching Assistant for DSCI 551 (Graduate course) and DSCI 351 (Undergraduate course).</li>
+          <li><b>Advanced Deep Learning Research, National University of Singapore:</b> Conducted privacy-preserving facial analysis research at National University of Singapore, improving model accuracy by 10% and reducing TensorFlow inference latency by 40% on 3× larger batches.</li>
         </ul>
       </div>
     </div>
