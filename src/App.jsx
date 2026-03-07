@@ -5,21 +5,19 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react
 const HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium";
 const HUGGINGFACE_API_KEY = import.meta.env.VITE_HUGGINGFACE_API_KEY;
 
-const QA_CONTEXT = `Dhyey Desai is an AI/ML Engineer and Data Scientist based in Los Angeles, California. Email: dhyeydes@usc.edu. Education: M.S. in Applied Data Science (USC, 2024–2026), B.Tech in Computer Science (Manipal University Jaipur, 2020–2024). 
+const QA_CONTEXT = `Dhyey Desai is an AI/ML Engineer based in Los Angeles, California. Phone: (213) 608-2504. Email: dhyeydes@usc.edu. Education: M.S. in Applied Data Science (USC, GPA: 3.73, 2024–2026), B.Tech in Computer Science and Engineering (Manipal University Jaipur, GPA: 3.85, 2020–2024). 
 
-Technical Skills: Programming Languages (Python, SQL, Java), ML & GenAI (Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models), Multimodal & NLP (CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL), ML Engineering (Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization), Tools & APIs (TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint).
+Technical Skills: Programming Languages (Python, SQL, Java, C, Scala), ML & GenAI (Recommender Systems, Transformers, CNN/RNN/LSTM, RAG, Generative AI, Foundation Models, Statistical Modeling, Data Mining), Multimodal & NLP (CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL), ML Engineering (Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization), Tools & APIs (TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint), Cloud (AWS - Certified Cloud Practitioner).
 
-Professional Experience: nala (AI/ML Engineer Intern, 05/25 – 08/25) - Built RAG system with OpenAI Function Calling + Firebase for pet health analytics, developed multimodal AI pipeline with real-time speech transcription, created dynamic visualization engine with 12+ chart types. Genpact (Generative AI Engineer Intern, 04/24 – 06/24) - Built AI-powered PO Automation conversational AI, designed prompt sets for system testing, contributed to scalable deployment workflows. National University of Singapore (Deep Learning Research Intern, 06/22 – 08/22) - Spearheaded privacy-preserving facial analysis research improving accuracy by 10%, architected deep learning systems reducing inference time by 40%.
+Professional Experience: Starcycle (Data Science Co-op, 02/26 – 05/26) - Prototyping Python tools and ETL pipelines parsing 1K+ inputs, generating synthetic and knowledge-graph-backed datasets, designing and evaluating 50+ prompts and API/MCP integrations. nala (AI/ML Engineer Intern, 05/25 – 08/25) - Built RAG system with OpenAI Function Calling + Firebase handling 500+ voice notes for pet health analytics across 3 cross-team dashboards, developed multimodal AI pipeline processing 200+ audio files reducing manual review time by 60%, created visualization engine in Scala with 12+ chart types and Redis caching cutting render time by 45%. Genpact (Generative AI Engineer Intern, 04/24 – 06/24) - Built AI-powered PO Automation conversational AI for multi-document querying, designed and optimized prompt sets with GPT-4 and custom evaluation metrics, contributed to scalable deployment workflows.
 
-Key Projects: Yelp Recommendation Challenge (Top 3/120) - Created Spark RDD + XGBoost recommender with 40+ features, achieved RMSE of 0.9734. ChatDB - LLM-powered database management tool converting natural language to SQL, supports multiple databases with data visualization. Hate Speech Detection - BERT-based classifier with 96% F1-score, bias-aware NLP pipeline. Breast Cancer Segmentation - Deep learning models achieving 97.53% accuracy for medical image analysis. Multiple Sclerosis Detection - CNN-based diagnostic tools with 99% diagnostic accuracy. Autism Detection - AI-driven facial analysis research improving model accuracy by 10% and batch inference by 40%.
+Key Projects: MultiLLM (Sep 2025 - Dec 2025) - Privacy-first AI platform with real-time streaming chat, intelligent task classification across 5+ local Ollama models, multi-format knowledge base supporting 10+ file types, Google OAuth authentication, Redis session management, rate limiting, and GDPR/HIPAA compliance. Yelp Recommendation System (Jan 2025 - May 2025) - Spark RDD + XGBoost recommender with 40+ features, ranked top 3/120, RMSE of 0.9745 (val) and 0.9734 (test). ChatDB (Aug 2024 - Jan 2025) - LLM-powered natural language to SQL converter supporting SQLite, MySQL, PostgreSQL with Matplotlib visualization.
 
-Certifications: 18+ professional certifications including AWS Academy ML for NLP & ML Foundations (verified digital badges), Stanford Machine Learning, DeepLearning.AI Supervised ML, Google Cloud Generative AI, IBM Data Visualization with Python, University of Michigan Python courses, Cisco CCNA networking, Oracle Database Foundations, FinTech transformation, organizational behavior. Recent: AWS Generative AI (2024), multiple AI/ML and cloud certifications from top institutions.
+Publications: Brain Stroke Detection using M.L. Models (IEEE Xplore) - Analyzed 8 ML and DL models, improved detection accuracy by 15% using ensemble methods.
 
-Publications: Brain Stroke Detection using M.L. Models (IEEE Xplore, Feb 2023). 
+Achievements: Origin Weekend: IMPACT S26 – First Place (USC startup sprint with Google and TIE Hub – USC Viterbi), Teaching Assistant for DSCI 551 (Graduate) & DSCI 351 (Undergraduate) - Foundations of Data Management at USC, Advanced Deep Learning Research at National University of Singapore - privacy-preserving facial analysis improving accuracy by 10% and reducing TensorFlow inference latency by 40%.
 
-Achievements: Teaching Assistant for DSCI 551 (Graduate) & DSCI 351 (Undergraduate) - Foundations of Data Management at USC, University Champion for PwC Launchpad Program.
-
-About: Passionate about leveraging advanced machine learning and generative AI to solve real-world challenges across healthcare, finance, and multimedia analytics. Currently pursuing MS in Applied Data Science at USC while serving as teaching assistant. Developed AI solutions at nala, Genpact, and NUS. Specializes in bridging technical innovation with practical deployment, building scalable and responsible AI systems.`;
+About: AI/ML Engineer with mid-level experience delivering production-ready RAG and multimodal recommender systems. Currently pursuing MS in Applied Data Science at USC while serving as teaching assistant. Built RAG platform for pet-health analytics at nala, AI assistant automating purchase-order analysis at Genpact, and currently a Data Science Co-op at Starcycle. Skilled in foundation and multimodal models, prompt engineering, and scalable deployment on AWS and Spark. Aims to create secure, high-impact AI solutions that automate workflows and enhance user experience.`;
 
 // Fallback responses for common questions
 const getFallbackResponse = (question) => {
@@ -33,9 +31,11 @@ PRIMARY LANGUAGES:
 • Python - Advanced proficiency for ML/AI development, data analysis, and backend systems
 • SQL - Expert level for database management, queries, and data manipulation  
 • Java - Proficient for enterprise applications and system development
+• C - Systems programming
+• Scala - Data engineering and visualization
 
 EXPERIENCE:
-Python is his primary language for machine learning, data science, and AI projects. SQL for database management and data analysis. Java for enterprise-level applications and system development.`;
+Python is his primary language for machine learning, data science, and AI projects. SQL for database management and data analysis. Java for enterprise-level applications. C for systems programming. Scala for data engineering, used to build a visualization engine at nala.`;
   }
 
   if (q.includes('nala')) {
@@ -44,11 +44,11 @@ Python is his primary language for machine learning, data science, and AI projec
 POSITION: AI/ML Engineer Intern (May 2025 - August 2025)
 
 KEY ACHIEVEMENTS:
-• Built RAG system with OpenAI Function Calling + Firebase, delivering actionable pet health analytics for cross-team insights
-• Developed multimodal AI pipeline with real-time speech transcription, PDF analysis, and intelligent summarization  
-• Created dynamic visualization engine with 12+ chart types and intelligent caching for optimal performance
+• Built RAG system with OpenAI Function Calling + Firebase handling 500+ voice notes, delivering actionable pet health analytics across 3 cross-team dashboards
+• Developed multimodal AI pipeline processing 200+ audio files with real-time speech transcription, PDF analysis, and summarization using TensorFlow and Transformers, reducing manual document review time by 60%
+• Created visualization engine in Scala supporting 12+ chart types with Redis caching, cutting data representation render time by 45% and enabling real-time analytics for 100+ daily queries
 
-IMPACT: Specialized in building real-time AI systems for pet health analytics, combining multiple AI technologies for comprehensive solutions.`;
+IMPACT: Built production-ready AI systems for pet health analytics, combining RAG, multimodal processing, and scalable visualization.`;
   }
 
   if (q.includes('genpact')) {
@@ -67,15 +67,14 @@ IMPACT: Focused on enterprise AI automation, specifically in finance sector with
   if (q.includes('nus') || q.includes('singapore')) {
     return `DHYEY'S WORK AT NUS
 
-POSITION: Deep Learning Research Intern (June 2022 - August 2022)
+CONTEXT: Advanced Deep Learning Research
 LOCATION: National University of Singapore
 
 KEY ACHIEVEMENTS:
-• Spearheaded privacy-preserving facial analysis research, improving accuracy by 10% while reducing bias
-• Architected deep learning systems in TensorFlow, reducing inference time by 40% for 3x larger batches
-• Pioneered with research team and NUS professors on novel CNN architectures for image analysis
+• Conducted privacy-preserving facial analysis research, improving model accuracy by 10%
+• Reduced TensorFlow inference latency by 40% on 3x larger batches
 
-IMPACT: Research-focused role advancing privacy-preserving AI techniques and optimization of deep learning systems for facial analysis applications.`;
+IMPACT: Research-focused work advancing privacy-preserving AI techniques and optimization of deep learning systems for facial analysis applications.`;
   }
 
   if (q.includes('certification') || q.includes('certificate') || q.includes('aws') || q.includes('coursera') || q.includes('stanford') || q.includes('learning')) {
@@ -115,99 +114,107 @@ TOTAL: 18+ verified professional certifications from top institutions including 
     return `DHYEY'S TECHNICAL SKILLS
 
 PROGRAMMING LANGUAGES:
-Python, SQL, Java
+Python, SQL, Java, C, Scala
 
 ML & GENERATIVE AI:
-Recommender Systems, Transformers, CNN/RNN/LSTM, RAG (Retrieval Augmented Generation), Foundation Models, Generative AI
+Recommender Systems, Transformers, CNN/RNN/LSTM, RAG (Retrieval Augmented Generation), Foundation Models, Generative AI, Statistical Modeling, Data Mining
 
 MULTIMODAL & NLP:
-Computer Vision, Natural Language Processing, Named Entity Recognition, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL
+CV, NLP, NER, Sentiment Analysis, Multimodal Pretraining, Text-to-SQL
 
 ML ENGINEERING:
 Model Deployment, Spark RDD, Hadoop, ETL, Quantization, Optimization
 
 TOOLS & APIs:
-TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint`;
+TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau, Microsoft Excel, PowerPoint
+
+CLOUD:
+AWS (Certified Cloud Practitioner)`;
   }
   
   if (q.includes('project') || q.includes('yelp') || q.includes('chatdb') || q.includes('hate speech')) {
     return `DHYEY'S KEY PROJECTS
 
-YELP RECOMMENDATION CHALLENGE (Top 3/120)
-January 2025 - May 2025: Built hybrid Spark RDD + XGBoost recommender system, Engineered 40+ features from user, business, behavioral data, Achieved RMSE of 0.9734 on test set
+MULTILLM - Intelligent Multi-Model AI System (Deployed)
+Sep 2025 - Dec 2025: Privacy-first AI platform with real-time streaming chat, intelligent task classification across 5+ local Ollama models (Llama 3.2, DeepSeek Coder, Phi3), multi-format knowledge base supporting 10+ file types with semantic chunking, Google OAuth + email/password auth, Redis session management, rate limiting, and GDPR/HIPAA compliance features
 
-CHATDB - Database Management Tool
-August 2024 - January 2025: LLM-powered natural language to SQL converter, Supports SQLite, MySQL, PostgreSQL databases, Integrated data visualization with multiple chart types
+YELP RECOMMENDATION SYSTEM (Top 3/120)
+Jan 2025 - May 2025: Spark RDD + XGBoost recommender with 40+ features, cold start features using check-in counts, photo frequency, tip sentiment, and business category embeddings, RMSE of 0.9745 (val) and 0.9734 (test)
 
-HATE SPEECH DETECTION SYSTEM
-October 2023 - July 2024: BERT-based classifier with NER and TF-IDF, Achieved 96% F1-score performance, Implemented bias-aware NLP pipeline
+CHATDB - Database Management & Visualization Tool
+Aug 2024 - Jan 2025: LLM-powered natural language to SQL converter, supports SQLite, MySQL, PostgreSQL, data visualization with Matplotlib bar, line, and scatter plots
 
 BRAIN STROKE DETECTION (IEEE Published)
-February 2023: Analyzed 8 ML/DL models with advanced preprocessing, Improved detection accuracy by 15% using ensembles, Published in IEEE Xplore`;
+Analyzed 8 ML/DL models with advanced preprocessing, improved detection accuracy by 15% using ensemble methods`;
   }
   
   if (q.includes('education') || q.includes('degree') || q.includes('study') || q.includes('university')) {
     return `DHYEY'S EDUCATION
 
 CURRENT:
-Master of Science in Applied Data Science, University of Southern California (USC), August 2024 - May 2026
+Master of Science in Applied Data Science, University of Southern California (USC), GPA: 3.73, August 2024 - May 2026
+Coursework: Foundations of Data Management, Machine Learning for Data Science, Foundations and Applications of Data Mining
 
 COMPLETED:
-Bachelor of Technology in Computer Science & Engineering, Manipal University Jaipur, Rajasthan, July 2020 - May 2024
+Bachelor of Technology in Computer Science & Engineering, Manipal University Jaipur, Rajasthan, GPA: 3.85, July 2020 - May 2024
+Coursework: Data Science And Machine Learning, Image Processing And Pattern Analysis, Artificial Intelligence, Regression Analysis And Forecasting
 
 ACADEMIC ACHIEVEMENTS:
-Teaching Assistant for Graduate & Undergraduate courses, Strong foundation in ML, Data Science, and Software Engineering`;
+Teaching Assistant for Graduate & Undergraduate courses at USC`;
   }
   
   if (q.includes('skill') || q.includes('technology') || q.includes('programming')) {
     return `DHYEY'S TECHNICAL SKILLS
 
 ML & GENERATIVE AI:
-Recommender Systems, Transformers, CNN/RNN/LSTM, RAG (Retrieval Augmented Generation), Foundation Models, Generative AI, Neural Networks
+Recommender Systems, Transformers, CNN/RNN/LSTM, RAG (Retrieval Augmented Generation), Foundation Models, Generative AI, Statistical Modeling, Data Mining
 
 MULTIMODAL & NLP:
-Computer Vision, Natural Language Processing, Named Entity Recognition, Sentiment Analysis, Text-to-SQL, Multimodal Pretraining
+CV, NLP, NER, Sentiment Analysis, Text-to-SQL, Multimodal Pretraining
 
 ML ENGINEERING:
 Model Deployment, Quantization, Optimization, Spark RDD, Hadoop, ETL Pipelines
 
 TOOLS & PLATFORMS:
-PyTorch, TensorFlow, Scikit-Learn, OpenAI API, Gemini API, Databricks, SQL, MongoDB, Git, Docker`;
+TensorFlow, OpenAI/Gemini API, SQL, MongoDB, Databricks, Git, Tableau
+
+CLOUD:
+AWS (Certified Cloud Practitioner)`;
   }
   
   if (q.includes('experience') || q.includes('work') || q.includes('job') || q.includes('intern')) {
     return `DHYEY'S PROFESSIONAL EXPERIENCE
 
+STARCYCLE (Data Science Co-op)
+Feb 2026 - May 2026: Prototyping Python tools and ETL pipelines parsing 1K+ inputs, generating synthetic and knowledge-graph-backed datasets with 5+ dashboards, designing and evaluating 50+ prompts, context strategies, and API/MCP integrations
+
 NALA (AI/ML Engineer Intern)
-May 2025 - July 2025: Developing intelligent RAG systems with OpenAI Function Calling, Building multimodal AI pipelines with real-time transcription, Creating dynamic visualization engines with 12+ chart types
+May 2025 - Aug 2025: Built RAG system with OpenAI Function Calling + Firebase handling 500+ voice notes, developed multimodal AI pipeline reducing manual review time by 60%, created Scala visualization engine with Redis caching cutting render time by 45%
 
-GENPACT (Generative AI Intern)
-April 2024 - June 2024: Built privacy-safe GenAI models for finance sector, Improved ML pipeline efficiency by 20%, Designed bias evaluation metrics
-
-NATIONAL UNIVERSITY OF SINGAPORE (Research Intern)
-June 2022 - August 2022: Spearheaded privacy-preserving facial analysis research, Improved model accuracy by 10% while reducing bias, Reduced inference time by 40% for larger batches`;
+GENPACT (Generative AI Engineer Intern)
+Apr 2024 - Jun 2024: Built AI-powered PO Automation conversational AI, designed prompt sets with GPT-4 and custom evaluation metrics, contributed to scalable enterprise deployment workflows`;
   }
   
   if (q.includes('summary') || q.includes('resume') || q.includes('overview') || (q.includes('tell me about') && !q.includes('project') && !q.includes('education') && !q.includes('skill') && !q.includes('experience'))) {
     return `DHYEY DESAI - RESUME SUMMARY
 
 EDUCATION:
-MS in Applied Data Science (USC, 2024-2026), BTech Computer Science (Manipal University, 2020-2024)
+MS in Applied Data Science (USC, GPA: 3.73, 2024-2026), BTech Computer Science (Manipal University, GPA: 3.85, 2020-2024)
 
 EXPERIENCE:
-AI/ML Engineer Intern at nala (2025), GenAI Intern at Genpact (2024), Research Intern at NUS (2022)
+Data Science Co-op at Starcycle (2026), AI/ML Engineer Intern at nala (2025), GenAI Intern at Genpact (2024)
 
 TECHNICAL SKILLS:
-ML & GenAI (Transformers, RAG, Foundation Models), Languages (Python, R, SQL, JavaScript), Tools (PyTorch, TensorFlow, Spark, MongoDB)
+ML & GenAI (Transformers, RAG, Foundation Models, Statistical Modeling), Languages (Python, SQL, Java, C, Scala), Cloud (AWS Certified Cloud Practitioner)
 
 KEY PROJECTS:
-Yelp Recommendation Challenge (Top 3/120), ChatDB - Natural Language to SQL Tool, Hate Speech Detection (96% F1-score)
+MultiLLM (Privacy-first Multi-Model AI Platform), Yelp Recommendation System (Top 3/120), ChatDB - Natural Language to SQL Tool
 
 PUBLICATIONS:
-Brain Stroke Detection (IEEE Xplore, 2023)
+Brain Stroke Detection (IEEE Xplore)
 
 ACHIEVEMENTS:
-USC Teaching Assistant, PwC Launchpad Champion, Top 3 Recommender Competition`;
+Origin Weekend: IMPACT S26 - First Place, USC Teaching Assistant, NUS Deep Learning Research`;
   }
   
   if (q.includes('contact') || q.includes('email') || q.includes('reach')) {
@@ -227,32 +234,32 @@ Currently pursuing MS at USC, Open to AI/ML opportunities, Available for collabo
     return `ABOUT DHYEY DESAI
 
 OVERVIEW:
-Data Scientist and ML Engineer from Los Angeles, Currently pursuing MS in Applied Data Science at USC, Hands-on experience in AI/ML at leading companies
+AI/ML Engineer based in Los Angeles, Currently pursuing MS in Applied Data Science at USC (GPA: 3.73), Mid-level experience delivering production-ready RAG and multimodal recommender systems
 
 PROFESSIONAL BACKGROUND:
-AI/ML Engineer Intern at nala, Generative AI Intern at Genpact, Deep Learning Research Intern at NUS
+Data Science Co-op at Starcycle, AI/ML Engineer Intern at nala, Generative AI Engineer Intern at Genpact
 
 EXPERTISE:
-Transformers and Foundation Models, Natural Language Processing, Computer Vision, Recommender Systems, Machine Learning Engineering
+Foundation and Multimodal Models, RAG Systems, Prompt Engineering, Scalable Deployment on AWS and Spark, Recommender Systems
 
 RECOGNITION:
-USC Teaching Assistant, Top 3 in competitive ML challenges, IEEE published researcher, PwC Launchpad Champion`;
+Origin Weekend: IMPACT S26 - First Place (USC/Google/TIE Hub), USC Teaching Assistant, IEEE Published Researcher, AWS Certified Cloud Practitioner`;
   }
   
   if (q.includes('achievement') || q.includes('award') || q.includes('recognition')) {
     return `DHYEY'S ACHIEVEMENTS & RECOGNITION
 
+COMPETITION SUCCESS:
+Origin Weekend: IMPACT S26 - First Place, Won USC startup launch sprint organized with Google and TIE Hub - USC Viterbi
+
 ACADEMIC EXCELLENCE:
 Teaching Assistant for DSCI 551 (Graduate Level), Teaching Assistant for DSCI 351 (Undergraduate Level), Foundations of Data Management at USC
 
-COMPETITION SUCCESS:
-Top 3 out of 120 students in USC Yelp Recommendation Challenge, Demonstrated accuracy and efficiency in ML competitions, University-scale recommender system competition
+RESEARCH:
+Advanced Deep Learning Research at National University of Singapore, Privacy-preserving facial analysis improving model accuracy by 10%, Reduced TensorFlow inference latency by 40% on 3x larger batches
 
-INDUSTRY RECOGNITION:
-University Champion for PwC Launchpad Program, Excellence in professional development program
-
-RESEARCH CONTRIBUTIONS:
-Published research in IEEE Xplore, Brain Stroke Detection using Machine Learning Models, Contributing to academic knowledge in healthcare AI`;
+PUBLICATIONS:
+Brain Stroke Detection using M.L. Models (IEEE Xplore), Improved detection accuracy by 15% using ensemble methods`;
   }
   
   return "I can help you learn about Dhyey's background! Try asking: 'What programming languages does he know?', 'Give me a summary of his resume', 'What are his technical skills?', 'Tell me about his projects', or 'What's his experience?'";
@@ -497,7 +504,7 @@ function About() {
           marginBottom: 25,
           opacity: 0.95
         }}>
-          Data Scientist & Machine Learning Engineer
+          AI/ML Engineer
         </p>
         <p style={{
           fontSize: 16,
@@ -506,7 +513,7 @@ function About() {
           margin: '0 auto',
           opacity: 0.9
         }}>
-          Passionate about applying AI and machine learning to solve complex real-world problems. 
+          Building production-ready RAG and multimodal AI systems. 
           Currently pursuing MS in Applied Data Science at USC.
         </p>
       </div>
@@ -526,9 +533,10 @@ function About() {
           {[
             { icon: '', label: 'Birthday', value: '6th December 2002' },
             { icon: '', label: 'Location', value: 'Los Angeles, California' },
+            { icon: '', label: 'Phone', value: '(213) 608-2504' },
             { icon: '', label: 'Email', value: 'dhyeydes@usc.edu' },
-            { icon: '', label: 'Degree', value: 'MS Applied Data Science, USC' },
-            { icon: '', label: 'Age', value: '22 years old' }
+            { icon: '', label: 'Degree', value: 'MS Applied Data Science, USC (GPA: 3.73)' },
+            { icon: '', label: 'Age', value: '23 years old' }
           ].map((item, index) => (
             <div key={index} style={{
               background: 'linear-gradient(135deg, #f6f9fc, #ffffff)',
@@ -571,7 +579,7 @@ function About() {
             textAlign: 'justify',
             marginBottom: 20
           }}>
-            I am a Data Scientist and AI/ML Engineer passionate about leveraging advanced machine learning and generative AI to solve real-world challenges across healthcare, finance, and multimedia analytics. Currently, I'm pursuing my MS in Applied Data Science at USC, where I also serve as a teaching assistant for graduate and undergraduate data management courses.
+            I am an AI/ML Engineer with mid-level experience delivering production-ready retrieval-augmented generation and multimodal recommender systems. Currently, I'm pursuing my MS in Applied Data Science at USC (GPA: 3.73), where I also serve as a teaching assistant for graduate and undergraduate data management courses.
           </p>
           <p style={{
             fontSize: 16, 
@@ -580,7 +588,7 @@ function About() {
             textAlign: 'justify',
             marginBottom: 20
           }}>
-            Professionally, I have developed and deployed AI solutions at leading organizations such as nala, Genpact, and the National University of Singapore. My experience at nala involved building real-time retrieval-augmented generation (RAG) systems and multimodal AI pipelines for actionable analytics. At Genpact, I drove Generative AI projects in finance, optimizing AI-powered automation workflows and inference performance. During my research internship at NUS, I spearheaded privacy-preserving facial analysis, improving model accuracy and efficiency.
+            Professionally, I am currently a Data Science Co-op at Starcycle, prototyping Python tools and ETL pipelines, building dashboards, and designing prompt and API/MCP integrations for internal AI tools. Previously at nala, I built a RAG platform for pet-health analytics using OpenAI Function Calling and Firebase, handling 500+ voice notes and delivering insights across 3 cross-team dashboards. I also developed a multimodal AI pipeline processing 200+ audio files, reducing manual review time by 60%, and created a visualization engine in Scala with 12+ chart types cutting render time by 45%. At Genpact, I built an AI-powered conversational AI for purchase-order automation, designed prompt sets with GPT-4, and contributed to scalable enterprise deployment workflows.
           </p>
           <p style={{
             fontSize: 16, 
@@ -589,7 +597,7 @@ function About() {
             textAlign: 'justify',
             marginBottom: 20
           }}>
-            My technical skill set includes Python, SQL, Java, machine learning engineering, natural language processing (NLP), computer vision, model deployment, and modern ML frameworks like TensorFlow and PyTorch. I excel in bridging technical innovation with practical deployment—developing solutions such as:
+            My technical skill set spans Python, SQL, Java, C, and Scala, along with expertise in foundation and multimodal models, prompt engineering, and scalable deployment on AWS and Spark. Key projects include:
           </p>
           <ul style={{
             fontSize: 16, 
@@ -598,10 +606,9 @@ function About() {
             marginBottom: 20,
             paddingLeft: 25
           }}>
-            <li style={{ marginBottom: 12 }}>A top-ranked recommender system using Spark RDD + XGBoost for the Yelp Recommendation Challenge.</li>
-            <li style={{ marginBottom: 12 }}>An intelligent, user-friendly database management tool (ChatDB) translating natural language to SQL queries.</li>
-            <li style={{ marginBottom: 12 }}>Advanced deep learning pipelines for hate speech detection (96% F1-score), early breast cancer diagnosis (97.53% accuracy), and multiple sclerosis detection (99% diagnostic accuracy).</li>
-            <li style={{ marginBottom: 12 }}>Research on privacy-preserving and bias-resistant facial analysis methods in partnership with NUS researchers.</li>
+            <li style={{ marginBottom: 12 }}>MultiLLM — a privacy-first AI platform with real-time streaming chat, intelligent task classification across 5+ local Ollama models, multi-format knowledge base supporting 10+ file types, and enterprise-grade security with Google OAuth, Redis session management, and GDPR/HIPAA compliance.</li>
+            <li style={{ marginBottom: 12 }}>A top-ranked recommender system (Top 3/120) using Spark RDD + XGBoost with 40+ features for the Yelp Recommendation Challenge, achieving RMSE of 0.9734.</li>
+            <li style={{ marginBottom: 12 }}>ChatDB — an LLM-powered database management tool converting natural language to SQL queries, supporting multiple databases with Matplotlib visualization.</li>
           </ul>
           <p style={{
             fontSize: 16, 
@@ -610,7 +617,7 @@ function About() {
             textAlign: 'justify',
             marginBottom: 0
           }}>
-            I am recognized for my strong interdisciplinary approach, research-minded problem solving, and a commitment to building scalable and responsible AI systems. My goal is to continue developing impactful AI solutions and collaborate on projects that shape a data-driven, ethical future.
+            I am an AWS Certified Cloud Practitioner and IEEE-published researcher (Brain Stroke Detection using ML Models). I won First Place at Origin Weekend: IMPACT S26, a USC startup sprint organized with Google and TIE Hub. I am skilled in bridging technical innovation with practical deployment, aiming to create secure, high-impact AI solutions that automate workflows and enhance user experience.
           </p>
         </div>
       </div>
@@ -673,7 +680,9 @@ function Skills() {
       skills: [
         { name: 'Python', color: '#3776ab' },
         { name: 'SQL', color: '#f29111' },
-        { name: 'Java', color: '#f89820' }
+        { name: 'Java', color: '#f89820' },
+        { name: 'C', color: '#555555' },
+        { name: 'Scala', color: '#dc322f' }
       ]
     },
     {
@@ -686,7 +695,9 @@ function Skills() {
         { name: 'CNN/RNN/LSTM', color: '#f7931e' },
         { name: 'RAG', color: '#412991' },
         { name: 'Generative AI', color: '#ffd21e' },
-        { name: 'Foundation Models', color: '#8e44ad' }
+        { name: 'Foundation Models', color: '#8e44ad' },
+        { name: 'Statistical Modeling', color: '#2ecc71' },
+        { name: 'Data Mining', color: '#e74c3c' }
       ]
     },
     {
@@ -694,7 +705,7 @@ function Skills() {
       icon: '',
       color: 'linear-gradient(135deg, #4facfe, #00f2fe)',
       skills: [
-        { name: 'Computer Vision', color: '#150458' },
+        { name: 'CV', color: '#150458' },
         { name: 'NLP', color: '#013243' },
         { name: 'NER', color: '#11557c' },
         { name: 'Sentiment Analysis', color: '#4c72b0' },
@@ -722,12 +733,21 @@ function Skills() {
       skills: [
         { name: 'TensorFlow', color: '#ff6f00' },
         { name: 'OpenAI/Gemini API', color: '#412991' },
+        { name: 'SQL', color: '#f29111' },
         { name: 'MongoDB', color: '#47a248' },
         { name: 'Databricks', color: '#ff3621' },
         { name: 'Git', color: '#f05032' },
         { name: 'Tableau', color: '#e97627' },
         { name: 'Microsoft Excel', color: '#217346' },
         { name: 'PowerPoint', color: '#d24726' }
+      ]
+    },
+    {
+      title: 'Cloud',
+      icon: '',
+      color: 'linear-gradient(135deg, #ff9a9e, #fecfef)',
+      skills: [
+        { name: 'AWS (Certified Cloud Practitioner)', color: '#ff9900' }
       ]
     }
   ];
@@ -848,6 +868,18 @@ function Projects() {
   };
 
   const projects = [
+    {
+      title: 'MultiLLM',
+      badge: { text: 'Deployed Website', color: '#8e44ad' },
+      description: 'Built privacy-first AI platform with real-time streaming chat interface, intelligent task classification routing across 5+ local Ollama models (Llama 3.2, DeepSeek Coder, Phi3), dynamic model selection with latency tracking, and extensible architecture for future cloud LLM integration (GPT-4, Claude, Gemini). Engineered multi-format knowledge base system supporting 10+ file types (PDF, DOCX, Jupyter notebooks, Python/JS/TS/Java/Go/Rust/C++/C#/Ruby/PHP) with semantic chunking, intelligent context retrieval, automatic relevance scoring, and user-controlled streaming responses with stop/reset capabilities. Deployed production-ready system with Google OAuth + email/password authentication, per-user data isolation with automatic cleanup, Redis session management with bcrypt hashing, rate limiting (100 req/15min), helmet security headers, CORS policies, and GDPR/HIPAA compliance features for enterprise deployment.',
+      role: 'Full-stack AI engineer, system architect',
+      challenge: 'Building a privacy-first multi-model AI system with enterprise-grade security and multi-format knowledge retrieval',
+      outcome: 'Production-deployed platform with 5+ model routing, 10+ file type support, and enterprise security compliance',
+      tech: ['Ollama', 'Llama 3.2', 'DeepSeek', 'Redis', 'Google OAuth', 'Node.js', 'Python', 'Semantic Chunking'],
+      gradient: 'linear-gradient(135deg, #667eea, #764ba2)',
+      icon: '',
+      website: 'https://multillm.app'
+    },
     {
       title: 'Yelp Recommendation Challenge',
       badge: { text: 'Top 3/120 Students', color: '#27ae60' },
@@ -985,6 +1017,24 @@ function Projects() {
                    onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
                    onMouseOut={(e) => e.target.style.transform = 'scale(1)'}>
                   GitHub
+                </a>
+              )}
+              {project.website && (
+                <a href={project.website} target="_blank" rel="noopener noreferrer" 
+                   style={{
+                     marginLeft: 8,
+                     padding: '6px 12px',
+                     background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                     color: '#fff',
+                     borderRadius: 12,
+                     textDecoration: 'none',
+                     fontSize: 12,
+                     fontWeight: 600,
+                     transition: 'all 0.3s ease'
+                   }}
+                   onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                   onMouseOut={(e) => e.target.style.transform = 'scale(1)'}>
+                  Live Demo
                 </a>
               )}
             </div>
@@ -1133,6 +1183,17 @@ function Certifications() {
   };
 
   const certifications = {
+    2025: [
+      {
+        title: 'AWS Certified Cloud Practitioner',
+        institution: 'Amazon Web Services Training and Certification',
+        date: 'November 21, 2025',
+        expires: 'November 21, 2028',
+        hasVerification: true,
+        badge: 'Certification – Foundational',
+        color: '#ff9900'
+      }
+    ],
     2024: [
       {
         title: 'Introducing Generative AI with AWS',
