@@ -6,11 +6,15 @@ import { glassCard, gradientText } from '../styles/theme';
 import FloatingLabelInput from '../components/ui/FloatingLabelInput';
 import ScrollReveal from '../components/ui/ScrollReveal';
 
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
+
 export default function ContactSection() {
   const { theme } = useTheme();
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
 
   const validate = () => {
     const errs = {};
@@ -21,7 +25,7 @@ export default function ContactSection() {
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -29,11 +33,36 @@ export default function ContactSection() {
       return;
     }
     setErrors({});
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setForm({ name: '', email: '', message: '' });
-    }, 3000);
+    setSending(true);
+    setSendError('');
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          subject: `Portfolio Contact from ${form.name}`,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setTimeout(() => {
+          setSubmitted(false);
+          setForm({ name: '', email: '', message: '' });
+        }, 4000);
+      } else {
+        setSendError('Something went wrong. Please try again.');
+      }
+    } catch {
+      setSendError('Network error. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -180,10 +209,16 @@ export default function ContactSection() {
                 onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                 error={errors.message}
               />
+              {sendError && (
+                <p style={{ color: '#e74c3c', fontSize: '0.85rem', marginBottom: 16, textAlign: 'center' }}>
+                  {sendError}
+                </p>
+              )}
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                disabled={sending}
+                whileHover={sending ? {} : { scale: 1.02 }}
+                whileTap={sending ? {} : { scale: 0.98 }}
                 style={{
                   width: '100%',
                   padding: '14px 32px',
@@ -193,11 +228,12 @@ export default function ContactSection() {
                   fontWeight: 600,
                   fontSize: '1rem',
                   border: 'none',
-                  cursor: 'pointer',
+                  cursor: sending ? 'not-allowed' : 'pointer',
                   boxShadow: theme.accent.glow,
+                  opacity: sending ? 0.7 : 1,
                 }}
               >
-                Send Message
+                {sending ? 'Sending...' : 'Send Message'}
               </motion.button>
             </form>
           )}
