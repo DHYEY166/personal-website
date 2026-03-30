@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import TopNavigation from './components/layout/TopNavigation';
@@ -13,26 +12,23 @@ import ParticleBackground from './components/ui/ParticleBackground';
 
 function AppContent() {
   const location = useLocation();
-  const [splashDone, setSplashDone] = useState(false);
 
   return (
     <>
-      <SplashScreen onComplete={() => setSplashDone(true)} />
-      {splashDone && (
-        <div style={{ minHeight: '100vh', position: 'relative' }}>
-          <CustomCursor />
-          <ParticleBackground />
-          <ScrollProgressBar />
-          <TopNavigation />
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
-              <Route path="/chatbot" element={<PageTransition><ChatbotPage /></PageTransition>} />
-            </Routes>
-          </AnimatePresence>
-          <ScrollToTop />
-        </div>
-      )}
+      <SplashScreen />
+      <div style={{ minHeight: '100vh', position: 'relative' }}>
+        <CustomCursor />
+        <ParticleBackground />
+        <ScrollProgressBar />
+        <TopNavigation />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+            <Route path="/chatbot" element={<PageTransition><ChatbotPage /></PageTransition>} />
+          </Routes>
+        </AnimatePresence>
+        <ScrollToTop />
+      </div>
     </>
   );
 }

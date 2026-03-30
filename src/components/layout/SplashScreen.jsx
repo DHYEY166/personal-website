@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
-export default function SplashScreen({ onComplete }) {
+export default function SplashScreen() {
   const { theme } = useTheme();
   const [show, setShow] = useState(() => {
     try {
@@ -13,17 +13,13 @@ export default function SplashScreen({ onComplete }) {
   });
 
   useEffect(() => {
-    if (!show) {
-      onComplete?.();
-      return;
-    }
+    if (!show) return;
     const timer = setTimeout(() => {
       setShow(false);
       try { sessionStorage.setItem('splash-shown', '1'); } catch {}
-      onComplete?.();
     }, 2000);
     return () => clearTimeout(timer);
-  }, [show, onComplete]);
+  }, [show]);
 
   return (
     <AnimatePresence>
