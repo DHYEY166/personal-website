@@ -50,6 +50,9 @@ cp .env.example .env
 # Start development server
 npm run dev
 
+# To test the AI chat locally (needs `/api/hf-chat` serverless route):
+# npx vercel dev
+
 # Build for production
 npm run build
 ```
@@ -66,6 +69,12 @@ VITE_HUGGINGFACE_API_KEY=your_huggingface_token_here
 
 # Optional prompt format: phi3 (default) or plain for some instruct models
 # VITE_HUGGINGFACE_PROMPT_STYLE=plain
+
+# Recommended on Vercel (serverless proxy — avoids browser CORS on HF API):
+# HUGGINGFACE_API_KEY=same_token_as_above
+# HUGGINGFACE_MODEL_ID=microsoft/Phi-3-mini-4k-instruct
+# The chat UI calls /api/hf-chat; the server uses this key. VITE_HUGGINGFACE_API_KEY alone
+# still works if exposed to Serverless Functions (set in Vercel dashboard).
 
 # Contact form (Web3Forms)
 # VITE_WEB3FORMS_KEY=your_web3forms_access_key

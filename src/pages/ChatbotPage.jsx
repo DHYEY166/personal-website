@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  buildHuggingFaceInputs,
-  HUGGINGFACE_API_URL,
-  HUGGINGFACE_API_KEY,
-  getFallbackResponse,
-} from '../data/qaContext';
+import { buildHuggingFaceInputs, getFallbackResponse } from '../data/qaContext';
+
+/** Same-origin proxy on Vercel (`/api/hf-chat`) — HF Inference API blocks browser CORS */
+const HF_CHAT_PATH = '/api/hf-chat';
 import { useTheme } from '../context/ThemeContext';
 
 const quickQuestions = [
@@ -38,24 +36,10 @@ export default function ChatbotPage() {
     setLoading(true);
 
     try {
-      if (!HUGGINGFACE_API_KEY) {
-        setMessages((msgs) => [
-          ...msgs,
-          {
-            from: 'bot',
-            text: getFallbackResponse(userInput),
-          },
-        ]);
-        return;
-      }
-
       const inputs = buildHuggingFaceInputs(userInput);
-      const res = await fetch(HUGGINGFACE_API_URL, {
+      const res = await fetch(HF_CHAT_PATH, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${HUGGINGFACE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           inputs,
           parameters: {
