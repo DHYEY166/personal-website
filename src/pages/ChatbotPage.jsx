@@ -56,9 +56,16 @@ export default function ChatbotPage() {
         const errBody = await res.text();
         let detail = '';
         try {
-          detail = JSON.parse(errBody)?.error || errBody?.slice(0, 200);
+          const j = JSON.parse(errBody);
+          const rawErr = j?.error ?? j?.message;
+          detail =
+            typeof rawErr === 'string'
+              ? rawErr
+              : rawErr != null
+                ? JSON.stringify(rawErr)
+                : errBody?.slice(0, 400);
         } catch {
-          detail = errBody?.slice(0, 200);
+          detail = errBody?.slice(0, 400);
         }
         throw new Error(`API ${res.status}${detail ? `: ${detail}` : ''}`);
       }

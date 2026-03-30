@@ -3,7 +3,7 @@
  * Uses Inference Providers router (legacy api-inference.huggingface.co returns 410).
  * Set HUGGINGFACE_API_KEY in Vercel (fine-grained token: "Make calls to Inference Providers").
  */
-const ROUTER_CHAT_URL = 'https://router.huggingface.co/v1/chat/completions';
+const ROUTER_BASE = 'https://router.huggingface.co/v1';
 
 /** Phi-3 template from qaContext → OpenAI-style messages (avoids double chat templating). */
 function buildChatMessages(inputs) {
@@ -17,6 +17,64 @@ function buildChatMessages(inputs) {
     ];
   }
   return [{ role: 'user', content: text.trim() }];
+}
+
+function flattenHfError(parsed) {
+  const e = parsed?.error;
+  if (typeof e === 'string') return e;
+  if (e && typeof e === 'object') {
+    if (typeof e.message === 'string') return e.message;
+    if (typeof e.msg === 'string') return e.msg;
+  }
+  if (typeof parsed?.message === 'string') return parsed.message;
+  try {
+    return JSON.stringify(parsed ?? {});
+  } catch {
+    return 'Request failed';
+  }
+}
+
+function extractChatText(parsed) {
+  const content = parsed?.choices?.[0]?.message?.content;
+  return typeof content === 'string' ? content.trim() : '';
+}
+
+function extractResponsesText(parsed) {
+  if (typeof parsed?.output_text === 'string') {
+    return parsed.output_text.trim();
+  }
+  const out = parsed?.output;
+  if (!Array.isArray(out)) return '';
+  for (const item of out) {
+    if (item?.type === 'message' && Array.isArray(item.content)) {
+      for (const part of item.content) {
+        const t = part?.text;
+        if (typeof t === 'string') {
+          return t.trim();
+        }
+      }
+    }
+  }
+  return '';
+}
+
+async function routerPost(path, token, body) {
+  const hfRes = await fetch(`${ROUTER_BASE}/${path}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  const raw = await hfRes.text();
+  let parsed = null;
+  try {
+    parsed = raw ? JSON.parse(raw) : null;
+  } catch {
+    parsed = null;
+  }
+  return { hfRes, raw, parsed };
 }
 
 export default async function handler(req, res) {
@@ -78,53 +136,73 @@ export default async function handler(req, res) {
     typeof p.temperature === 'number' ? p.temperature : 0.35;
   const topP = typeof p.top_p === 'number' ? p.top_p : 0.9;
 
-  const payload = {
-    model: modelId,
-    messages: buildChatMessages(inputs),
-    max_tokens: maxTokens,
+  const sampling = {
+    max_output_tokens: maxTokens,
     temperature,
     top_p: topP,
   };
 
   try {
-    const hfRes = await fetch(ROUTER_CHAT_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    // 1) Responses API: single string `input` matches legacy text-generation prompts (Phi-3 tags, etc.)
+    let { hfRes, raw, parsed } = await routerPost(
+      'responses',
+      token,
+      {
+        model: modelId,
+        input: inputs,
+        ...sampling,
       },
-      body: JSON.stringify(payload),
-    });
+    );
 
-    const raw = await hfRes.text();
-    let parsed;
-    try {
-      parsed = raw ? JSON.parse(raw) : null;
-    } catch {
-      res.status(hfRes.ok ? 500 : hfRes.status).send(raw);
-      return;
+    let textOut = hfRes.ok ? extractResponsesText(parsed) : '';
+
+    if ((!hfRes.ok || !textOut) && hfRes.status === 400) {
+      const minimal = await routerPost('responses', token, {
+        model: modelId,
+        input: inputs,
+      });
+      if (minimal.hfRes.ok && extractResponsesText(minimal.parsed)) {
+        hfRes = minimal.hfRes;
+        parsed = minimal.parsed;
+        raw = minimal.raw;
+        textOut = extractResponsesText(minimal.parsed);
+      } else if (!minimal.hfRes.ok) {
+        hfRes = minimal.hfRes;
+        parsed = minimal.parsed;
+        raw = minimal.raw;
+      }
     }
 
-    if (!hfRes.ok) {
-      const msg =
-        typeof parsed?.error === 'string'
-          ? parsed.error
-          : parsed?.error?.message || parsed?.message;
-      res.status(hfRes.status).json(
-        msg ? { error: msg, ...parsed } : parsed || { error: raw.slice(0, 500) },
-      );
-      return;
-    }
+    // 2) Chat completions (OpenAI-style messages)
+    if (!hfRes.ok || !textOut) {
+      const chat = await routerPost('chat/completions', token, {
+        model: modelId,
+        messages: buildChatMessages(inputs),
+        max_tokens: maxTokens,
+        temperature,
+        top_p: topP,
+      });
 
-    const content = parsed?.choices?.[0]?.message?.content;
-    const textOut = typeof content === 'string' ? content.trim() : '';
+      if (chat.hfRes.ok) {
+        textOut = extractChatText(chat.parsed);
+      }
 
-    if (textOut) {
+      if (!textOut) {
+        const errMsg =
+          flattenHfError(chat.parsed) ||
+          flattenHfError(parsed) ||
+          (chat.raw || raw || '').slice(0, 800);
+        res
+          .status(chat.hfRes.ok ? 502 : chat.hfRes.status)
+          .json({ error: errMsg });
+        return;
+      }
+
       res.status(200).json([{ generated_text: textOut }]);
       return;
     }
 
-    res.status(200).json(parsed);
+    res.status(200).json([{ generated_text: textOut }]);
   } catch (e) {
     res.status(502).json({
       error: e instanceof Error ? e.message : 'Proxy request failed',
