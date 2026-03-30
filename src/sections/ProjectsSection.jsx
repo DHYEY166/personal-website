@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { projects, projectCategories } from '../data/projectsData';
 import { glassCard, gradientText } from '../styles/theme';
@@ -50,21 +50,23 @@ export default function ProjectsSection() {
 
       <FilterBar categories={categories} active={activeFilter} onChange={setActiveFilter} />
 
-      <div
+      <motion.div
+        layout
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
           gap: 24,
         }}
       >
+        <AnimatePresence mode="popLayout">
         {filtered.map((project, i) => (
           <motion.div
             key={project.id}
             layout
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, delay: i * 0.08 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3, delay: i * 0.03 }}
             whileHover={{
               y: -8,
               boxShadow: theme.glass.shadowHover,
@@ -152,7 +154,8 @@ export default function ProjectsSection() {
             </div>
           </motion.div>
         ))}
-      </div>
+        </AnimatePresence>
+      </motion.div>
 
       {selectedProject && (
         <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
