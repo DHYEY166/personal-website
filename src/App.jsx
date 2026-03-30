@@ -13,7 +13,9 @@ function AppContent() {
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
       <CustomCursor />
-      <ParticleBackground />
+      <div style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}>
+        <ParticleBackground />
+      </div>
       <ScrollProgressBar />
       <TopNavigation />
       <Routes location={location} key={location.pathname}>
