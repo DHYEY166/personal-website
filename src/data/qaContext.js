@@ -7,7 +7,8 @@ export const HUGGINGFACE_API_KEY = import.meta.env.VITE_HUGGINGFACE_API_KEY;
 export const HUGGINGFACE_MODEL_ID =
   import.meta.env.VITE_HUGGINGFACE_MODEL_ID || 'microsoft/Phi-3-mini-4k-instruct';
 
-export const HUGGINGFACE_API_URL = `https://api-inference.huggingface.co/models/${HUGGINGFACE_MODEL_ID}`;
+/** Legacy URL (deprecated). Browser calls use `/api/hf-chat`, which uses router.huggingface.co. */
+export const HUGGINGFACE_API_URL = `https://router.huggingface.co/v1/chat/completions`;
 
 /**
  * `phi3` — Phi-3 / similar Microsoft chat templates (<|system|>…<|end|>).
