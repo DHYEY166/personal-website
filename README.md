@@ -84,7 +84,7 @@ VITE_HUGGINGFACE_API_KEY=your_huggingface_token_here
 
 The chatbot sends a **system + bio** block on each request so the model answers from your facts. **`getFallbackResponse`** in `src/data/qaContext.js` is only used when the API fails, the key is missing, or the response is empty — it is keyword-based, not the main “AI path.”
 
-**If the API returns “not supported by any provider you have enabled”:** open [Inference Providers settings](https://huggingface.co/settings/inference-providers), turn on at least one provider, and use a token with **Make calls to Inference Providers**. No provider enabled means **no model id will work** on the router.
+**If the API returns “not supported by any provider you have enabled”:** open [Inference Providers settings](https://huggingface.co/settings/inference-providers) and **toggle ON** at least **HF Inference** and/or a GPU partner (Groq, Together, etc.). The serverless route retries several model ids (including `:hf-inference` / `:preferred` suffixes). To force one host, set `HUGGINGFACE_MODEL_ID` to e.g. `Qwen/Qwen2.5-1.5B-Instruct:hf-inference`. Use a fine-grained token with **Make calls to Inference Providers**.
 
 ## Project Structure
 

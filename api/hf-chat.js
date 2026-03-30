@@ -51,7 +51,44 @@ function effectiveUpstreamStatus(hfRes, parsed) {
 }
 
 const PROVIDER_SETUP_HINT =
-  'Open https://huggingface.co/settings/inference-providers and enable at least one provider (e.g. Hugging Face, Groq, Together). Use a fine-grained token with "Make calls to Inference Providers".';
+  'Enable HF Inference and/or a GPU partner at https://huggingface.co/settings/inference-providers (toggle ON). Token: fine-grained with "Make calls to Inference Providers". You can also set HUGGINGFACE_MODEL_ID to pin a host, e.g. Qwen/Qwen2.5-1.5B-Instruct:hf-inference';
+
+/** When auto-routing finds no host, try these in order (suffix pins a provider per HF docs). */
+const MODEL_FALLBACK_CHAIN = [
+  'Qwen/Qwen2.5-1.5B-Instruct:hf-inference',
+  'Qwen/Qwen2.5-1.5B-Instruct:preferred',
+  'google/gemma-2-2b-it:hf-inference',
+  'HuggingFaceTB/SmolLM2-1.7B-Instruct:hf-inference',
+  'Qwen/Qwen2.5-1.5B-Instruct',
+];
+
+function isValidModelId(id) {
+  return (
+    typeof id === 'string' &&
+    /^[^/]+\/[^/]+$/.test(id) &&
+    id.length <= 160
+  );
+}
+
+function buildModelAttemptList(explicitFromEnv) {
+  const chain = [];
+  if (explicitFromEnv) {
+    chain.push(explicitFromEnv);
+    if (!explicitFromEnv.includes(':')) {
+      chain.push(
+        `${explicitFromEnv}:hf-inference`,
+        `${explicitFromEnv}:preferred`,
+      );
+    }
+  }
+  chain.push(...MODEL_FALLBACK_CHAIN);
+  const seen = new Set();
+  return chain.filter((id) => {
+    if (!isValidModelId(id) || seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
 
 function extractChatText(parsed) {
   const content = parsed?.choices?.[0]?.message?.content;
@@ -75,6 +112,61 @@ function extractResponsesText(parsed) {
     }
   }
   return '';
+}
+
+async function inferWithModel(
+  token,
+  modelId,
+  inputs,
+  sampling,
+  maxTokens,
+  temperature,
+  topP,
+) {
+  let lastParsed = null;
+  let lastRaw = '';
+  let lastStatus = 500;
+
+  const chat = await routerPost('chat/completions', token, {
+    model: modelId,
+    messages: buildChatMessages(inputs),
+    max_tokens: maxTokens,
+    temperature,
+    top_p: topP,
+  });
+  lastParsed = chat.parsed;
+  lastRaw = chat.raw;
+  lastStatus = effectiveUpstreamStatus(chat.hfRes, chat.parsed);
+  if (chat.hfRes.ok && !hfPayloadIsError(chat.parsed)) {
+    const t = extractChatText(chat.parsed);
+    if (t) return { textOut: t, lastParsed, lastRaw, lastStatus };
+  }
+
+  let r = await routerPost('responses', token, {
+    model: modelId,
+    input: inputs,
+    ...sampling,
+  });
+  if (
+    (!r.hfRes.ok ||
+      hfPayloadIsError(r.parsed) ||
+      !extractResponsesText(r.parsed)) &&
+    r.hfRes.status === 400
+  ) {
+    r = await routerPost('responses', token, {
+      model: modelId,
+      input: inputs,
+    });
+  }
+  lastParsed = r.parsed;
+  lastRaw = r.raw;
+  lastStatus = effectiveUpstreamStatus(r.hfRes, r.parsed);
+  if (r.hfRes.ok && !hfPayloadIsError(r.parsed)) {
+    const t = extractResponsesText(r.parsed);
+    if (t) return { textOut: t, lastParsed, lastRaw, lastStatus };
+  }
+
+  return { textOut: '', lastParsed, lastRaw, lastStatus };
 }
 
 async function routerPost(path, token, body) {
@@ -128,16 +220,18 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Default: small instruct model widely routed on Inference Providers (Phi-3 often needs a provider enabled in HF settings).
-  const modelId =
+  const explicitModel = (
     process.env.HUGGINGFACE_MODEL_ID ||
     process.env.VITE_HUGGINGFACE_MODEL_ID ||
-    'Qwen/Qwen2.5-1.5B-Instruct';
+    ''
+  ).trim();
 
-  if (!/^[^/]+\/[^/]+$/.test(modelId) || modelId.length > 160) {
+  if (explicitModel && !isValidModelId(explicitModel)) {
     res.status(500).json({ error: 'Invalid HUGGINGFACE_MODEL_ID' });
     return;
   }
+
+  const modelAttempts = buildModelAttemptList(explicitModel || null);
 
   const defaultParams = {
     max_new_tokens: 384,
@@ -168,44 +262,22 @@ export default async function handler(req, res) {
     let lastRaw = '';
     let lastStatus = 500;
 
-    // 1) Chat completions first — clean system/user from Phi-3 tags (better for Qwen, Mistral, etc.)
-    const chat = await routerPost('chat/completions', token, {
-      model: modelId,
-      messages: buildChatMessages(inputs),
-      max_tokens: maxTokens,
-      temperature,
-      top_p: topP,
-    });
-    lastParsed = chat.parsed;
-    lastRaw = chat.raw;
-    lastStatus = effectiveUpstreamStatus(chat.hfRes, chat.parsed);
-    if (chat.hfRes.ok && !hfPayloadIsError(chat.parsed)) {
-      textOut = extractChatText(chat.parsed);
-    }
-
-    // 2) Responses API — legacy-style full prompt string (fallback)
-    if (!textOut) {
-      let r = await routerPost('responses', token, {
-        model: modelId,
-        input: inputs,
-        ...sampling,
-      });
-      if (
-        (!r.hfRes.ok ||
-          hfPayloadIsError(r.parsed) ||
-          !extractResponsesText(r.parsed)) &&
-        r.hfRes.status === 400
-      ) {
-        r = await routerPost('responses', token, {
-          model: modelId,
-          input: inputs,
-        });
-      }
-      lastParsed = r.parsed;
-      lastRaw = r.raw;
-      lastStatus = effectiveUpstreamStatus(r.hfRes, r.parsed);
-      if (r.hfRes.ok && !hfPayloadIsError(r.parsed)) {
-        textOut = extractResponsesText(r.parsed);
+    for (const modelId of modelAttempts) {
+      const out = await inferWithModel(
+        token,
+        modelId,
+        inputs,
+        sampling,
+        maxTokens,
+        temperature,
+        topP,
+      );
+      lastParsed = out.lastParsed;
+      lastRaw = out.lastRaw;
+      lastStatus = out.lastStatus;
+      if (out.textOut) {
+        textOut = out.textOut;
+        break;
       }
     }
 
