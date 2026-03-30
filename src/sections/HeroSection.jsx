@@ -36,7 +36,7 @@ export default function HeroSection() {
         background: theme.bg.primary,
       }}
     >
-      {/* Background layer: 3D scene or gradient fallback */}
+      {/* Background layer */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         {canWebGL ? (
           <Suspense fallback={<MeshFallback theme={theme} />}>
@@ -47,7 +47,7 @@ export default function HeroSection() {
         )}
       </div>
 
-      {/* Foreground layer: text content */}
+      {/* Foreground layer */}
       <div
         style={{
           position: 'relative',
@@ -58,20 +58,14 @@ export default function HeroSection() {
           justifyContent: 'center',
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+        <div
           style={{
             textAlign: 'center',
             maxWidth: 800,
             padding: 'clamp(16px, 4vw, 24px)',
           }}
         >
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          <p
             style={{
               fontSize: 'clamp(1rem, 2vw, 1.2rem)',
               color: theme.text.muted,
@@ -81,12 +75,9 @@ export default function HeroSection() {
             }}
           >
             Welcome
-          </motion.p>
+          </p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+          <h1
             style={{
               fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
               fontWeight: 800,
@@ -96,12 +87,9 @@ export default function HeroSection() {
             }}
           >
             {heroText.greeting}
-          </motion.h1>
+          </h1>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+          <h2
             style={{
               fontSize: 'clamp(1.2rem, 3vw, 2rem)',
               fontWeight: 600,
@@ -110,12 +98,9 @@ export default function HeroSection() {
             }}
           >
             <TypeWriter items={['ML Engineer', 'AI Researcher', 'Full-Stack Developer', 'Problem Solver']} />
-          </motion.h2>
+          </h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+          <p
             style={{
               fontSize: 'clamp(0.95rem, 1.5vw, 1.15rem)',
               color: theme.text.secondary,
@@ -125,12 +110,9 @@ export default function HeroSection() {
             }}
           >
             {heroText.tagline}
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.0 }}
+          <div
             style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}
           >
             <motion.a
@@ -174,8 +156,8 @@ export default function HeroSection() {
             >
               Chat with AI
             </motion.a>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );
