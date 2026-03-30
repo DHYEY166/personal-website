@@ -109,12 +109,13 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Default: small instruct model widely routed on Inference Providers (Phi-3 often needs a provider enabled in HF settings).
   const modelId =
     process.env.HUGGINGFACE_MODEL_ID ||
     process.env.VITE_HUGGINGFACE_MODEL_ID ||
-    'microsoft/Phi-3-mini-4k-instruct';
+    'Qwen/Qwen2.5-1.5B-Instruct';
 
-  if (!/^[^/]+\/[^/]+$/.test(modelId) || modelId.length > 120) {
+  if (!/^[^/]+\/[^/]+$/.test(modelId) || modelId.length > 160) {
     res.status(500).json({ error: 'Invalid HUGGINGFACE_MODEL_ID' });
     return;
   }
@@ -143,62 +144,54 @@ export default async function handler(req, res) {
   };
 
   try {
-    // 1) Responses API: single string `input` matches legacy text-generation prompts (Phi-3 tags, etc.)
-    let { hfRes, raw, parsed } = await routerPost(
-      'responses',
-      token,
-      {
+    let textOut = '';
+    let lastParsed = null;
+    let lastRaw = '';
+    let lastStatus = 500;
+
+    // 1) Chat completions first — clean system/user from Phi-3 tags (better for Qwen, Mistral, etc.)
+    const chat = await routerPost('chat/completions', token, {
+      model: modelId,
+      messages: buildChatMessages(inputs),
+      max_tokens: maxTokens,
+      temperature,
+      top_p: topP,
+    });
+    lastParsed = chat.parsed;
+    lastRaw = chat.raw;
+    lastStatus = chat.hfRes.status;
+    if (chat.hfRes.ok) {
+      textOut = extractChatText(chat.parsed);
+    }
+
+    // 2) Responses API — legacy-style full prompt string (fallback)
+    if (!textOut) {
+      let r = await routerPost('responses', token, {
         model: modelId,
         input: inputs,
         ...sampling,
-      },
-    );
-
-    let textOut = hfRes.ok ? extractResponsesText(parsed) : '';
-
-    if ((!hfRes.ok || !textOut) && hfRes.status === 400) {
-      const minimal = await routerPost('responses', token, {
-        model: modelId,
-        input: inputs,
       });
-      if (minimal.hfRes.ok && extractResponsesText(minimal.parsed)) {
-        hfRes = minimal.hfRes;
-        parsed = minimal.parsed;
-        raw = minimal.raw;
-        textOut = extractResponsesText(minimal.parsed);
-      } else if (!minimal.hfRes.ok) {
-        hfRes = minimal.hfRes;
-        parsed = minimal.parsed;
-        raw = minimal.raw;
+      if (
+        (!r.hfRes.ok || !extractResponsesText(r.parsed)) &&
+        r.hfRes.status === 400
+      ) {
+        r = await routerPost('responses', token, {
+          model: modelId,
+          input: inputs,
+        });
+      }
+      lastParsed = r.parsed;
+      lastRaw = r.raw;
+      lastStatus = r.hfRes.status;
+      if (r.hfRes.ok) {
+        textOut = extractResponsesText(r.parsed);
       }
     }
 
-    // 2) Chat completions (OpenAI-style messages)
-    if (!hfRes.ok || !textOut) {
-      const chat = await routerPost('chat/completions', token, {
-        model: modelId,
-        messages: buildChatMessages(inputs),
-        max_tokens: maxTokens,
-        temperature,
-        top_p: topP,
-      });
-
-      if (chat.hfRes.ok) {
-        textOut = extractChatText(chat.parsed);
-      }
-
-      if (!textOut) {
-        const errMsg =
-          flattenHfError(chat.parsed) ||
-          flattenHfError(parsed) ||
-          (chat.raw || raw || '').slice(0, 800);
-        res
-          .status(chat.hfRes.ok ? 502 : chat.hfRes.status)
-          .json({ error: errMsg });
-        return;
-      }
-
-      res.status(200).json([{ generated_text: textOut }]);
+    if (!textOut) {
+      const errMsg =
+        flattenHfError(lastParsed) || lastRaw.slice(0, 800) || 'Empty model output';
+      res.status(lastStatus >= 400 ? lastStatus : 502).json({ error: errMsg });
       return;
     }
 

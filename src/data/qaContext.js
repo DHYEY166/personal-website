@@ -3,9 +3,9 @@
 // and largely ignores long pasted context — responses look "hardcoded" or random without good fallbacks.
 export const HUGGINGFACE_API_KEY = import.meta.env.VITE_HUGGINGFACE_API_KEY;
 
-/** Default: small instruct model; override e.g. Qwen/Qwen2.5-1.5B-Instruct or mistralai/Mistral-7B-Instruct-v0.2 */
+/** Default: routed on most HF Inference Provider accounts; override or set `provider:model` suffix per HF docs */
 export const HUGGINGFACE_MODEL_ID =
-  import.meta.env.VITE_HUGGINGFACE_MODEL_ID || 'microsoft/Phi-3-mini-4k-instruct';
+  import.meta.env.VITE_HUGGINGFACE_MODEL_ID || 'Qwen/Qwen2.5-1.5B-Instruct';
 
 /** Legacy URL (deprecated). Browser calls use `/api/hf-chat`, which uses router.huggingface.co. */
 export const HUGGINGFACE_API_URL = `https://router.huggingface.co/v1/chat/completions`;

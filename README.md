@@ -64,15 +64,17 @@ Create a `.env` file in the root directory:
 ```env
 VITE_HUGGINGFACE_API_KEY=your_huggingface_token_here
 
-# Optional — defaults to microsoft/Phi-3-mini-4k-instruct (instruction-tuned; better for portfolio Q&A than DialoGPT)
-# VITE_HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct
+# Optional — defaults to Qwen/Qwen2.5-1.5B-Instruct (works with Inference Providers without extra setup).
+# Use another id if you enable providers at https://huggingface.co/settings/inference-providers
+# (e.g. microsoft/Phi-3-mini-4k-instruct once a host is enabled, or model:id:fastest per HF docs).
+# VITE_HUGGINGFACE_MODEL_ID=microsoft/Phi-3-mini-4k-instruct
 
 # Optional prompt format: phi3 (default) or plain for some instruct models
 # VITE_HUGGINGFACE_PROMPT_STYLE=plain
 
 # Recommended on Vercel (serverless proxy — avoids browser CORS on HF API):
 # HUGGINGFACE_API_KEY=same_token_as_above
-# HUGGINGFACE_MODEL_ID=microsoft/Phi-3-mini-4k-instruct
+# HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct
 # The chat UI calls /api/hf-chat; the server uses this key. VITE_HUGGINGFACE_API_KEY alone
 # still works if exposed to Serverless Functions (set in Vercel dashboard).
 
@@ -122,7 +124,7 @@ The website features an intelligent chatbot that can answer questions about:
 - Education and publications
 - Contact information
 
-Powered by Hugging Face's DialoGPT model with custom context about Dhyey's professional background.
+Powered by Hugging Face Inference Providers (router API) with custom context about Dhyey's professional background.
 
 ## License
 
