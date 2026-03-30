@@ -1,9 +1,11 @@
 /**
- * Server-side Hugging Face proxy — avoids browser CORS.
- * Uses Inference Providers router (legacy api-inference.huggingface.co returns 410).
- * Set HUGGINGFACE_API_KEY in Vercel (fine-grained token: "Make calls to Inference Providers").
+ * Server-side chat proxy — avoids browser CORS.
+ * - Optional GROQ_API_KEY: OpenAI-compatible API (https://console.groq.com/keys); tried first when set.
+ * - HUGGINGFACE_API_KEY: Inference Providers router (fine-grained token: "Make calls to Inference Providers").
+ * Set at least one of the above in Vercel.
  */
 const ROUTER_BASE = 'https://router.huggingface.co/v1';
+const GROQ_CHAT_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 /** Phi-3 template from qaContext → OpenAI-style messages (avoids double chat templating). */
 function buildChatMessages(inputs) {
@@ -51,7 +53,7 @@ function effectiveUpstreamStatus(hfRes, parsed) {
 }
 
 const PROVIDER_SETUP_HINT =
-  'Enable HF Inference and/or a GPU partner at https://huggingface.co/settings/inference-providers (toggle ON). Token: fine-grained with "Make calls to Inference Providers". You can also set HUGGINGFACE_MODEL_ID to pin a host, e.g. Qwen/Qwen2.5-1.5B-Instruct:hf-inference';
+  'Enable HF Inference and/or a GPU partner at https://huggingface.co/settings/inference-providers (toggle ON). Token: fine-grained with "Make calls to Inference Providers". Or set GROQ_API_KEY (free) from https://console.groq.com/keys to bypass HF routing.';
 
 /** When auto-routing finds no host, try these in order (suffix pins a provider per HF docs). */
 const MODEL_FALLBACK_CHAIN = [
@@ -188,6 +190,41 @@ async function routerPost(path, token, body) {
   return { hfRes, raw, parsed };
 }
 
+async function tryGroqChat(groqKey, inputs, maxTokens, temperature, topP) {
+  const model =
+    (process.env.GROQ_MODEL_ID || 'llama-3.1-8b-instant').trim() ||
+    'llama-3.1-8b-instant';
+  const gr = await fetch(GROQ_CHAT_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${groqKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      messages: buildChatMessages(inputs),
+      max_tokens: maxTokens,
+      temperature,
+      top_p: topP,
+    }),
+  });
+  const raw = await gr.text();
+  let parsed = null;
+  try {
+    parsed = raw ? JSON.parse(raw) : null;
+  } catch {
+    parsed = null;
+  }
+  const textOut =
+    gr.ok && !parsed?.error ? extractChatText(parsed) : '';
+  return {
+    textOut,
+    lastParsed: parsed,
+    lastRaw: raw,
+    lastStatus: gr.ok && !parsed?.error ? gr.status : parsed?.error ? 400 : gr.status,
+  };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
 
@@ -196,11 +233,15 @@ export default async function handler(req, res) {
     return;
   }
 
-  const token =
+  const hfToken =
     process.env.HUGGINGFACE_API_KEY || process.env.VITE_HUGGINGFACE_API_KEY;
+  const groqKey = process.env.GROQ_API_KEY?.trim();
 
-  if (!token) {
-    res.status(500).json({ error: 'Missing HUGGINGFACE_API_KEY on server' });
+  if (!hfToken && !groqKey) {
+    res.status(500).json({
+      error:
+        'Missing GROQ_API_KEY or HUGGINGFACE_API_KEY on server. Add GROQ_API_KEY from https://console.groq.com/keys (easiest), or fix HF Inference Providers and use HUGGINGFACE_API_KEY.',
+    });
     return;
   }
 
@@ -231,7 +272,9 @@ export default async function handler(req, res) {
     return;
   }
 
-  const modelAttempts = buildModelAttemptList(explicitModel || null);
+  const modelAttempts = hfToken
+    ? buildModelAttemptList(explicitModel || null)
+    : [];
 
   const defaultParams = {
     max_new_tokens: 384,
@@ -262,28 +305,51 @@ export default async function handler(req, res) {
     let lastRaw = '';
     let lastStatus = 500;
 
-    for (const modelId of modelAttempts) {
-      const out = await inferWithModel(
-        token,
-        modelId,
+    if (groqKey) {
+      const g = await tryGroqChat(
+        groqKey,
         inputs,
-        sampling,
         maxTokens,
         temperature,
         topP,
       );
-      lastParsed = out.lastParsed;
-      lastRaw = out.lastRaw;
-      lastStatus = out.lastStatus;
-      if (out.textOut) {
-        textOut = out.textOut;
-        break;
+      lastParsed = g.lastParsed;
+      lastRaw = g.lastRaw;
+      lastStatus = g.lastStatus;
+      if (g.textOut) {
+        textOut = g.textOut;
+      }
+    }
+
+    if (!textOut && hfToken) {
+      for (const modelId of modelAttempts) {
+        const out = await inferWithModel(
+          hfToken,
+          modelId,
+          inputs,
+          sampling,
+          maxTokens,
+          temperature,
+          topP,
+        );
+        lastParsed = out.lastParsed;
+        lastRaw = out.lastRaw;
+        lastStatus = out.lastStatus;
+        if (out.textOut) {
+          textOut = out.textOut;
+          break;
+        }
       }
     }
 
     if (!textOut) {
       const base =
-        flattenHfError(lastParsed) || lastRaw.slice(0, 800) || 'Empty model output';
+        flattenHfError(lastParsed) ||
+        (typeof lastParsed?.error?.message === 'string'
+          ? lastParsed.error.message
+          : '') ||
+        lastRaw.slice(0, 800) ||
+        'Empty model output';
       const errMsg = /not supported by any provider/i.test(base)
         ? `${base} ${PROVIDER_SETUP_HINT}`
         : base;

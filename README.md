@@ -72,11 +72,15 @@ VITE_HUGGINGFACE_API_KEY=your_huggingface_token_here
 # Optional prompt format: phi3 (default) or plain for some instruct models
 # VITE_HUGGINGFACE_PROMPT_STYLE=plain
 
-# Recommended on Vercel (serverless proxy — avoids browser CORS on HF API):
-# HUGGINGFACE_API_KEY=same_token_as_above
-# HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct
-# The chat UI calls /api/hf-chat; the server uses this key. VITE_HUGGINGFACE_API_KEY alone
-# still works if exposed to Serverless Functions (set in Vercel dashboard).
+# Recommended on Vercel (serverless proxy — avoids browser CORS):
+# Easiest if HF Inference Providers won’t route: create a free key at https://console.groq.com/keys
+# GROQ_API_KEY=gsk_...
+# Optional: GROQ_MODEL_ID=llama-3.1-8b-instant
+#
+# Or use Hugging Face only:
+# HUGGINGFACE_API_KEY=fine_grained_token_with_inference_providers
+# HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct:hf-inference
+# The chat UI calls /api/hf-chat. If both GROQ_API_KEY and HUGGINGFACE_API_KEY are set, Groq is tried first.
 
 # Contact form (Web3Forms)
 # VITE_WEB3FORMS_KEY=your_web3forms_access_key

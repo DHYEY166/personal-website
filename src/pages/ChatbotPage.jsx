@@ -263,7 +263,7 @@ export default function ChatbotPage() {
         <div style={chatHeaderStyle}>
           <div>
             <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Dhyey's AI Assistant</h3>
-            <p style={{ margin: 0, opacity: 0.9, fontSize: 13 }}>Powered by Hugging Face AI</p>
+            <p style={{ margin: 0, opacity: 0.9, fontSize: 13 }}>Powered by AI (Groq or Hugging Face)</p>
           </div>
         </div>
 
