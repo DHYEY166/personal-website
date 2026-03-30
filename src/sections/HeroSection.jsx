@@ -56,7 +56,7 @@ export default function HeroSection() {
           maxWidth: 800,
           padding: 'clamp(16px, 4vw, 24px)',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2,
         }}
       >
         <motion.p
