@@ -34,6 +34,25 @@ function flattenHfError(parsed) {
   }
 }
 
+/** Router sometimes returns HTTP 200 with `{ error: ... }` and no `choices` / output. */
+function hfPayloadIsError(parsed) {
+  return (
+    parsed != null &&
+    typeof parsed === 'object' &&
+    parsed.error != null &&
+    parsed.error !== false
+  );
+}
+
+function effectiveUpstreamStatus(hfRes, parsed) {
+  if (!hfRes.ok) return hfRes.status;
+  if (hfPayloadIsError(parsed)) return 400;
+  return hfRes.status;
+}
+
+const PROVIDER_SETUP_HINT =
+  'Open https://huggingface.co/settings/inference-providers and enable at least one provider (e.g. Hugging Face, Groq, Together). Use a fine-grained token with "Make calls to Inference Providers".';
+
 function extractChatText(parsed) {
   const content = parsed?.choices?.[0]?.message?.content;
   return typeof content === 'string' ? content.trim() : '';
@@ -159,8 +178,8 @@ export default async function handler(req, res) {
     });
     lastParsed = chat.parsed;
     lastRaw = chat.raw;
-    lastStatus = chat.hfRes.status;
-    if (chat.hfRes.ok) {
+    lastStatus = effectiveUpstreamStatus(chat.hfRes, chat.parsed);
+    if (chat.hfRes.ok && !hfPayloadIsError(chat.parsed)) {
       textOut = extractChatText(chat.parsed);
     }
 
@@ -172,7 +191,9 @@ export default async function handler(req, res) {
         ...sampling,
       });
       if (
-        (!r.hfRes.ok || !extractResponsesText(r.parsed)) &&
+        (!r.hfRes.ok ||
+          hfPayloadIsError(r.parsed) ||
+          !extractResponsesText(r.parsed)) &&
         r.hfRes.status === 400
       ) {
         r = await routerPost('responses', token, {
@@ -182,16 +203,21 @@ export default async function handler(req, res) {
       }
       lastParsed = r.parsed;
       lastRaw = r.raw;
-      lastStatus = r.hfRes.status;
-      if (r.hfRes.ok) {
+      lastStatus = effectiveUpstreamStatus(r.hfRes, r.parsed);
+      if (r.hfRes.ok && !hfPayloadIsError(r.parsed)) {
         textOut = extractResponsesText(r.parsed);
       }
     }
 
     if (!textOut) {
-      const errMsg =
+      const base =
         flattenHfError(lastParsed) || lastRaw.slice(0, 800) || 'Empty model output';
-      res.status(lastStatus >= 400 ? lastStatus : 502).json({ error: errMsg });
+      const errMsg = /not supported by any provider/i.test(base)
+        ? `${base} ${PROVIDER_SETUP_HINT}`
+        : base;
+      const outStatus =
+        lastStatus >= 400 ? lastStatus : hfPayloadIsError(lastParsed) ? 400 : 502;
+      res.status(outStatus).json({ error: errMsg });
       return;
     }
 
