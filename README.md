@@ -59,8 +59,19 @@ npm run build
 Create a `.env` file in the root directory:
 
 ```env
-VITE_HUGGINGFACE_API_KEY=your_huggingface_api_key_here
+VITE_HUGGINGFACE_API_KEY=your_huggingface_token_here
+
+# Optional — defaults to microsoft/Phi-3-mini-4k-instruct (instruction-tuned; better for portfolio Q&A than DialoGPT)
+# VITE_HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct
+
+# Optional prompt format: phi3 (default) or plain for some instruct models
+# VITE_HUGGINGFACE_PROMPT_STYLE=plain
+
+# Contact form (Web3Forms)
+# VITE_WEB3FORMS_KEY=your_web3forms_access_key
 ```
+
+The chatbot sends a **system + bio** block on each request so the model answers from your facts. **`getFallbackResponse`** in `src/data/qaContext.js` is only used when the API fails, the key is missing, or the response is empty — it is keyword-based, not the main “AI path.”
 
 ## Project Structure
 

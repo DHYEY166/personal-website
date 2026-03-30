@@ -1,6 +1,45 @@
 // API Configuration for Chatbot
-export const HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium";
+// Use an instruction-tuned model for factual Q&A over a long bio. DialoGPT is a short-chat model
+// and largely ignores long pasted context — responses look "hardcoded" or random without good fallbacks.
 export const HUGGINGFACE_API_KEY = import.meta.env.VITE_HUGGINGFACE_API_KEY;
+
+/** Default: small instruct model; override e.g. Qwen/Qwen2.5-1.5B-Instruct or mistralai/Mistral-7B-Instruct-v0.2 */
+export const HUGGINGFACE_MODEL_ID =
+  import.meta.env.VITE_HUGGINGFACE_MODEL_ID || 'microsoft/Phi-3-mini-4k-instruct';
+
+export const HUGGINGFACE_API_URL = `https://api-inference.huggingface.co/models/${HUGGINGFACE_MODEL_ID}`;
+
+/**
+ * `phi3` — Phi-3 / similar Microsoft chat templates (<|system|>…<|end|>).
+ * `plain` — single user block (works for many instruct models on HF; try if phi3 looks wrong).
+ */
+export const HUGGINGFACE_PROMPT_STYLE = import.meta.env.VITE_HUGGINGFACE_PROMPT_STYLE || 'phi3';
+
+const PORTFOLIO_SYSTEM = `You are Dhyey Desai's portfolio assistant. Answer visitors using ONLY the FACTS below. Rules:
+- Be concise, friendly, and accurate (short paragraphs or bullets).
+- If the FACTS do not contain the answer, say you do not have that information — do not invent employers, dates, or projects.
+- Do not claim to browse the web or access files outside the FACTS.
+
+FACTS:
+`;
+
+function buildPhi3ChatInput(userMessage) {
+  const systemBlock = `${PORTFOLIO_SYSTEM}${QA_CONTEXT}`;
+  return `<|system|>\n${systemBlock}\n<|end|>\n<|user|>\n${userMessage.trim()}\n<|end|>\n<|assistant|>\n`;
+}
+
+function buildPlainInstructInput(userMessage) {
+  return `${PORTFOLIO_SYSTEM}${QA_CONTEXT}\n\nQuestion: ${userMessage.trim()}\n\nAnswer:`;
+}
+
+/** Full prompt string sent to Hugging Face text-generation inference */
+export function buildHuggingFaceInputs(userMessage) {
+  const style = String(HUGGINGFACE_PROMPT_STYLE).toLowerCase();
+  if (style === 'plain' || style === 'dialo') {
+    return buildPlainInstructInput(userMessage);
+  }
+  return buildPhi3ChatInput(userMessage);
+}
 
 export const QA_CONTEXT = `Dhyey Desai is an AI/ML Engineer based in Los Angeles, California. Email: dhyeydes@usc.edu. Education: M.S. in Applied Data Science (USC, GPA: 3.73, 2024–2026), B.Tech in Computer Science and Engineering (Manipal University Jaipur, GPA: 3.85, 2020–2024).
 

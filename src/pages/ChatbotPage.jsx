@@ -1,5 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { QA_CONTEXT, HUGGINGFACE_API_URL, HUGGINGFACE_API_KEY, getFallbackResponse } from '../data/qaContext';
+import {
+  buildHuggingFaceInputs,
+  HUGGINGFACE_API_URL,
+  HUGGINGFACE_API_KEY,
+  getFallbackResponse,
+} from '../data/qaContext';
 import { useTheme } from '../context/ThemeContext';
 
 const quickQuestions = [
@@ -33,7 +38,18 @@ export default function ChatbotPage() {
     setLoading(true);
 
     try {
-      const prompt = `${QA_CONTEXT}\n\nUser: ${userInput}\nBot:`;
+      if (!HUGGINGFACE_API_KEY) {
+        setMessages((msgs) => [
+          ...msgs,
+          {
+            from: 'bot',
+            text: getFallbackResponse(userInput),
+          },
+        ]);
+        return;
+      }
+
+      const inputs = buildHuggingFaceInputs(userInput);
       const res = await fetch(HUGGINGFACE_API_URL, {
         method: 'POST',
         headers: {
@@ -41,22 +57,42 @@ export default function ChatbotPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          inputs: prompt,
-          parameters: { max_new_tokens: 100, temperature: 0.7, return_full_text: false },
+          inputs,
+          parameters: {
+            max_new_tokens: 384,
+            temperature: 0.35,
+            top_p: 0.9,
+            do_sample: true,
+            return_full_text: false,
+          },
         }),
       });
 
       if (!res.ok) {
-        throw new Error(`API error: ${res.status}`);
+        const errBody = await res.text();
+        let detail = '';
+        try {
+          detail = JSON.parse(errBody)?.error || errBody?.slice(0, 200);
+        } catch {
+          detail = errBody?.slice(0, 200);
+        }
+        throw new Error(`API ${res.status}${detail ? `: ${detail}` : ''}`);
       }
 
       const data = await res.json();
       let answer = '';
 
-      if (Array.isArray(data) && data[0]?.generated_text) {
-        answer = data[0].generated_text.replace(prompt, '').trim();
-      } else if (data.generated_text) {
-        answer = data.generated_text.replace(prompt, '').trim();
+      if (Array.isArray(data) && data[0]?.generated_text != null) {
+        answer = String(data[0].generated_text).trim();
+      } else if (data?.generated_text != null) {
+        answer = String(data.generated_text).trim();
+      }
+
+      if (!answer && data?.[0]?.generated_text == null && typeof data === 'object') {
+        const first = Array.isArray(data) ? data[0] : data;
+        if (first && typeof first === 'object' && 'summary_text' in first) {
+          answer = String(first.summary_text || '').trim();
+        }
       }
 
       if (!answer) {
