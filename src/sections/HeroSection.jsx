@@ -36,8 +36,8 @@ export default function HeroSection() {
         background: theme.bg.primary,
       }}
     >
-      {/* Background layer */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+      {/* Background layer - negative z-index ensures it stays behind text */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: -1 }}>
         {canWebGL ? (
           <Suspense fallback={<MeshFallback theme={theme} />}>
             <HeroScene />
@@ -51,7 +51,6 @@ export default function HeroSection() {
       <div
         style={{
           position: 'relative',
-          zIndex: 1,
           minHeight: '100vh',
           display: 'flex',
           alignItems: 'center',
