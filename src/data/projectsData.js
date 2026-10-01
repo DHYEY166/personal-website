@@ -1,6 +1,7 @@
 export const projects = [
   {
     id: 'policy-rag',
+    brief: 'RAG over policy documents (Gemma via Ollama, ChromaDB, Cohere reranking); 1.0 retrieval recall and answer accuracy on 16 questions.',
     title: 'Policy RAG Assistant',
     badge: { text: 'Recall & Accuracy 1.0', color: '#27ae60' },
     description: 'Retrieval-augmented assistant that answers questions over policy documents. Gemma models served locally by Ollama, a Chroma vector store, and Cohere reranking, with stage-level tracing and a fixed-set evaluation harness that scored retrieval recall and answer accuracy of 1.0 on 16 questions.',
@@ -14,6 +15,7 @@ export const projects = [
   },
   {
     id: 'beacon',
+    brief: 'Emergency guidance for first responders; QLoRA-fine-tuned Gemma 4 E4B on WHO/SPHERE/IMCI protocols, offline BM25 RAG, voice/photo/text input, 6 languages; FastAPI, Next.js, React Native.',
     title: 'BEACON',
     badge: { text: 'Fine-tuned Gemma 4', color: '#e67e22' },
     description: 'AI-powered emergency decision support for community first responders. A QLoRA fine-tune of Gemma 4 E4B on WHO/SPHERE/IMCI protocols turns a typed, spoken, or photographed situation into an urgency level, immediate actions, things to avoid, and escalation signs, with spoken guidance in 6 languages and offline-capable BM25 retrieval.',
@@ -27,6 +29,7 @@ export const projects = [
   },
   {
     id: 'multillm',
+    brief: 'Privacy-first chat routing across 5+ local Ollama models; 10+ file-type knowledge base; Google OAuth, Redis.',
     title: 'MultiLLM',
     badge: { text: 'Multi-Model AI', color: '#8e44ad' },
     description: 'Privacy-first AI platform routing tasks across 5+ local Ollama models (Llama 3.2, DeepSeek Coder, Phi3) with real-time streaming chat and dynamic model selection. Multi-format knowledge base supporting 10+ file types with semantic chunking and intelligent context retrieval. Google OAuth, Redis session management, rate limiting, and GDPR/HIPAA compliance features.',
@@ -41,6 +44,7 @@ export const projects = [
   },
   {
     id: 'chatdb',
+    brief: 'Natural language to SQL plus charts (SQLite, MySQL, PostgreSQL).',
     title: 'ChatDB',
     badge: { text: 'LLM Integration', color: '#3498db' },
     description: 'Developed an interactive database management and visualization platform. Integrated LLM-powered natural language querying, allowing users to convert NL inputs to SQL, support multiple databases, and generate instant data visualizations.',
@@ -54,6 +58,7 @@ export const projects = [
   },
   {
     id: 'hate-speech',
+    brief: 'BERT + TF-IDF hate-speech detection, 96% F1.',
     title: 'Hate Speech Detection',
     badge: { text: '96% F1-Score', color: '#e67e22' },
     description: 'Engineered a bias-aware NLP pipeline with BERT and TF-IDF for detecting hate speech and offensive language. Tuned NER and sentiment models for efficient real-time inference, achieving 96% F1-score.',
@@ -67,6 +72,7 @@ export const projects = [
   },
   {
     id: 'breast-cancer',
+    brief: 'Breast tumor segmentation, 97.53% accuracy.',
     title: 'Breast Cancer Segmentation',
     badge: { text: '97.53% Accuracy', color: '#2ecc71' },
     description: 'Created deep learning models for medical image segmentation of breast cancer tumors. Implemented advanced preprocessing and optimization techniques to achieve 97.53% accuracy.',
@@ -80,6 +86,7 @@ export const projects = [
   },
   {
     id: 'ms-detection',
+    brief: 'MS lesion segmentation (the Diagnostics paper below).',
     // Source: Desai et al., "Pseudo-RGB Slice Stacking in 2D ResUNet for High-Sensitivity Multiple
     // Sclerosis Lesion Segmentation", Diagnostics 2026, 16(16):2494 (abstract, PMID 42650897).
     title: 'MS Lesion Segmentation',
@@ -96,6 +103,7 @@ export const projects = [
   },
   {
     id: 'autism',
+    brief: 'Facial-analysis research for early autism diagnosis; +10% accuracy, 40% faster batch inference.',
     title: 'Autism Detection Using Deep Learning Techniques',
     badge: { text: 'Research Project', color: '#e74c3c' },
     description: 'Conducted research on AI-driven facial analysis for early autism diagnosis. Enhanced model accuracy by 10% while developing bias-reduction architectures and improving batch inference by 40%.',

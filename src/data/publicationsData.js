@@ -2,6 +2,7 @@
 export const publications = [
   {
     id: 'murs-2026',
+    brief: 'Sole author. Artist gender bias in ALS recommendation on Last.fm 360K; stacked post-processing + Fair-ALS cut male-artist exposure 69.8% to ~50% at 30% lower NDCG cost than post-processing alone.',
     title: 'Amplified Silence: Uncovering and Mitigating Gender Bias in Music Recommendation Algorithms',
     authors: 'Dhyey Desai',
     venue: '4th Music Recommender Systems Workshop (MuRS 2026), held with RecSys',
@@ -14,6 +15,7 @@ export const publications = [
   },
   {
     id: 'ms-resunet',
+    brief: 'First author. ResNet50-encoder 2D U-Net, pseudo-RGB stack of 3 FLAIR slices; Dice 0.714, AUC 0.963 on MSLesSeg2024.',
     title: 'Pseudo-RGB Slice Stacking in 2D ResUNet for High-Sensitivity Multiple Sclerosis Lesion Segmentation',
     authors: 'Dhyey Desai, Jayesh Gangrade, Shweta Gangrade, Atef Gharbi, Yassine Daadaa, Dhouha Ben Noureddine',
     venue: 'Diagnostics (MDPI), 16(16):2494',
@@ -26,6 +28,7 @@ export const publications = [
   },
   {
     id: 'brain-stroke',
+    brief: 'Compared ML models; logistic regression reached 96% accuracy.',
     title: 'Supervised Machine Learning Approaches for Brain Stroke Detection',
     authors: 'Dhyey V. Desai, Tarun Jain, Priyesh Tiwari',
     venue: 'IEEE IEMECON 2023',
