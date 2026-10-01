@@ -33,8 +33,8 @@ const otherCerts = certList.filter((c) => !featuredCerts.includes(c));
 const short = (s) => s.replace(/\s*\(A Coforge Company\)/, '');
 const projectLink = (p) => p.website || (p.github && p.github !== GITHUB ? p.github : '');
 
-// Projects with a full line in the prompt; the rest get a one-line mention. The MS project is
-// covered by its publication entry.
+// Projects with a full line (brief + link) in the prompt; the rest share one line with their
+// brief only (no link). The MS project is covered by its publication entry.
 const PROMPT_FEATURED = ['policy-rag', 'beacon', 'multillm'];
 const PROMPT_SKIP = ['ms-detection'];
 // Generic skills that add tokens without helping answers.
@@ -61,10 +61,10 @@ export const QA_CONTEXT = [
   `PROJECTS:\n${projects
     .filter((p) => PROMPT_FEATURED.includes(p.id))
     .map((p) => `- ${p.title}: ${p.brief}${projectLink(p) ? ` ${projectLink(p)}` : ''}`)
-    .join('\n')}\n- Other: ${projects
+    .join('\n')}\n- Other (code on GitHub): ${projects
     .filter((p) => !PROMPT_FEATURED.includes(p.id) && !PROMPT_SKIP.includes(p.id))
-    .map((p) => `${p.title.replace(' Using Deep Learning Techniques', '')} (${p.badge.text})`)
-    .join('; ')}; code on GitHub.`,
+    .map((p) => `${p.title.replace(' Using Deep Learning Techniques', '')}: ${p.brief.replace(/\.$/, '').replace(/; /g, ', ')}`)
+    .join('; ')}.`,
   `PUBLICATIONS:\n${publications
     .map((p) => `- "${p.title}" (${p.year}): ${p.statusKind === 'accepted' ? 'accepted and presented at the 4th Music Recommender Systems Workshop (MuRS 2026) at RecSys, Sept 28, 2026; NOT published' : `published in ${p.venue}`}. ${p.brief}${p.statusKind !== 'accepted' && p.links?.[0] ? ` ${p.links[0].url}` : ''}`)
     .join('\n')}`,
