@@ -20,7 +20,8 @@ A modern, interactive personal portfolio website showcasing Dhyey Desai's skills
 - Lazily loaded 3D hero scene (React Three Fiber) and lazily loaded routes
 - Hash links (`/#projects`, etc.) that work from any page, plus a catch-all 404 page
 - SEO basics: meta description, canonical URL, Open Graph/Twitter cards, favicon, `robots.txt`, and `sitemap.xml`
-- Serverless chat proxy (`api/hf-chat.js`) with an origin allowlist, input-size limits, and an output-token cap
+- Serverless chat proxy (`api/hf-chat.js`) with an origin allowlist, input-size limits, an output-token cap, and a per-visitor rate limit (10/min, 40/day per IP)
+- Chat replies rendered as a safe Markdown subset (no raw HTML)
 
 ## Tech Stack
 
@@ -69,6 +70,8 @@ GROQ_API_KEY=gsk_...                    # recommended; get one at https://consol
 # HUGGINGFACE_API_KEY=hf_...            # optional fallback (fine-grained token with "Make calls to Inference Providers")
 # HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct:hf-inference   # optional
 # ALLOWED_ORIGINS=https://my-custom-domain.com   # optional, comma-separated extra origins allowed to call /api/hf-chat
+# UPSTASH_REDIS_REST_URL=https://...upstash.io  # optional: share rate-limit counters across instances
+# UPSTASH_REDIS_REST_TOKEN=...                  # (Vercel KV's KV_REST_API_URL / KV_REST_API_TOKEN also work)
 
 # Public, safe to expose (client-side)
 # VITE_WEB3FORMS_KEY=your_web3forms_access_key   # Web3Forms access keys are designed to be public
@@ -78,6 +81,8 @@ GROQ_API_KEY=gsk_...                    # recommended; get one at https://consol
 If both `GROQ_API_KEY` and `HUGGINGFACE_API_KEY` are set, Groq is tried first. The API route still reads the legacy `VITE_HUGGINGFACE_API_KEY` / `VITE_HUGGINGFACE_MODEL_ID` names for backward compatibility; rename them to the non-`VITE_` names.
 
 The chatbot sends a **system + bio** block (built from the files in `src/data/` by `src/data/qaContext.js`) on each request so the model answers from real facts. **`getFallbackResponse`** in `src/data/qaContext.js` is only used when the API fails, the key is missing, or the response is empty. It is keyword-based, not the main AI path.
+
+**Rate limiting:** `/api/hf-chat` allows 10 requests per minute and 40 per day per visitor IP and answers HTTP 429 with a `Retry-After` header beyond that. Without Upstash the counters live in each serverless instance's memory, so they are best effort (separate instances and cold starts each have their own counts). Groq's own free-tier limits (for `openai/gpt-oss-20b`: 30 requests/min, 8K tokens/min, 1K requests/day) are surfaced to visitors as a friendly "busy" message.
 
 **If Hugging Face returns "not supported by any provider you have enabled":** open [Inference Providers settings](https://huggingface.co/settings/inference-providers) and turn on at least **HF Inference** and/or a partner provider, or set `GROQ_API_KEY` instead.
 
