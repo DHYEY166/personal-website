@@ -1,9 +1,21 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 
-export default function FloatingLabelInput({ label, type = 'text', multiline = false, value, onChange, error }) {
+export default function FloatingLabelInput({
+  label,
+  name,
+  type = 'text',
+  multiline = false,
+  value,
+  onChange,
+  error,
+  autoComplete,
+  required = false,
+}) {
   const { theme } = useTheme();
   const [focused, setFocused] = useState(false);
+  const id = useId();
+  const errorId = `${id}-error`;
   const isActive = focused || (value && value.length > 0);
 
   const Tag = multiline ? 'textarea' : 'input';
@@ -11,12 +23,18 @@ export default function FloatingLabelInput({ label, type = 'text', multiline = f
   return (
     <div style={{ position: 'relative', marginBottom: 24 }}>
       <Tag
+        id={id}
+        name={name}
         type={multiline ? undefined : type}
         value={value}
         onChange={onChange}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         rows={multiline ? 4 : undefined}
+        autoComplete={autoComplete}
+        aria-required={required || undefined}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
         style={{
           width: '100%',
           padding: '20px 16px 8px',
@@ -27,7 +45,7 @@ export default function FloatingLabelInput({ label, type = 'text', multiline = f
           border: focused
             ? `2px solid ${theme.accent.primary}`
             : error
-            ? '2px solid #e74c3c'
+            ? `2px solid ${theme.text.error}`
             : theme.glass.border,
           borderRadius: 12,
           outline: 'none',
@@ -39,12 +57,13 @@ export default function FloatingLabelInput({ label, type = 'text', multiline = f
         }}
       />
       <label
+        htmlFor={id}
         style={{
           position: 'absolute',
           left: 16,
           top: isActive ? 6 : 14,
           fontSize: isActive ? '0.7rem' : '0.95rem',
-          color: focused ? theme.accent.primary : error ? '#e74c3c' : theme.text.muted,
+          color: focused ? theme.accent.text : error ? theme.text.error : theme.text.muted,
           transition: 'all 0.2s ease',
           pointerEvents: 'none',
           fontWeight: isActive ? 600 : 400,
@@ -53,7 +72,7 @@ export default function FloatingLabelInput({ label, type = 'text', multiline = f
         {label}
       </label>
       {error && (
-        <p style={{ color: '#e74c3c', fontSize: '0.78rem', marginTop: 4, paddingLeft: 4 }}>
+        <p id={errorId} style={{ color: theme.text.error, fontSize: '0.78rem', marginTop: 4, paddingLeft: 4 }}>
           {error}
         </p>
       )}

@@ -47,7 +47,7 @@ export default function CertificationsSection() {
             style={{
               fontSize: '1.4rem',
               fontWeight: 700,
-              color: theme.accent.primary,
+              color: theme.accent.text,
               marginBottom: 20,
               paddingLeft: 4,
             }}
@@ -146,7 +146,7 @@ export default function CertificationsSection() {
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
-                          color: theme.accent.primary,
+                          color: theme.accent.text,
                           fontSize: '0.8rem',
                           fontWeight: 600,
                           textDecoration: 'none',

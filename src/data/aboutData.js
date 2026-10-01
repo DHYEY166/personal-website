@@ -1,6 +1,7 @@
 export const heroText = {
   greeting: "Hello, I'm Dhyey",
   role: 'AI/ML Engineer',
+  roles: ['ML Engineer', 'AI Researcher', 'Full-Stack Developer', 'Problem Solver'],
   tagline: 'Building production-ready RAG and multimodal AI systems. Currently pursuing MS in Applied Data Science at USC.',
 };
 

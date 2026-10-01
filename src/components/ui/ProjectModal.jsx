@@ -1,8 +1,52 @@
+import { useEffect, useId, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
+const FOCUSABLE = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
 export default function ProjectModal({ project, onClose }) {
   const { theme } = useTheme();
+  const dialogRef = useRef(null);
+  const closeRef = useRef(null);
+  const titleId = useId();
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    if (!project) return undefined;
+    const previouslyFocused = document.activeElement;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (e.key !== 'Tab' || !dialogRef.current) return;
+      // Keep keyboard focus inside the dialog.
+      const items = [...dialogRef.current.querySelectorAll(FOCUSABLE)];
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = overflow;
+      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
+    };
+  }, [project]);
 
   if (!project) return null;
 
@@ -31,6 +75,10 @@ export default function ProjectModal({ project, onClose }) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 30 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
           onClick={e => e.stopPropagation()}
           style={{
             background: theme.name === 'dark' ? '#121230' : '#fff',
@@ -47,7 +95,10 @@ export default function ProjectModal({ project, onClose }) {
         >
           {/* Close button */}
           <button
+            ref={closeRef}
+            type="button"
             onClick={onClose}
+            aria-label="Close project details"
             style={{
               position: 'absolute',
               top: 16,
@@ -65,7 +116,7 @@ export default function ProjectModal({ project, onClose }) {
               justifyContent: 'center',
             }}
           >
-            ✕
+            <span aria-hidden="true">✕</span>
           </button>
 
           {/* Gradient bar */}
@@ -76,10 +127,11 @@ export default function ProjectModal({ project, onClose }) {
             marginBottom: 24,
           }} />
 
-          <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: theme.text.heading, marginBottom: 8 }}>
+          <h2 id={titleId} style={{ fontSize: '1.6rem', fontWeight: 800, color: theme.text.heading, marginBottom: 8 }}>
             {project.title}
           </h2>
 
+          {project.badge && (
           <span style={{
             display: 'inline-block',
             padding: '4px 12px',
@@ -93,6 +145,7 @@ export default function ProjectModal({ project, onClose }) {
           }}>
             {project.badge.text}
           </span>
+          )}
 
           <p style={{ color: theme.text.secondary, fontSize: '0.95rem', lineHeight: 1.8, marginBottom: 24 }}>
             {project.description}
@@ -102,9 +155,9 @@ export default function ProjectModal({ project, onClose }) {
             { label: 'Role', value: project.role },
             { label: 'Challenge', value: project.challenge },
             { label: 'Outcome', value: project.outcome },
-          ].map((item, i) => (
+          ].filter((item) => item.value).map((item, i) => (
             <p key={i} style={{ fontSize: '0.9rem', marginBottom: 8 }}>
-              <span style={{ color: theme.accent.primary, fontWeight: 700 }}>{item.label}: </span>
+              <span style={{ color: theme.accent.text, fontWeight: 700 }}>{item.label}: </span>
               <span style={{ color: theme.text.secondary }}>{item.value}</span>
             </p>
           ))}
@@ -133,12 +186,12 @@ export default function ProjectModal({ project, onClose }) {
                   borderRadius: 10,
                   background: theme.glass.background,
                   border: theme.glass.border,
-                  color: theme.accent.primary,
+                  color: theme.accent.text,
                   fontWeight: 600,
                   fontSize: '0.9rem',
                   textDecoration: 'none',
                 }}>
-                GitHub
+                GitHub<span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
             {project.website && (
@@ -153,7 +206,7 @@ export default function ProjectModal({ project, onClose }) {
                   textDecoration: 'none',
                   boxShadow: theme.accent.glow,
                 }}>
-                Visit Website
+                Visit Website<span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
           </div>

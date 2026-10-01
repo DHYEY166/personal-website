@@ -21,7 +21,10 @@ export default function ScrollToTop() {
           exit={{ opacity: 0, scale: 0.5 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => window.scrollTo({
+            top: 0,
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+          })}
           style={{
             position: 'fixed',
             bottom: 32,

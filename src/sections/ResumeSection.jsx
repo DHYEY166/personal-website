@@ -24,7 +24,7 @@ function SectionBlock({ title, theme, children, delay = 0 }) {
         style={{
           fontSize: '1.3rem',
           fontWeight: 700,
-          color: theme.accent.primary,
+          color: theme.accent.text,
           marginBottom: 24,
           paddingBottom: 12,
           borderBottom: `1px solid rgba(102, 126, 234, 0.15)`,
@@ -105,7 +105,7 @@ export default function ResumeSection() {
             <p style={{ fontSize: '0.95rem', color: theme.text.primary, marginBottom: 4 }}>
               {edu.degree}
             </p>
-            <p style={{ fontSize: '0.85rem', color: theme.accent.primary, fontWeight: 600, marginBottom: 4 }}>
+            <p style={{ fontSize: '0.85rem', color: theme.accent.text, fontWeight: 600, marginBottom: 4 }}>
               {edu.gpa}
             </p>
             <p style={{ fontSize: '0.85rem', color: theme.text.muted }}>
@@ -125,7 +125,7 @@ export default function ResumeSection() {
                 style={{
                   fontSize: '0.9rem',
                   fontWeight: 600,
-                  color: theme.accent.primary,
+                  color: theme.accent.text,
                   minWidth: 180,
                 }}
               >
@@ -159,7 +159,7 @@ export default function ResumeSection() {
             <p
               style={{
                 fontSize: '0.9rem',
-                color: theme.accent.primary,
+                color: theme.accent.text,
                 fontWeight: 500,
                 marginBottom: 12,
               }}

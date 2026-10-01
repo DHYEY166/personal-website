@@ -72,7 +72,7 @@ export default function TopNavigation() {
     borderRadius: 8,
     fontSize: 14,
     fontWeight: isActive ? 600 : 500,
-    color: isActive ? theme.accent.primary : theme.text.secondary,
+    color: isActive ? theme.accent.text : theme.text.secondary,
     background: isActive ? `${theme.accent.primary}15` : 'transparent',
     textDecoration: 'none',
     transition: 'all 0.2s ease',

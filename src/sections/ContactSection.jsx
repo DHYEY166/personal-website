@@ -103,7 +103,9 @@ export default function ContactSection() {
         maxWidth: 900,
         margin: '0 auto 60px',
       }}>
-        {contactItems.map((item, i) => (
+        {contactItems.map((item, i) => {
+          const color = typeof item.color === 'string' ? item.color : item.color[theme.name];
+          return (
           <motion.a
             key={i}
             href={item.link}
@@ -131,16 +133,16 @@ export default function ContactSection() {
               width: 52,
               height: 52,
               borderRadius: 14,
-              background: `${item.color}20`,
-              border: `1px solid ${item.color}40`,
+              background: `${color}20`,
+              border: `1px solid ${color}40`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
-              color: item.color,
+              color,
               fontWeight: 800,
               fontSize: '1.1rem',
-            }}>
+            }} aria-hidden="true">
               {item.icon}
             </div>
             <div>
@@ -158,7 +160,8 @@ export default function ContactSection() {
               </p>
             </div>
           </motion.a>
-        ))}
+          );
+        })}
       </div>
 
       <ScrollReveal delay={0.2}>
@@ -175,12 +178,13 @@ export default function ContactSection() {
 
           {submitted ? (
             <motion.div
+              role="status"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               style={{ textAlign: 'center', padding: '40px 0' }}
             >
-              <div style={{ fontSize: 48, marginBottom: 16 }}>✓</div>
-              <p style={{ color: theme.accent.primary, fontSize: '1.1rem', fontWeight: 600 }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }} aria-hidden="true">✓</div>
+              <p style={{ color: theme.accent.text, fontSize: '1.1rem', fontWeight: 600 }}>
                 Message sent successfully!
               </p>
               <p style={{ color: theme.text.muted, fontSize: '0.9rem', marginTop: 8 }}>
@@ -188,29 +192,37 @@ export default function ContactSection() {
               </p>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate aria-label="Send a message">
               <FloatingLabelInput
                 label="Name"
+                name="name"
+                autoComplete="name"
+                required
                 value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                 error={errors.name}
               />
               <FloatingLabelInput
                 label="Email"
+                name="email"
                 type="email"
+                autoComplete="email"
+                required
                 value={form.email}
                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                 error={errors.email}
               />
               <FloatingLabelInput
                 label="Message"
+                name="message"
                 multiline
+                required
                 value={form.message}
                 onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
                 error={errors.message}
               />
               {sendError && (
-                <p style={{ color: '#e74c3c', fontSize: '0.85rem', marginBottom: 16, textAlign: 'center' }}>
+                <p role="alert" style={{ color: theme.text.error, fontSize: '0.85rem', marginBottom: 16, textAlign: 'center' }}>
                   {sendError}
                 </p>
               )}

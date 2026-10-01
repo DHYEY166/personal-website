@@ -232,14 +232,14 @@ export default function ChatbotPage() {
     fontSize: 12,
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    color: theme.accent.primary,
+    color: theme.accent.text,
     fontWeight: 500,
   };
 
   /* ---- render ---- */
 
   return (
-    <div style={containerStyle}>
+    <main id="main" style={containerStyle}>
       <div style={headerStyle}>
         <h1
           style={{
@@ -260,13 +260,19 @@ export default function ChatbotPage() {
         {/* Header bar */}
         <div style={chatHeaderStyle}>
           <div>
-            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Dhyey's AI Assistant</h3>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Dhyey's AI Assistant</h2>
             <p style={{ margin: 0, opacity: 0.9, fontSize: 13 }}>Powered by AI (Groq or Hugging Face)</p>
           </div>
         </div>
 
         {/* Messages */}
-        <div style={chatBodyStyle} ref={chatBodyRef}>
+        <div
+          style={chatBodyStyle}
+          ref={chatBodyRef}
+          role="log"
+          aria-live="polite"
+          aria-label="Conversation with Dhyey's AI assistant"
+        >
           {messages.map((message, index) => (
             <div key={index} style={messageStyle(message.from === 'user')}>
               <div style={bubbleStyle(message.from === 'user')}>{message.text}</div>
@@ -326,6 +332,7 @@ export default function ChatbotPage() {
               {quickQuestions.map((question, index) => (
                 <button
                   key={index}
+                  type="button"
                   style={quickQuestionBtnStyle}
                   onClick={() => setInput(question)}
                   onMouseOver={(e) => {
@@ -335,7 +342,7 @@ export default function ChatbotPage() {
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.background = theme.glass.background;
-                    e.currentTarget.style.color = theme.accent.primary;
+                    e.currentTarget.style.color = theme.accent.text;
                     e.currentTarget.style.borderColor = `${theme.accent.primary}40`;
                   }}
                 >
@@ -353,6 +360,8 @@ export default function ChatbotPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !loading && handleSend()}
             placeholder="Ask me anything about Dhyey..."
+            aria-label="Ask a question about Dhyey"
+            maxLength={500}
             style={inputStyle}
             disabled={loading}
             onFocus={(e) => (e.target.style.borderColor = theme.accent.primary)}
@@ -381,6 +390,6 @@ export default function ChatbotPage() {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
