@@ -49,13 +49,13 @@ export const experience = [
     company: 'Starcycle',
     location: 'United States',
     label: 'LegalTech / Corporate Dissolution Platform',
-    brief: 'Python/ETL tools (1K+ inputs) for entity and tax data enrichment and wind-down compliance; late-fee and closure indexes; reconciliation across internal and third-party systems; 5+ dashboards; 50+ prompts and API/MCP integrations evaluated.',
+    brief: 'Internal Slack-based RAG assistant (incremental sync, Vue frontend, PII redaction); CRM integration planning with a staged, payload-validating sync workflow; national compliance datasets, late-fee and closure indexes, and cross-system data reconciliation.',
     role: 'Data Science Intern',
     period: 'Feb 2026 \u2013 May 2026',
     bullets: [
-      'Prototyped Python tools and ETL pipelines that parsed 1K+ inputs and automated entity and tax data enrichment for wind-down compliance, cutting manual ops effort.',
-      'Built late-fee and closure indexes and reconciled records across internal and third-party systems; generated synthetic and knowledge-graph-backed datasets and 5+ dashboards that surfaced platform and funnel bottlenecks.',
-      'Designed and evaluated 50+ prompts, context strategies, and API/MCP integrations to improve internal AI tool quality and reliability.',
+      'Built an internal Slack-based assistant for Q&A, summaries, and insights using RAG architecture, with incremental data sync, a Vue frontend, and PII redaction safeguards.',
+      'Led CRM integration planning (API research, webhook architecture, field mapping) and designed a staged sync workflow that validates payloads before writing to production.',
+      'Built national compliance datasets with tiered state coverage, machine-readable exports, late fee and closure reference indexes, and contributed to a data reconciliation pipeline across multiple internal and third-party systems.',
     ],
   },
   {
