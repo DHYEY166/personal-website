@@ -1,20 +1,23 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { buildHuggingFaceInputs, getFallbackResponse } from '../data/qaContext';
+import { useTheme } from '../context/ThemeContext';
+import { gradientText } from '../styles/theme';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 /** Same-origin proxy on Vercel (`/api/hf-chat`) — HF Inference API blocks browser CORS */
 const HF_CHAT_PATH = '/api/hf-chat';
-import { useTheme } from '../context/ThemeContext';
 
 const quickQuestions = [
-  "What are Dhyey's skills?",
-  "Tell me about his education",
+  "What is Dhyey's current role?",
+  "What has he published?",
   "What projects has he worked on?",
-  "What's his work experience?",
+  "What are his technical skills?",
   "How can I contact him?",
 ];
 
 export default function ChatbotPage() {
   const { theme } = useTheme();
+  usePageMeta({ title: 'Ask Dhyey AI | Dhyey Desai', path: '/chatbot' });
   const [messages, setMessages] = useState([
     { from: 'bot', text: "Hi! I'm Dhyey's AI assistant. Ask me anything about his background, skills, projects, or experience!" },
   ]);
@@ -231,23 +234,20 @@ export default function ChatbotPage() {
     fontSize: 12,
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    color: theme.accent.primary,
+    color: theme.accent.text,
     fontWeight: 500,
   };
 
   /* ---- render ---- */
 
   return (
-    <div style={containerStyle}>
+    <main id="main" style={containerStyle}>
       <div style={headerStyle}>
         <h1
           style={{
             fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
             fontWeight: 800,
-            background: theme.accent.textGradient,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
+            ...gradientText(theme.accent.textGradient),
             marginBottom: 8,
           }}
         >
@@ -262,13 +262,19 @@ export default function ChatbotPage() {
         {/* Header bar */}
         <div style={chatHeaderStyle}>
           <div>
-            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Dhyey's AI Assistant</h3>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Dhyey's AI Assistant</h2>
             <p style={{ margin: 0, opacity: 0.9, fontSize: 13 }}>Powered by AI (Groq or Hugging Face)</p>
           </div>
         </div>
 
         {/* Messages */}
-        <div style={chatBodyStyle} ref={chatBodyRef}>
+        <div
+          style={chatBodyStyle}
+          ref={chatBodyRef}
+          role="log"
+          aria-live="polite"
+          aria-label="Conversation with Dhyey's AI assistant"
+        >
           {messages.map((message, index) => (
             <div key={index} style={messageStyle(message.from === 'user')}>
               <div style={bubbleStyle(message.from === 'user')}>{message.text}</div>
@@ -328,6 +334,7 @@ export default function ChatbotPage() {
               {quickQuestions.map((question, index) => (
                 <button
                   key={index}
+                  type="button"
                   style={quickQuestionBtnStyle}
                   onClick={() => setInput(question)}
                   onMouseOver={(e) => {
@@ -337,7 +344,7 @@ export default function ChatbotPage() {
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.background = theme.glass.background;
-                    e.currentTarget.style.color = theme.accent.primary;
+                    e.currentTarget.style.color = theme.accent.text;
                     e.currentTarget.style.borderColor = `${theme.accent.primary}40`;
                   }}
                 >
@@ -355,6 +362,8 @@ export default function ChatbotPage() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !loading && handleSend()}
             placeholder="Ask me anything about Dhyey..."
+            aria-label="Ask a question about Dhyey"
+            maxLength={500}
             style={inputStyle}
             disabled={loading}
             onFocus={(e) => (e.target.style.borderColor = theme.accent.primary)}
@@ -383,6 +392,6 @@ export default function ChatbotPage() {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -13,14 +13,18 @@ export const darkTheme = {
   },
   text: {
     primary: '#e0e0e0',
-    secondary: 'rgba(255, 255, 255, 0.65)',
-    muted: 'rgba(255, 255, 255, 0.4)',
+    secondary: 'rgba(255, 255, 255, 0.7)',
+    // 0.55 alpha keeps muted text at >= 4.5:1 on the page and card backgrounds.
+    muted: 'rgba(255, 255, 255, 0.55)',
     heading: '#ffffff',
+    error: '#ff6b5e',
   },
   accent: {
     primary: '#667eea',
     secondary: '#764ba2',
     pink: '#f093fb',
+    // Accent colour for text and links (>= 4.5:1 contrast on this theme).
+    text: '#8b9cf4',
     gradient: 'linear-gradient(135deg, #667eea, #764ba2)',
     textGradient: 'linear-gradient(135deg, #667eea, #f093fb)',
     glow: '0 0 20px rgba(102, 126, 234, 0.3)',
@@ -57,13 +61,15 @@ export const lightTheme = {
   text: {
     primary: '#1a1a2e',
     secondary: '#4a4a6a',
-    muted: '#8892b0',
+    muted: '#5f6b85',
     heading: '#1a1a2e',
+    error: '#c0392b',
   },
   accent: {
     primary: '#667eea',
     secondary: '#764ba2',
     pink: '#f093fb',
+    text: '#4c5fd1',
     gradient: 'linear-gradient(135deg, #667eea, #764ba2)',
     textGradient: 'linear-gradient(135deg, #667eea, #764ba2)',
     glow: '0 0 20px rgba(102, 126, 234, 0.15)',
@@ -95,9 +101,14 @@ export const glassCard = (theme) => ({
   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
 });
 
+// Uses the backgroundImage longhand on purpose: when the theme changes, React updates
+// only the properties whose values changed. Setting the `background` shorthand would
+// reset background-clip to border-box, and React would not re-apply the unchanged
+// clip value, turning gradient headings into solid blocks after a theme toggle.
 export const gradientText = (gradient) => ({
-  background: gradient,
+  backgroundImage: gradient,
   WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  color: 'transparent',
 });

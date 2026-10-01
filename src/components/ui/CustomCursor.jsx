@@ -1,62 +1,67 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
-import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useIsMobile, usePrefersReducedMotion } from '../../hooks/useMediaQuery';
 
 export default function CustomCursor() {
   const { theme } = useTheme();
   const isMobile = useIsMobile();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const reducedMotion = usePrefersReducedMotion();
+  const disabled = isMobile || reducedMotion;
+
+  // Motion values update the DOM directly, so mouse movement does not re-render React.
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const ringX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.5 });
+  const ringY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.5 });
+
   const [isHovering, setIsHovering] = useState(false);
   const [visible, setVisible] = useState(false);
-  const ringRef = useRef({ x: 0, y: 0 });
-  const rafRef = useRef(null);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (disabled) return;
 
     const handleMove = (e) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      setVisible(true);
+      x.set(e.clientX);
+      y.set(e.clientY);
+      setVisible((v) => (v ? v : true));
     };
 
     const handleOver = (e) => {
-      const tag = e.target.tagName.toLowerCase();
-      if (tag === 'a' || tag === 'button' || e.target.style.cursor === 'pointer' || e.target.closest('a, button')) {
-        setIsHovering(true);
-      }
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      const interactive =
+        target.closest('a, button, [role="button"]') ||
+        (target instanceof HTMLElement && target.style.cursor === 'pointer');
+      setIsHovering(Boolean(interactive));
     };
 
-    const handleOut = () => setIsHovering(false);
     const handleLeave = () => setVisible(false);
 
     window.addEventListener('mousemove', handleMove, { passive: true });
     window.addEventListener('mouseover', handleOver, { passive: true });
-    window.addEventListener('mouseout', handleOut, { passive: true });
     document.addEventListener('mouseleave', handleLeave);
 
     return () => {
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseover', handleOver);
-      window.removeEventListener('mouseout', handleOut);
       document.removeEventListener('mouseleave', handleLeave);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [isMobile]);
+  }, [disabled, x, y]);
 
-  if (isMobile) return null;
+  if (disabled) return null;
 
   return (
     <>
       <motion.div
-        animate={{
-          x: position.x - 4,
-          y: position.y - 4,
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{ type: 'tween', duration: 0 }}
+        aria-hidden="true"
         style={{
           position: 'fixed',
+          top: -4,
+          left: -4,
+          x,
+          y,
+          opacity: visible ? 1 : 0,
           width: 8,
           height: 8,
           borderRadius: '50%',
@@ -67,15 +72,16 @@ export default function CustomCursor() {
         }}
       />
       <motion.div
-        animate={{
-          x: position.x - 20,
-          y: position.y - 20,
-          opacity: visible ? 1 : 0,
-          scale: isHovering ? 1.5 : 1,
-        }}
-        transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.5 }}
+        aria-hidden="true"
+        animate={{ scale: isHovering ? 1.5 : 1 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         style={{
           position: 'fixed',
+          top: -20,
+          left: -20,
+          x: ringX,
+          y: ringY,
+          opacity: visible ? 1 : 0,
           width: 40,
           height: 40,
           borderRadius: '50%',

@@ -131,6 +131,7 @@ export default function ProjectsSection() {
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: theme.text.heading, margin: 0 }}>
                     {project.title}
                   </h3>
+                  {project.badge && (
                   <span style={{
                     padding: '4px 10px',
                     borderRadius: 6,
@@ -142,6 +143,7 @@ export default function ProjectsSection() {
                   }}>
                     {project.badge.text}
                   </span>
+                  )}
                 </div>
 
                 <p style={{ color: theme.text.secondary, fontSize: '0.92rem', lineHeight: 1.7, marginBottom: 20 }}>
@@ -178,19 +180,35 @@ export default function ProjectsSection() {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedProject(project);
+                    }}
+                    style={{
+                      color: theme.accent.text,
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      padding: 0,
+                    }}
+                  >
+                    Details<span className="sr-only"> about {project.title}</span>
+                  </button>
                   {project.github && (
                     <a href={project.github} target="_blank" rel="noopener noreferrer"
                       onClick={e => e.stopPropagation()}
-                      style={{ color: theme.accent.primary, fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none' }}>
-                      GitHub
+                      style={{ color: theme.accent.text, fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none' }}>
+                      GitHub<span className="sr-only"> repository for {project.title} (opens in a new tab)</span>
                     </a>
                   )}
                   {project.website && (
                     <a href={project.website} target="_blank" rel="noopener noreferrer"
                       onClick={e => e.stopPropagation()}
-                      style={{ color: theme.accent.pink, fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none' }}>
-                      Website
+                      style={{ color: theme.accent.text, fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none' }}>
+                      Website<span className="sr-only"> for {project.title} (opens in a new tab)</span>
                     </a>
                   )}
                 </div>

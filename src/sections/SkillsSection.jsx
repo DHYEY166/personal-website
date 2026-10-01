@@ -5,9 +5,14 @@ import { glassCard, gradientText } from '../styles/theme';
 import RadarChart from '../components/ui/RadarChart';
 import ScrollReveal from '../components/ui/ScrollReveal';
 
-function ProficiencyDots({ level, color }) {
+function ProficiencyDots({ level, color, theme }) {
+  if (!level) return null;
   return (
-    <span style={{ display: 'inline-flex', gap: 3, marginLeft: 6 }}>
+    <span
+      role="img"
+      aria-label={`${level} out of 5`}
+      style={{ display: 'inline-flex', gap: 3, marginLeft: 6 }}
+    >
       {[1, 2, 3, 4, 5].map((dot) => (
         <span
           key={dot}
@@ -15,7 +20,7 @@ function ProficiencyDots({ level, color }) {
             width: 6,
             height: 6,
             borderRadius: '50%',
-            background: dot <= level ? color : 'rgba(255,255,255,0.15)',
+            background: dot <= level ? color : theme.name === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)',
             display: 'inline-block',
           }}
         />
@@ -113,7 +118,7 @@ export default function SkillsSection() {
                     fontWeight: 500,
                   }}>
                     {skill.name}
-                    <ProficiencyDots level={skill.proficiency} color={skill.color} />
+                    <ProficiencyDots level={skill.proficiency} color={skill.color} theme={theme} />
                   </span>
                 ))}
               </div>

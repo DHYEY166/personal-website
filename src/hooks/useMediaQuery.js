@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
 
+function getMatch(query) {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia(query).matches;
+}
+
 export function useMediaQuery(query) {
-  const [matches, setMatches] = useState(false);
+  // Read the real value on first render so layout does not flash on mobile.
+  const [matches, setMatches] = useState(() => getMatch(query));
 
   useEffect(() => {
     const mql = window.matchMedia(query);
@@ -15,5 +21,4 @@ export function useMediaQuery(query) {
 }
 
 export const useIsMobile = () => useMediaQuery('(max-width: 768px)');
-export const useIsTablet = () => useMediaQuery('(min-width: 769px) and (max-width: 1024px)');
-export const useIsDesktop = () => useMediaQuery('(min-width: 1025px)');
+export const usePrefersReducedMotion = () => useMediaQuery('(prefers-reduced-motion: reduce)');

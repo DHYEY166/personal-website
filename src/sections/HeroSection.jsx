@@ -1,12 +1,22 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { heroText } from '../data/aboutData';
 import { gradientText } from '../styles/theme';
-import { useIsMobile } from '../hooks/useMediaQuery';
+import { useIsMobile, usePrefersReducedMotion } from '../hooks/useMediaQuery';
 import TypeWriter from '../components/ui/TypeWriter';
 
 const HeroScene = lazy(() => import('../components/three/HeroScene'));
+const MotionLink = motion.create(Link);
+
+function scrollToSection(e, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  e.preventDefault();
+  el.scrollIntoView({ behavior: 'smooth' });
+  window.history.replaceState(null, '', `#${id}`);
+}
 
 function MeshFallback({ theme }) {
   return (
@@ -24,7 +34,35 @@ function MeshFallback({ theme }) {
 export default function HeroSection() {
   const { theme } = useTheme();
   const isMobile = useIsMobile();
-  const canWebGL = !isMobile && typeof navigator !== 'undefined' && (navigator.hardwareConcurrency || 4) >= 4;
+  const reducedMotion = usePrefersReducedMotion();
+  const canWebGL =
+    !isMobile &&
+    !reducedMotion &&
+    typeof navigator !== 'undefined' &&
+    (navigator.hardwareConcurrency || 4) >= 4;
+
+  // The 3D scene is a separate ~890 kB chunk. Only request it once the page has
+  // loaded and the browser is idle, so it stays off the critical rendering path.
+  const [loadScene, setLoadScene] = useState(false);
+  useEffect(() => {
+    if (!canWebGL) return undefined;
+    let idleId;
+    let timeoutId;
+    const start = () => {
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(() => setLoadScene(true), { timeout: 3000 });
+      } else {
+        timeoutId = window.setTimeout(() => setLoadScene(true), 1500);
+      }
+    };
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+    return () => {
+      window.removeEventListener('load', start);
+      if (idleId && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleId);
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [canWebGL]);
 
   return (
     <section
@@ -37,8 +75,8 @@ export default function HeroSection() {
       }}
     >
       {/* Background layer - negative z-index ensures it stays behind text */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: -1 }}>
-        {canWebGL ? (
+      <div style={{ position: 'absolute', inset: 0, zIndex: -1 }} aria-hidden="true">
+        {canWebGL && loadScene ? (
           <Suspense fallback={<MeshFallback theme={theme} />}>
             <HeroScene />
           </Suspense>
@@ -88,7 +126,7 @@ export default function HeroSection() {
             {heroText.greeting}
           </h1>
 
-          <h2
+          <p
             style={{
               fontSize: 'clamp(1.2rem, 3vw, 2rem)',
               fontWeight: 600,
@@ -96,8 +134,11 @@ export default function HeroSection() {
               marginBottom: 24,
             }}
           >
-            <TypeWriter items={['ML Engineer', 'AI Researcher', 'Full-Stack Developer', 'Problem Solver']} />
-          </h2>
+            <span className="sr-only">{heroText.roles.join(', ')}</span>
+            <span aria-hidden="true">
+              <TypeWriter items={heroText.roles} paused={reducedMotion} />
+            </span>
+          </p>
 
           <p
             style={{
@@ -115,7 +156,8 @@ export default function HeroSection() {
             style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}
           >
             <motion.a
-              href="#about"
+              href="#projects"
+              onClick={(e) => scrollToSection(e, 'projects')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.3 }}
@@ -134,8 +176,8 @@ export default function HeroSection() {
               Explore My Work
             </motion.a>
 
-            <motion.a
-              href="/chatbot"
+            <MotionLink
+              to="/chatbot"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.3 }}
@@ -154,7 +196,7 @@ export default function HeroSection() {
               }}
             >
               Chat with AI
-            </motion.a>
+            </MotionLink>
           </div>
         </div>
       </div>

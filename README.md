@@ -4,36 +4,39 @@ A modern, interactive personal portfolio website showcasing Dhyey Desai's skills
 
 ## Features
 
-### Interactive Sections
-- **About Me** - Personal background and information
-- **Skills** - Technical expertise and technologies
-- **Projects** - Featured AI/ML projects with achievements
-- **Certifications** - Professional certifications and achievements
-- **Resume** - Complete professional background
-- **Contact** - Professional contact information
-- **AI Chatbot** - Interactive Q&A about Dhyey's background (powered by Hugging Face)
+### Sections
+- **About** - Background, current role, and education
+- **Skills** - Technical skills by category, with a radar overview
+- **Projects** - Featured AI/ML projects, filterable, with an accessible details dialog
+- **Publications** - Peer-reviewed papers and workshop papers
+- **Certifications** - Professional certifications (newest first)
+- **Resume** - Experience, education, projects, achievements, and a PDF download
+- **Contact** - Contact details and a Web3Forms contact form
+- **AI Chatbot** (`/chatbot`) - Q&A about Dhyey's background, answered by an LLM through a serverless route
 
 ### Technical Features
-- **Responsive Design** - Works perfectly on all devices
-- **Modern UI/UX** - Beautiful gradients and animations
-- **React Router** - Smooth navigation between sections
-- **Environment Variables** - Secure API key management
-- **Vite Build** - Fast development and optimized production builds
+- Responsive layout with light/dark themes (persisted in `localStorage`)
+- Framer Motion animations that respect `prefers-reduced-motion`
+- Lazily loaded 3D hero scene (React Three Fiber) and lazily loaded routes
+- Hash links (`/#projects`, etc.) that work from any page, plus a catch-all 404 page
+- SEO basics: meta description, canonical URL, Open Graph/Twitter cards, favicon, `robots.txt`, and `sitemap.xml`
+- Serverless chat proxy (`api/hf-chat.js`) with an origin allowlist, input-size limits, and an output-token cap
 
 ## Tech Stack
 
-- **Frontend:** React 18, Vite
-- **Styling:** Inline CSS with modern gradients and animations
-- **Routing:** React Router DOM
-- **AI Integration:** Hugging Face Inference API
+- **Frontend:** React 19, Vite 7, React Router 7
+- **Animation / 3D:** Framer Motion, Three.js, React Three Fiber, Drei
+- **Styling:** Theme objects with inline styles (`src/styles/theme.js`) plus global CSS (`src/index.css`)
+- **AI Integration:** Groq (preferred) or Hugging Face Inference Providers, called via a Vercel serverless function
 - **Deployment:** Vercel
-- **Version Control:** Git/GitHub
 
 ## Live Website
 
 **Visit:** [https://personal-website-dun-eta-72.vercel.app/](https://personal-website-dun-eta-72.vercel.app/)
 
 ## Installation & Development
+
+Requires Node.js 20.19+ (Vite 7).
 
 ```bash
 # Clone the repository
@@ -43,103 +46,78 @@ cd personal-website
 # Install dependencies
 npm install
 
-# Create environment file
-cp .env.example .env
-# Add your VITE_HUGGINGFACE_API_KEY to .env
-
-# Start development server
+# Start the development server (the chatbot falls back to keyword answers without the API)
 npm run dev
 
-# To test the AI chat locally (needs `/api/hf-chat` serverless route):
+# To test the AI chat locally with the /api/hf-chat serverless route:
 # npx vercel dev
 
-# Build for production
+# Lint and build for production
+npm run lint
 npm run build
+npm run preview
 ```
 
 ## Environment Variables
 
-Create a `.env` file in the root directory:
+**Never put secret keys in `VITE_`-prefixed variables.** Vite exposes `VITE_*` values to client code, so they can end up in the public JavaScript bundle. Keep LLM API keys server-only and set them in **Vercel → Project → Settings → Environment Variables** (or in a local `.env` used by `vercel dev`):
 
 ```env
-VITE_HUGGINGFACE_API_KEY=your_huggingface_token_here
+# Server-only (read by api/hf-chat.js; never exposed to the browser)
+GROQ_API_KEY=gsk_...                    # recommended; get one at https://console.groq.com/keys
+# GROQ_MODEL_ID=llama-3.1-8b-instant    # optional
+# HUGGINGFACE_API_KEY=hf_...            # optional fallback (fine-grained token with "Make calls to Inference Providers")
+# HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct:hf-inference   # optional
+# ALLOWED_ORIGINS=https://my-custom-domain.com   # optional, comma-separated extra origins allowed to call /api/hf-chat
 
-# Optional — defaults to Qwen/Qwen2.5-1.5B-Instruct (works with Inference Providers without extra setup).
-# Use another id if you enable providers at https://huggingface.co/settings/inference-providers
-# (e.g. microsoft/Phi-3-mini-4k-instruct once a host is enabled, or model:id:fastest per HF docs).
-# VITE_HUGGINGFACE_MODEL_ID=microsoft/Phi-3-mini-4k-instruct
-
-# Optional prompt format: phi3 (default) or plain for some instruct models
-# VITE_HUGGINGFACE_PROMPT_STYLE=plain
-
-# Recommended on Vercel (serverless proxy — avoids browser CORS):
-# Easiest if HF Inference Providers won’t route: create a free key at https://console.groq.com/keys
-# GROQ_API_KEY=gsk_...
-# Optional: GROQ_MODEL_ID=llama-3.1-8b-instant
-#
-# Or use Hugging Face only:
-# HUGGINGFACE_API_KEY=fine_grained_token_with_inference_providers
-# HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct:hf-inference
-# The chat UI calls /api/hf-chat. If both GROQ_API_KEY and HUGGINGFACE_API_KEY are set, Groq is tried first.
-
-# Contact form (Web3Forms)
-# VITE_WEB3FORMS_KEY=your_web3forms_access_key
+# Public, safe to expose (client-side)
+# VITE_WEB3FORMS_KEY=your_web3forms_access_key   # Web3Forms access keys are designed to be public
+# VITE_HUGGINGFACE_PROMPT_STYLE=plain            # optional prompt format: phi3 (default) or plain
 ```
 
-The chatbot sends a **system + bio** block on each request so the model answers from your facts. **`getFallbackResponse`** in `src/data/qaContext.js` is only used when the API fails, the key is missing, or the response is empty — it is keyword-based, not the main “AI path.”
+If both `GROQ_API_KEY` and `HUGGINGFACE_API_KEY` are set, Groq is tried first. The API route still reads the legacy `VITE_HUGGINGFACE_API_KEY` / `VITE_HUGGINGFACE_MODEL_ID` names for backward compatibility; rename them to the non-`VITE_` names.
 
-**If the API returns “not supported by any provider you have enabled”:** open [Inference Providers settings](https://huggingface.co/settings/inference-providers) and **toggle ON** at least **HF Inference** and/or a GPU partner (Groq, Together, etc.). The serverless route retries several model ids (including `:hf-inference` / `:preferred` suffixes). To force one host, set `HUGGINGFACE_MODEL_ID` to e.g. `Qwen/Qwen2.5-1.5B-Instruct:hf-inference`. Use a fine-grained token with **Make calls to Inference Providers**.
+The chatbot sends a **system + bio** block (built from the files in `src/data/` by `src/data/qaContext.js`) on each request so the model answers from real facts. **`getFallbackResponse`** in `src/data/qaContext.js` is only used when the API fails, the key is missing, or the response is empty. It is keyword-based, not the main AI path.
+
+**If Hugging Face returns "not supported by any provider you have enabled":** open [Inference Providers settings](https://huggingface.co/settings/inference-providers) and turn on at least **HF Inference** and/or a partner provider, or set `GROQ_API_KEY` instead.
 
 ## Project Structure
 
 ```
 personal-website/
-├── src/
-│   ├── App.jsx          # Main application component
-│   ├── main.jsx         # React entry point
-│   └── index.css        # Global styles
+├── api/
+│   └── hf-chat.js          # Vercel serverless chat proxy (Groq / Hugging Face)
 ├── public/
-│   ├── profile.jpg      # Profile image
-│   └── Dhyey_Desai_Resume.pdf  # Resume file
-├── index.html           # HTML template
-├── package.json         # Dependencies and scripts
-├── vite.config.js       # Vite configuration
-└── .env                 # Environment variables (not in repo)
+│   ├── Dhyey_Desai_Resume.pdf
+│   ├── favicon.svg, og-image.png
+│   └── robots.txt, sitemap.xml
+├── src/
+│   ├── App.jsx             # Routes (/, /chatbot, 404) and providers
+│   ├── main.jsx            # React entry point
+│   ├── index.css           # Global styles
+│   ├── components/         # Layout, UI, and 3D components
+│   ├── context/            # Theme context
+│   ├── data/               # Site content (resume, projects, publications, skills, chatbot context)
+│   ├── hooks/              # Scroll spy, media queries, page meta, etc.
+│   ├── pages/              # HomePage, ChatbotPage, NotFoundPage
+│   ├── sections/           # Home page sections
+│   └── styles/             # Theme tokens
+├── index.html              # HTML template, meta tags, and fonts
+├── eslint.config.js
+├── vite.config.js
+└── vercel.json
 ```
+
+Most content updates only touch `src/data/`. When the resume changes, also replace `public/Dhyey_Desai_Resume.pdf`.
 
 ## Deployment
 
-This project is deployed on **Vercel** with automatic deployments from GitHub:
-
-1. **GitHub Repository:** [https://github.com/DHYEY166/personal-website](https://github.com/DHYEY166/personal-website)
-2. **Live Website:** [https://personal-website-dun-eta-72.vercel.app/](https://personal-website-dun-eta-72.vercel.app/)
-
-### Alternative Deployment Options
-
-- **Netlify:** Connect GitHub repo and deploy
-- **GitHub Pages:** Use GitHub Actions for deployment
-- **Firebase Hosting:** Google's hosting platform
-
-## AI Chatbot
-
-The website features an intelligent chatbot that can answer questions about:
-- Dhyey's background and experience
-- Technical skills and expertise
-- Projects and achievements
-- Professional certifications
-- Education and publications
-- Contact information
-
-Powered by Hugging Face Inference Providers (router API) with custom context about Dhyey's professional background.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
+Deployed on **Vercel** with automatic deployments from GitHub ([DHYEY166/personal-website](https://github.com/DHYEY166/personal-website)). Set `GROQ_API_KEY` (and optionally `HUGGINGFACE_API_KEY`) in the Vercel project for the chatbot to work.
 
 ## About Dhyey Desai
 
-AI/ML Engineer and Data Scientist based in Los Angeles, California. Currently pursuing MS in Applied Data Science at USC with experience at companies like nala, Genpact, and NUS.
+Associate Forward Deployed Engineer at Momentuum Blue (A Coforge Company) in Princeton, New Jersey, working on agentic AI, RAG, and LLM evaluation. MS in Applied Data Science from USC (2026). Previous experience at Starcycle, Onawa Pet, Genpact, and the National University of Singapore.
 
-**Contact:** dhyeydes@usc.edu  
+**Contact:** dvdesai06@gmail.com  
 **LinkedIn:** [linkedin.com/in/dhyey-desai-80659a216](https://www.linkedin.com/in/dhyey-desai-80659a216)  
 **GitHub:** [github.com/DHYEY166](https://github.com/DHYEY166)

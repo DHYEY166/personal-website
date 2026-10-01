@@ -7,7 +7,13 @@ import ScrollReveal from '../components/ui/ScrollReveal';
 export default function CertificationsSection() {
   const { theme } = useTheme();
 
-  const yearEntries = Object.entries(certifications).reverse();
+  const yearEntries = Object.entries(certifications)
+    .sort(([a], [b]) => Number(b) - Number(a))
+    .map(([year, certs]) => [
+      year,
+      // Newest first; year-only dates ("2026") parse to Jan 1 and sort last within a year.
+      [...certs].sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0)),
+    ]);
 
   return (
     <section
@@ -47,7 +53,7 @@ export default function CertificationsSection() {
             style={{
               fontSize: '1.4rem',
               fontWeight: 700,
-              color: theme.accent.primary,
+              color: theme.accent.text,
               marginBottom: 20,
               paddingLeft: 4,
             }}
@@ -146,13 +152,13 @@ export default function CertificationsSection() {
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
-                          color: theme.accent.primary,
+                          color: theme.accent.text,
                           fontSize: '0.8rem',
                           fontWeight: 600,
                           textDecoration: 'none',
                         }}
                       >
-                        Verify
+                        Verify<span className="sr-only"> {cert.title} (opens in a new tab)</span>
                       </a>
                     )}
                   </div>
