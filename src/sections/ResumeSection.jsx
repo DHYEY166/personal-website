@@ -10,6 +10,7 @@ import {
 } from '../data/resumeData';
 import { glassCard, gradientText } from '../styles/theme';
 import ScrollReveal from '../components/ui/ScrollReveal';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 function SectionBlock({ title, theme, children, delay = 0 }) {
   return (
@@ -39,6 +40,8 @@ function SectionBlock({ title, theme, children, delay = 0 }) {
 
 export default function ResumeSection() {
   const { theme } = useTheme();
+  // Below this width the skill labels stack above their values.
+  const stackSkills = useMediaQuery('(max-width: 600px)');
 
   const labelStyle = {
     fontSize: '0.85rem',
@@ -151,23 +154,42 @@ export default function ResumeSection() {
 
       {/* Technical Skills */}
       <SectionBlock title="Technical Skills" theme={theme} delay={0.05}>
-        <div style={{ display: 'grid', gap: 12 }}>
+        {/* One grid for all rows: a shared label column sized to the longest label, and a value
+            column that wraps within the card (minmax(0, 1fr) lets long text shrink). */}
+        <dl
+          style={{
+            display: 'grid',
+            gridTemplateColumns: stackSkills ? 'minmax(0, 1fr)' : 'max-content minmax(0, 1fr)',
+            columnGap: 24,
+            rowGap: stackSkills ? 0 : 14,
+            margin: 0,
+            fontSize: '0.9rem',
+            lineHeight: 1.6,
+          }}
+        >
           {technicalSkills.map((skill, i) => (
-            <div key={i} style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <span
+            <div key={skill.category} style={{ display: 'contents' }}>
+              <dt
                 style={{
-                  fontSize: '0.9rem',
                   fontWeight: 600,
                   color: theme.accent.text,
-                  minWidth: 180,
+                  marginTop: stackSkills && i > 0 ? 14 : 0,
                 }}
               >
-                {skill.category}:
-              </span>
-              <span style={{ fontSize: '0.9rem', color: theme.text.secondary }}>{skill.items}</span>
+                {skill.category}
+              </dt>
+              <dd
+                style={{
+                  margin: stackSkills ? '2px 0 0' : 0,
+                  color: theme.text.secondary,
+                  overflowWrap: 'anywhere',
+                }}
+              >
+                {skill.items}
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </SectionBlock>
 
       {/* Professional Experience */}
