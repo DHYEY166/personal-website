@@ -5,7 +5,7 @@ export const education = [
     school: 'University of Southern California',
     period: 'Aug 2024 \u2013 May 2026',
     degree: 'Master of Science, Applied Data Science',
-    gpa: 'GPA: 3.73',
+    gpa: 'GPA: 3.76',
     coursework: 'Foundations of Data Management, Machine Learning for Data Science, Foundations and Applications of Data Mining',
   },
   {
