@@ -5,7 +5,8 @@ export const certifications = {
       title: 'AWS Certified AI Practitioner',
       institution: 'Amazon Web Services Training and Certification',
       date: '2026',
-      hasVerification: false,
+      hasVerification: true,
+      verificationLink: 'https://www.credly.com/badges/50679af5-08a1-4bc0-9fe9-80f962b9e05c',
       badge: 'Certification \u2013 Foundational',
       color: '#ff9900'
     }
