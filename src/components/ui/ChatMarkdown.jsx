@@ -25,12 +25,16 @@ function Inline({ nodes, theme, mode }) {
           </code>
         );
       case 'link': {
+        // External pages and same-site files (e.g. the resume PDF) open in a new tab so the chat
+        // isn't lost; same-site routes like /#contact and mailto: links open in place.
         const external = !n.href.startsWith('/');
+        const siteFile = !external && /\.[a-z0-9]{2,5}(?:#|$)/i.test(n.href);
+        const newTab = siteFile || (external && !n.href.startsWith('mailto:'));
         return (
           <a
             key={i}
             href={n.href}
-            {...(external && !n.href.startsWith('mailto:') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             style={{ color: theme.accent.text, fontWeight: 600, textDecoration: 'underline', textUnderlineOffset: 2, wordBreak: 'break-word' }}
           >
             <Inline nodes={n.children} theme={theme} mode={mode} />
