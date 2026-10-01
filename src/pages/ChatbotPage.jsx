@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { gradientText } from '../styles/theme';
 import { usePageMeta } from '../hooks/usePageMeta';
 import ChatMarkdown from '../components/ui/ChatMarkdown';
+import { quickQuestions } from '../data/quickQuestions';
 
 /** Same-origin proxy on Vercel (`/api/hf-chat`) — HF Inference API blocks browser CORS */
 const HF_CHAT_PATH = '/api/hf-chat';
@@ -23,14 +24,6 @@ function rateLimitMessage(body, retryAfterHeader) {
   return `You've asked a lot of questions, thank you for the interest! Please try again ${wait}. You can also reach Dhyey directly via the [contact form](/#contact).`;
 }
 
-const quickQuestions = [
-  "What is Dhyey's current role?",
-  "What has he published?",
-  "What projects has he worked on?",
-  "What are his technical skills?",
-  "How can I contact him?",
-];
-
 export default function ChatbotPage() {
   const { theme } = useTheme();
   usePageMeta({ title: 'Ask Dhyey AI | Dhyey Desai', path: '/chatbot' });
@@ -47,11 +40,13 @@ export default function ChatbotPage() {
     }
   }, [messages, loading]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
-    setMessages((prev) => [...prev, { from: 'user', text: input }]);
-    const userInput = input;
-    setInput('');
+  /** Sends the typed input, or `preset` (a quick-question chip) without touching the draft. */
+  const handleSend = async (preset) => {
+    const fromChip = typeof preset === 'string';
+    const userInput = fromChip ? preset : input;
+    if (!userInput.trim() || loading) return;
+    setMessages((prev) => [...prev, { from: 'user', text: userInput }]);
+    if (!fromChip) setInput('');
     setLoading(true);
 
     try {
@@ -181,12 +176,20 @@ export default function ChatbotPage() {
     gap: 14,
   };
 
-  const chatInputContainerStyle = {
-    padding: '16px 24px',
+  // Footer = quick-question chips + input row. It sits below the scrolling log (not inside or
+  // over it), so the chips never cover messages.
+  const chatFooterStyle = {
     background: theme.glass.background,
     backdropFilter: theme.glass.blur,
     WebkitBackdropFilter: theme.glass.blur,
     borderTop: theme.glass.border,
+    padding: '12px 24px 16px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+  };
+
+  const chatInputContainerStyle = {
     display: 'flex',
     gap: 12,
     alignItems: 'center',
@@ -222,6 +225,9 @@ export default function ChatbotPage() {
 
   const inputStyle = {
     flex: 1,
+    // Inputs have an intrinsic min width; without this the row overflows narrow phones and
+    // pushes the Send button past the card edge.
+    minWidth: 0,
     padding: '12px 18px',
     border: theme.glass.border,
     borderRadius: 12,
@@ -247,26 +253,14 @@ export default function ChatbotPage() {
     boxShadow: theme.accent.glow,
   };
 
-  const quickQuestionsContainerStyle = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 12,
-    justifyContent: 'center',
-  };
-
-  const quickQuestionBtnStyle = {
-    background: theme.glass.background,
-    backdropFilter: theme.glass.blur,
-    WebkitBackdropFilter: theme.glass.blur,
-    border: `1px solid ${theme.accent.primary}40`,
-    borderRadius: 16,
-    padding: '8px 16px',
-    fontSize: 12,
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    color: theme.accent.text,
-    fontWeight: 500,
+  // Chip colours come from the theme through CSS variables; layout, hover, focus, disabled, and
+  // the mobile single-line scroller live in index.css (.quick-chips / .quick-chip).
+  const quickChipVars = {
+    '--chip-bg': theme.glass.background,
+    '--chip-border': `${theme.accent.primary}40`,
+    '--chip-color': theme.accent.text,
+    '--chip-hover-bg': theme.accent.gradient,
+    '--chip-focus': theme.accent.text,
   };
 
   /* ---- render ---- */
@@ -347,79 +341,61 @@ export default function ChatbotPage() {
               </div>
             </div>
           )}
-
-          {messages.length === 1 && (
-            <div style={quickQuestionsContainerStyle}>
-              <p
-                style={{
-                  width: '100%',
-                  textAlign: 'center',
-                  color: theme.text.muted,
-                  marginBottom: 8,
-                  fontSize: 14,
-                }}
-              >
-                Quick questions to get started:
-              </p>
-              {quickQuestions.map((question, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  style={quickQuestionBtnStyle}
-                  onClick={() => setInput(question)}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = theme.accent.gradient;
-                    e.currentTarget.style.color = '#fff';
-                    e.currentTarget.style.borderColor = 'transparent';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = theme.glass.background;
-                    e.currentTarget.style.color = theme.accent.text;
-                    e.currentTarget.style.borderColor = `${theme.accent.primary}40`;
-                  }}
-                >
-                  {question}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* Input area */}
-        <div style={chatInputContainerStyle}>
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && !loading && handleSend()}
-            placeholder="Ask me anything about Dhyey..."
-            aria-label="Ask a question about Dhyey"
-            maxLength={500}
-            style={inputStyle}
-            disabled={loading}
-            onFocus={(e) => (e.target.style.borderColor = theme.accent.primary)}
-            onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
-          />
-          <button
-            onClick={handleSend}
-            disabled={loading || !input.trim()}
-            style={{
-              ...sendButtonStyle,
-              opacity: loading || !input.trim() ? 0.5 : 1,
-              cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
-            }}
-            onMouseOver={(e) => {
-              if (!loading && input.trim()) {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = theme.accent.glowStrong;
-              }
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = theme.accent.glow;
-            }}
-          >
-            {loading ? 'Sending...' : 'Send'}
-          </button>
+        <div style={chatFooterStyle}>
+          {/* Quick questions: always available; disabled while a reply is loading. */}
+          <div className="quick-chips" role="group" aria-label="Quick questions" style={quickChipVars}>
+            {quickQuestions.map((question) => (
+              <button
+                key={question}
+                type="button"
+                className="quick-chip"
+                disabled={loading}
+                onClick={() => handleSend(question)}
+              >
+                {question}
+              </button>
+            ))}
+          </div>
+
+          {/* Input area */}
+          <div style={chatInputContainerStyle}>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && !loading && handleSend()}
+              placeholder="Ask me anything about Dhyey..."
+              aria-label="Ask a question about Dhyey"
+              maxLength={500}
+              style={inputStyle}
+              disabled={loading}
+              onFocus={(e) => (e.target.style.borderColor = theme.accent.primary)}
+              onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
+            />
+            <button
+              type="button"
+              onClick={() => handleSend()}
+              disabled={loading || !input.trim()}
+              style={{
+                ...sendButtonStyle,
+                opacity: loading || !input.trim() ? 0.5 : 1,
+                cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
+              }}
+              onMouseOver={(e) => {
+                if (!loading && input.trim()) {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = theme.accent.glowStrong;
+                }
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = theme.accent.glow;
+              }}
+            >
+              {loading ? 'Sending...' : 'Send'}
+            </button>
+          </div>
         </div>
       </div>
     </main>

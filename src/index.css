@@ -121,3 +121,59 @@ img {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
+
+/* Chatbot quick-question chips (colours come from CSS variables set by ChatbotPage). */
+.quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quick-chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
+  color: var(--chip-color);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+/* Hover only on devices that really hover, so a tapped chip doesn't stay highlighted on phones. */
+@media (hover: hover) {
+  .quick-chip:hover:not(:disabled) {
+    background: var(--chip-hover-bg);
+    border-color: transparent;
+    color: #fff;
+  }
+}
+.quick-chip:focus-visible {
+  outline: 2px solid var(--chip-focus);
+  outline-offset: 2px;
+}
+.quick-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* Phones: one horizontally scrollable line so the chips don't take vertical space. */
+@media (max-width: 600px) {
+  .quick-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    /* Room for the focus outline inside the scroll container. */
+    padding: 4px;
+    margin: -4px;
+  }
+  .quick-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .quick-chip {
+    scroll-snap-align: start;
+  }
+}
