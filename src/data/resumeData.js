@@ -106,6 +106,7 @@ export const resumeProjects = [
   },
   {
     name: 'MultiLLM | Intelligent Multi-Model AI System',
+    link: 'https://github.com/DHYEY166/MultiLLM',
     period: 'Sep 2025 \u2013 Dec 2025',
     bullets: [
       'Built privacy-first AI platform with real-time streaming chat, intelligent task routing across 5+ local Ollama models (Llama 3.2, DeepSeek Coder, Phi3), and dynamic model selection with latency tracking.',

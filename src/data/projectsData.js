@@ -35,8 +35,7 @@ export const projects = [
     challenge: 'Building a privacy-first multi-model AI system with enterprise-grade security and multi-format knowledge retrieval',
     outcome: '5+ model routing, 10+ file type support, and enterprise security features',
     tech: ['Ollama', 'Llama 3.2', 'DeepSeek', 'Redis', 'Google OAuth', 'Node.js', 'Python', 'Semantic Chunking'],
-    // No public MultiLLM repository; link to the GitHub profile.
-    github: 'https://github.com/DHYEY166',
+    github: 'https://github.com/DHYEY166/MultiLLM',
     categories: ['AI/ML', 'Full-Stack'],
   },
   {
