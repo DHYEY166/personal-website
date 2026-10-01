@@ -4,17 +4,17 @@
 // out of sync with the page. The prompt uses the compact `brief` fields (one line per role,
 // project, and publication) to keep each request small: Groq's free tier allows 8K tokens per
 // minute, so every token in the prompt costs visitor capacity. No API keys live in client code.
-import { contactItems } from './contactData';
-import { certifications } from './certificationsData';
-import { projects } from './projectsData';
-import { publications } from './publicationsData';
-import { RESUME_PDF_PATH, education, experience, technicalSkills } from './resumeData';
+import { contactItems } from './contactData.js';
+import { certifications } from './certificationsData.js';
+import { projects } from './projectsData.js';
+import { publications } from './publicationsData.js';
+import { RESUME_PDF_PATH, education, experience, technicalSkills } from './resumeData.js';
 
 /**
  * `phi3` — Phi-3 style chat template (<|system|>…<|end|>); the proxy converts it to
  * system/user chat messages. `plain` — a single instruction block.
  */
-export const HUGGINGFACE_PROMPT_STYLE = import.meta.env.VITE_HUGGINGFACE_PROMPT_STYLE || 'phi3';
+export const HUGGINGFACE_PROMPT_STYLE = import.meta.env?.VITE_HUGGINGFACE_PROMPT_STYLE || 'phi3';
 
 const NAME = 'Dhyey Desai';
 const SITE = 'https://personal-website-dun-eta-72.vercel.app';
