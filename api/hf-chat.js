@@ -5,6 +5,52 @@
  * Set at least one of the above in Vercel.
  */
 const ROUTER_BASE = 'https://router.huggingface.co/v1';
+
+/** Hard limits so the route cannot be used as a cheap general-purpose LLM proxy. */
+const MAX_OUTPUT_TOKENS = 512;
+const MAX_INPUT_CHARS = 16000; // system prompt + portfolio facts + question
+const MAX_QUESTION_CHARS = 1000;
+
+const PRODUCTION_ORIGIN = 'https://personal-website-dun-eta-72.vercel.app';
+const LOCAL_ORIGIN_RE = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+
+/**
+ * Allowed browser origins: production, this deployment's own Vercel URLs (previews),
+ * localhost, plus any extra comma-separated origins in ALLOWED_ORIGINS.
+ */
+function allowedOrigins() {
+  const set = new Set([PRODUCTION_ORIGIN]);
+  for (const v of [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL]) {
+    if (v) set.add(`https://${v}`);
+  }
+  for (const v of (process.env.ALLOWED_ORIGINS || '').split(',')) {
+    if (v.trim()) set.add(v.trim().replace(/\/$/, ''));
+  }
+  return set;
+}
+
+function requestOrigin(req) {
+  const origin = req.headers?.origin;
+  if (origin) return origin;
+  // Some browsers omit Origin on same-origin requests; fall back to Referer.
+  const referer = req.headers?.referer;
+  if (!referer) return '';
+  try {
+    return new URL(referer).origin;
+  } catch {
+    return '';
+  }
+}
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  return LOCAL_ORIGIN_RE.test(origin) || allowedOrigins().has(origin);
+}
+
+function clampNumber(value, min, max, fallback) {
+  const n = typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+  return Math.min(max, Math.max(min, n));
+}
 const GROQ_CHAT_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 /** Phi-3 template from qaContext → OpenAI-style messages (avoids double chat templating). */
@@ -233,11 +279,19 @@ export default async function handler(req, res) {
     return;
   }
 
+  const origin = requestOrigin(req);
+  if (!isAllowedOrigin(origin)) {
+    console.warn(`[hf-chat] rejected request from origin "${origin || '(none)'}"`);
+    res.status(403).json({ error: 'Origin not allowed' });
+    return;
+  }
+
   const hfToken =
     process.env.HUGGINGFACE_API_KEY || process.env.VITE_HUGGINGFACE_API_KEY;
   const groqKey = process.env.GROQ_API_KEY?.trim();
 
   if (!hfToken && !groqKey) {
+    console.error('[hf-chat] no GROQ_API_KEY or HUGGINGFACE_API_KEY configured');
     res.status(500).json({
       error:
         'Missing GROQ_API_KEY or HUGGINGFACE_API_KEY on server. Add GROQ_API_KEY from https://console.groq.com/keys (easiest), or fix HF Inference Providers and use HUGGINGFACE_API_KEY.',
@@ -258,6 +312,15 @@ export default async function handler(req, res) {
   const { inputs, parameters } = body || {};
   if (!inputs || typeof inputs !== 'string') {
     res.status(400).json({ error: 'Missing inputs string' });
+    return;
+  }
+  if (inputs.length > MAX_INPUT_CHARS) {
+    res.status(413).json({ error: `Input too long (max ${MAX_INPUT_CHARS} characters)` });
+    return;
+  }
+  const question = buildChatMessages(inputs).find((m) => m.role === 'user')?.content || '';
+  if (question.length > MAX_QUESTION_CHARS) {
+    res.status(413).json({ error: `Question too long (max ${MAX_QUESTION_CHARS} characters)` });
     return;
   }
 
@@ -283,15 +346,13 @@ export default async function handler(req, res) {
     do_sample: true,
     return_full_text: false,
   };
-  const p = { ...defaultParams, ...parameters };
+  const p = { ...defaultParams, ...(parameters && typeof parameters === 'object' ? parameters : {}) };
 
-  const maxTokens = Math.min(
-    4096,
-    Math.max(1, Number(p.max_new_tokens) || 384),
+  const maxTokens = Math.round(
+    clampNumber(Number(p.max_new_tokens), 1, MAX_OUTPUT_TOKENS, defaultParams.max_new_tokens),
   );
-  const temperature =
-    typeof p.temperature === 'number' ? p.temperature : 0.35;
-  const topP = typeof p.top_p === 'number' ? p.top_p : 0.9;
+  const temperature = clampNumber(p.temperature, 0, 1.5, defaultParams.temperature);
+  const topP = clampNumber(p.top_p, 0.05, 1, defaultParams.top_p);
 
   const sampling = {
     max_output_tokens: maxTokens,
@@ -355,12 +416,17 @@ export default async function handler(req, res) {
         : base;
       const outStatus =
         lastStatus >= 400 ? lastStatus : hfPayloadIsError(lastParsed) ? 400 : 502;
+      console.error(
+        `[hf-chat] all backends failed (groq: ${groqKey ? 'configured' : 'not set'}, ` +
+          `hf models tried: ${modelAttempts.length}) status=${outStatus}: ${base.slice(0, 300)}`,
+      );
       res.status(outStatus).json({ error: errMsg });
       return;
     }
 
     res.status(200).json([{ generated_text: textOut }]);
   } catch (e) {
+    console.error('[hf-chat] proxy request failed:', e instanceof Error ? e.message : e);
     res.status(502).json({
       error: e instanceof Error ? e.message : 'Proxy request failed',
     });
