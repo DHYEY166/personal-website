@@ -64,7 +64,7 @@ export const experience = [
     label: 'PetTech',
     brief: 'RAG with OpenAI function calling + Firebase over 500+ voice notes (pet-health analytics); multimodal pipeline cutting manual review 60%; Scala + Redis visualization engine (45% faster).',
     role: 'AI/ML Engineer Intern',
-    period: 'May 2025 \u2013 Aug 2025',
+    period: 'May 2025 \u2013 Jul 2025',
     link: { label: 'pet-voice-notes on GitHub', url: 'https://github.com/dhyeynala/pet-voice-notes' },
     bullets: [
       'Built a RAG system with OpenAI Function Calling + Firebase handling 500+ voice notes, delivering actionable pet health analytics across 3 cross-team dashboards to inform product decisions.',
