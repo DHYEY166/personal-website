@@ -50,7 +50,7 @@ export const experience = [
     location: 'United States',
     label: 'LegalTech / Corporate Dissolution Platform',
     brief: 'Python/ETL tools (1K+ inputs) for entity and tax data enrichment and wind-down compliance; late-fee and closure indexes; reconciliation across internal and third-party systems; 5+ dashboards; 50+ prompts and API/MCP integrations evaluated.',
-    role: 'Data Science Co-op',
+    role: 'Data Science Intern',
     period: 'Feb 2026 \u2013 May 2026',
     bullets: [
       'Prototyped Python tools and ETL pipelines that parsed 1K+ inputs and automated entity and tax data enrichment for wind-down compliance, cutting manual ops effort.',
