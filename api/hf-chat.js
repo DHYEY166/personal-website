@@ -238,8 +238,12 @@ async function routerPost(path, token, body) {
 
 async function tryGroqChat(groqKey, inputs, maxTokens, temperature, topP) {
   const model =
-    (process.env.GROQ_MODEL_ID || 'llama-3.1-8b-instant').trim() ||
-    'llama-3.1-8b-instant';
+    (process.env.GROQ_MODEL_ID || 'openai/gpt-oss-20b').trim() ||
+    'openai/gpt-oss-20b';
+  // GPT-OSS models reason before answering; keep it light so the answer fits in max_tokens.
+  const reasoningParams = /gpt-oss/i.test(model)
+    ? { reasoning_effort: 'low', include_reasoning: false }
+    : {};
   const gr = await fetch(GROQ_CHAT_URL, {
     method: 'POST',
     headers: {
@@ -252,6 +256,7 @@ async function tryGroqChat(groqKey, inputs, maxTokens, temperature, topP) {
       max_tokens: maxTokens,
       temperature,
       top_p: topP,
+      ...reasoningParams,
     }),
   });
   const raw = await gr.text();

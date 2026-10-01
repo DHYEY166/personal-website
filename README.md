@@ -65,7 +65,7 @@ npm run preview
 ```env
 # Server-only (read by api/hf-chat.js; never exposed to the browser)
 GROQ_API_KEY=gsk_...                    # recommended; get one at https://console.groq.com/keys
-# GROQ_MODEL_ID=llama-3.1-8b-instant    # optional
+# GROQ_MODEL_ID=openai/gpt-oss-20b    # optional
 # HUGGINGFACE_API_KEY=hf_...            # optional fallback (fine-grained token with "Make calls to Inference Providers")
 # HUGGINGFACE_MODEL_ID=Qwen/Qwen2.5-1.5B-Instruct:hf-inference   # optional
 # ALLOWED_ORIGINS=https://my-custom-domain.com   # optional, comma-separated extra origins allowed to call /api/hf-chat
