@@ -77,13 +77,3 @@ export const skillCategories = [
     ]
   }
 ];
-
-// Radar chart data derived from categories
-export const radarData = [
-  { name: 'Languages', level: 85 },
-  { name: 'ML/GenAI', level: 95 },
-  { name: 'NLP', level: 90 },
-  { name: 'ML Eng', level: 80 },
-  { name: 'Tools', level: 88 },
-  { name: 'Cloud', level: 75 },
-];
