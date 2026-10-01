@@ -9,7 +9,7 @@ export const heroText = {
 export const infoItems = [
   { label: 'Current Role', value: 'Associate Forward Deployed Engineer, Momentuum Blue' },
   { label: 'Location', value: 'Princeton, New Jersey' },
-  { label: 'Email', value: 'dhyeydes@usc.edu' },
+  { label: 'Email', value: 'dvdesai06@gmail.com' },
   { label: 'Education', value: 'MS Applied Data Science, USC (GPA: 3.73)' },
 ];
 

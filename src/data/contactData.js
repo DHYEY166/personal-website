@@ -2,8 +2,8 @@ export const contactItems = [
   {
     icon: '@',
     title: 'Email',
-    value: 'dhyeydes@usc.edu',
-    link: 'mailto:dhyeydes@usc.edu',
+    value: 'dvdesai06@gmail.com',
+    link: 'mailto:dvdesai06@gmail.com',
     // Per-theme colours keep the icon text at >= 4.5:1 contrast.
     color: { dark: '#ff6b5e', light: '#c0392b' }
   },

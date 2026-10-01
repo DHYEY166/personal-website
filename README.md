@@ -118,6 +118,6 @@ Deployed on **Vercel** with automatic deployments from GitHub ([DHYEY166/persona
 
 Associate Forward Deployed Engineer at Momentuum Blue (A Coforge Company) in Princeton, New Jersey, working on agentic AI, RAG, and LLM evaluation. MS in Applied Data Science from USC (2026). Previous experience at Starcycle, Onawa Pet, Genpact, and the National University of Singapore.
 
-**Contact:** dhyeydes@usc.edu  
+**Contact:** dvdesai06@gmail.com  
 **LinkedIn:** [linkedin.com/in/dhyey-desai-80659a216](https://www.linkedin.com/in/dhyey-desai-80659a216)  
 **GitHub:** [github.com/DHYEY166](https://github.com/DHYEY166)
