@@ -7,12 +7,90 @@
 const ROUTER_BASE = 'https://router.huggingface.co/v1';
 
 /** Hard limits so the route cannot be used as a cheap general-purpose LLM proxy. */
-const MAX_OUTPUT_TOKENS = 512;
-const MAX_INPUT_CHARS = 20000; // system prompt + portfolio facts (~12k today) + question
+const MAX_OUTPUT_TOKENS = 400; // includes gpt-oss reasoning tokens; the client asks for 300
+const DEFAULT_OUTPUT_TOKENS = 300;
+const MAX_INPUT_CHARS = 8000; // system prompt + compact portfolio facts (~5k today) + question
 const MAX_QUESTION_CHARS = 1000;
 
 const PRODUCTION_ORIGIN = 'https://personal-website-dun-eta-72.vercel.app';
 const LOCAL_ORIGIN_RE = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+/** Vercel preview deployments of this project (per-commit and per-branch URLs). */
+const PREVIEW_ORIGIN_RE = /^https:\/\/personal-website-[a-z0-9-]+-dhyeys-projects-8579ba17\.vercel\.app$/;
+
+/* ---------------- Per-visitor rate limiting ----------------
+ * Best effort. Without a shared store each serverless instance keeps its own counters, so a
+ * visitor whose requests land on different instances can exceed the limits, and counters reset
+ * on cold starts. If UPSTASH_REDIS_REST_URL/UPSTASH_REDIS_REST_TOKEN (or Vercel KV's
+ * KV_REST_API_URL/KV_REST_API_TOKEN) are set, counters are shared through Upstash's REST API
+ * instead; on any Upstash error the in-memory limiter is used.
+ */
+const RATE_LIMITS = [
+  { name: 'minute', windowMs: 60 * 1000, max: 10 },
+  { name: 'day', windowMs: 24 * 60 * 60 * 1000, max: 40 },
+];
+const memoryCounters = new Map(); // `${name}:${ip}:${window}` -> count
+const MAX_MEMORY_KEYS = 10000;
+
+function clientIp(req) {
+  const xff = req.headers?.['x-forwarded-for'];
+  const first = (Array.isArray(xff) ? xff[0] : xff || '').split(',')[0].trim();
+  return first || req.headers?.['x-real-ip'] || req.socket?.remoteAddress || 'unknown';
+}
+
+/** Fixed windows aligned to the epoch: returns the keys and seconds until each window resets. */
+function windowsFor(ip, now) {
+  return RATE_LIMITS.map((l) => {
+    const index = Math.floor(now / l.windowMs);
+    return {
+      ...l,
+      key: `rl:hf-chat:${l.name}:${ip}:${index}`,
+      resetInSec: Math.max(1, Math.ceil(((index + 1) * l.windowMs - now) / 1000)),
+    };
+  });
+}
+
+function memoryHit(windows) {
+  if (memoryCounters.size > MAX_MEMORY_KEYS) memoryCounters.clear();
+  return windows.map((w) => {
+    const count = (memoryCounters.get(w.key) || 0) + 1;
+    memoryCounters.set(w.key, count);
+    return count;
+  });
+}
+
+async function upstashHit(windows) {
+  const url = (process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || '').replace(/\/$/, '');
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  const commands = windows.flatMap((w) => [
+    ['INCR', w.key],
+    ['PEXPIRE', w.key, String(w.windowMs)],
+  ]);
+  const r = await fetch(`${url}/pipeline`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(commands),
+  });
+  if (!r.ok) throw new Error(`Upstash HTTP ${r.status}`);
+  const out = await r.json();
+  return windows.map((_, i) => Number(out?.[i * 2]?.result));
+}
+
+/** Counts this request and returns { limited, retryAfterSec, limitName }. */
+async function checkRateLimit(ip) {
+  const windows = windowsFor(ip, Date.now());
+  let counts = null;
+  try {
+    counts = await upstashHit(windows);
+  } catch (e) {
+    console.warn('[hf-chat] Upstash rate limit failed, using in-memory limiter:', e instanceof Error ? e.message : e);
+  }
+  if (!counts || counts.some((c) => !Number.isFinite(c))) counts = memoryHit(windows);
+  const over = windows.filter((w, i) => counts[i] > w.max);
+  if (!over.length) return { limited: false };
+  const worst = over.reduce((a, b) => (b.resetInSec > a.resetInSec ? b : a));
+  return { limited: true, retryAfterSec: worst.resetInSec, limitName: worst.name };
+}
 
 /**
  * Allowed browser origins: production, this deployment's own Vercel URLs (previews),
@@ -44,7 +122,7 @@ function requestOrigin(req) {
 
 function isAllowedOrigin(origin) {
   if (!origin) return false;
-  return LOCAL_ORIGIN_RE.test(origin) || allowedOrigins().has(origin);
+  return LOCAL_ORIGIN_RE.test(origin) || PREVIEW_ORIGIN_RE.test(origin) || allowedOrigins().has(origin);
 }
 
 function clampNumber(value, min, max, fallback) {
@@ -268,11 +346,18 @@ async function tryGroqChat(groqKey, inputs, maxTokens, temperature, topP) {
   }
   const textOut =
     gr.ok && !parsed?.error ? extractChatText(parsed) : '';
+  if (gr.ok && !textOut) {
+    console.warn(
+      `[hf-chat] Groq returned no content (finish_reason=${parsed?.choices?.[0]?.finish_reason ?? 'unknown'})`,
+    );
+  }
   return {
     textOut,
+    retryAfter: gr.headers.get('retry-after'),
     lastParsed: parsed,
     lastRaw: raw,
-    lastStatus: gr.ok && !parsed?.error ? gr.status : parsed?.error ? 400 : gr.status,
+    // Keep the real HTTP status on failures (e.g. 429) so callers can react to it.
+    lastStatus: gr.ok ? (parsed?.error ? 400 : gr.status) : gr.status,
   };
 }
 
@@ -288,6 +373,22 @@ export default async function handler(req, res) {
   if (!isAllowedOrigin(origin)) {
     console.warn(`[hf-chat] rejected request from origin "${origin || '(none)'}"`);
     res.status(403).json({ error: 'Origin not allowed' });
+    return;
+  }
+
+  const ip = clientIp(req);
+  const rl = await checkRateLimit(ip);
+  if (rl.limited) {
+    console.warn(`[hf-chat] rate limited (${rl.limitName}) ip=${ip}`);
+    res.setHeader('Retry-After', String(rl.retryAfterSec));
+    res.status(429).json({
+      error:
+        rl.limitName === 'day'
+          ? "You've reached today's question limit for this chatbot. Please come back tomorrow."
+          : "You've asked a lot of questions in a short time. Please try again in a minute.",
+      code: 'rate_limited',
+      retryAfter: rl.retryAfterSec,
+    });
     return;
   }
 
@@ -345,7 +446,7 @@ export default async function handler(req, res) {
     : [];
 
   const defaultParams = {
-    max_new_tokens: 384,
+    max_new_tokens: DEFAULT_OUTPUT_TOKENS,
     temperature: 0.35,
     top_p: 0.9,
     do_sample: true,
@@ -370,6 +471,7 @@ export default async function handler(req, res) {
     let lastParsed = null;
     let lastRaw = '';
     let lastStatus = 500;
+    let upstreamRetryAfter = null;
 
     if (groqKey) {
       const g = await tryGroqChat(
@@ -382,6 +484,7 @@ export default async function handler(req, res) {
       lastParsed = g.lastParsed;
       lastRaw = g.lastRaw;
       lastStatus = g.lastStatus;
+      upstreamRetryAfter = g.retryAfter;
       if (g.textOut) {
         textOut = g.textOut;
       }
@@ -406,6 +509,19 @@ export default async function handler(req, res) {
           break;
         }
       }
+    }
+
+    if (!textOut && lastStatus === 429) {
+      // The model provider's own limit (Groq free tier: 30 RPM / 8K TPM / 1K RPD for gpt-oss-20b).
+      const retryAfter = Math.min(3600, Math.max(1, Math.ceil(Number(upstreamRetryAfter) || 30)));
+      console.warn(`[hf-chat] upstream rate limit hit (retry-after ${upstreamRetryAfter ?? 'n/a'}s)`);
+      res.setHeader('Retry-After', String(retryAfter));
+      res.status(429).json({
+        error: 'The AI service is busy right now. Please try again shortly.',
+        code: 'upstream_rate_limited',
+        retryAfter,
+      });
+      return;
     }
 
     if (!textOut) {
