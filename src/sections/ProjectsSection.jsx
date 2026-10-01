@@ -208,7 +208,7 @@ export default function ProjectsSection() {
                     <a href={project.website} target="_blank" rel="noopener noreferrer"
                       onClick={e => e.stopPropagation()}
                       style={{ color: theme.accent.text, fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none' }}>
-                      Website<span className="sr-only"> for {project.title} (opens in a new tab)</span>
+                      {project.websiteLabel || 'Website'}<span className="sr-only"> for {project.title} (opens in a new tab)</span>
                     </a>
                   )}
                 </div>

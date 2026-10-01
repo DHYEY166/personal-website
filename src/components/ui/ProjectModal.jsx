@@ -206,7 +206,7 @@ export default function ProjectModal({ project, onClose }) {
                   textDecoration: 'none',
                   boxShadow: theme.accent.glow,
                 }}>
-                Visit Website<span className="sr-only"> (opens in a new tab)</span>
+                {project.websiteLabel ? `Read the ${project.websiteLabel}` : 'Visit Website'}<span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
           </div>

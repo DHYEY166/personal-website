@@ -35,6 +35,8 @@ export const experience = [
     period: 'Aug 2026 \u2013 Present',
     current: true,
     project: 'Enterprise Agentic AI Delivery Readiness',
+    // `brief` is the compact version used in the chatbot prompt (src/data/qaContext.js).
+    brief: 'LangGraph agentic workflows and end-to-end RAG (ChromaDB, pgvector, BM25 hybrid retrieval, Cohere reranking) with a fixed eval harness for retrieval recall and answer quality; LLM evaluations; reusable solution patterns for enterprise client deployments. Policy RAG harness: 1.0 retrieval recall and answer accuracy on 16 questions.',
     bullets: [
       'Building deployment-ready capability to design, evaluate, and deliver agentic AI solutions for enterprise client engagements.',
       'Building agentic workflows with LangGraph and end-to-end RAG pipelines to Momentuum Blue delivery standards, including a fixed evaluation harness for retrieval recall and answer quality.',
@@ -47,6 +49,7 @@ export const experience = [
     company: 'Starcycle',
     location: 'United States',
     label: 'LegalTech / Corporate Dissolution Platform',
+    brief: 'Python/ETL tools (1K+ inputs) for entity and tax data enrichment and wind-down compliance; late-fee and closure indexes; reconciliation across internal and third-party systems; 5+ dashboards; 50+ prompts and API/MCP integrations evaluated.',
     role: 'Data Science Co-op',
     period: 'Feb 2026 \u2013 May 2026',
     bullets: [
@@ -59,6 +62,7 @@ export const experience = [
     company: 'Onawa Pet',
     location: 'United States',
     label: 'PetTech',
+    brief: 'RAG with OpenAI function calling + Firebase over 500+ voice notes (pet-health analytics); multimodal pipeline cutting manual review 60%; Scala + Redis visualization engine (45% faster).',
     role: 'AI/ML Engineer Intern',
     period: 'May 2025 \u2013 Aug 2025',
     link: { label: 'pet-voice-notes on GitHub', url: 'https://github.com/dhyeynala/pet-voice-notes' },
@@ -72,6 +76,7 @@ export const experience = [
     company: 'Genpact',
     location: 'India',
     label: 'IT Consulting / Digital Transformation',
+    brief: 'Conversational purchase-order automation assistant with multi-document querying; GPT-4 prompt sets with custom evaluation metrics.',
     role: 'Generative AI Engineer Intern',
     period: 'Apr 2024 \u2013 Jun 2024',
     bullets: [
