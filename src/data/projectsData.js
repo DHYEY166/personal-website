@@ -80,16 +80,19 @@ export const projects = [
   },
   {
     id: 'ms-detection',
-    title: 'Multiple Sclerosis Detection',
-    badge: { text: '99% Diagnostic Accuracy', color: '#9b59b6' },
-    description: 'Designed CNN-based diagnostic tools for Multiple Sclerosis using MRI scans. Employed sophisticated preprocessing to attain 99% diagnostic accuracy across varied datasets.',
-    role: 'Researcher, DL practitioner',
-    challenge: 'Extracting reliable diagnostic signals from complex medical imagery',
-    outcome: '99% accuracy; improved early detection for neurologists',
-    tech: ['CNN', 'TensorFlow', 'MRI Analysis', 'Medical AI'],
+    // Source: Desai et al., "Pseudo-RGB Slice Stacking in 2D ResUNet for High-Sensitivity Multiple
+    // Sclerosis Lesion Segmentation", Diagnostics 2026, 16(16):2494 (abstract, PMID 42650897).
+    title: 'MS Lesion Segmentation',
+    badge: { text: 'Published \u00b7 Dice 0.714', color: '#9b59b6' },
+    description: 'Multiple sclerosis lesion segmentation on FLAIR MRI, published in Diagnostics (MDPI). A 2D U-Net with an ImageNet-pretrained ResNet50 encoder takes three consecutive FLAIR slices stacked as a pseudo-RGB input, trained with two-phase transfer learning and flip test-time augmentation.',
+    role: 'First author, deep learning researcher',
+    challenge: 'Segmenting white-matter lesions despite extreme class imbalance, variable lesion load, and poor contrast at lesion boundaries',
+    outcome: 'MSLesSeg2024 test set: Dice 0.714, IoU 0.657, AUC 0.963, Dice comparable to a 3D nnU-Net baseline (0.726, not significant); MSSEG 2016: Dice 0.705 after brief fine-tuning',
+    tech: ['ResUNet', 'ResNet50', 'Transfer Learning', 'FLAIR MRI', 'Medical AI'],
     gradient: 'linear-gradient(135deg, #fa709a, #fee140)',
-    github: 'https://github.com/DHYEY166/Multiple_Sclerosis_Detection',
-    categories: ['AI/ML', 'Healthcare'],
+    website: 'https://doi.org/10.3390/diagnostics16162494',
+    websiteLabel: 'Paper',
+    categories: ['AI/ML', 'Healthcare', 'Research'],
   },
   {
     id: 'autism',

@@ -1,4 +1,4 @@
-// No DOIs or paper URLs are listed on purpose: only links that are known to exist.
+// Paper links are only added once verified (DOI via PubMed, IEEE Xplore record).
 export const publications = [
   {
     id: 'murs-2026',
@@ -14,19 +14,28 @@ export const publications = [
   },
   {
     id: 'ms-resunet',
-    title: 'Pseudo-RGB slice stacking in a 2D ResUNet for high-sensitivity multiple sclerosis lesion segmentation',
-    venue: 'Diagnostics (MDPI)',
+    title: 'Pseudo-RGB Slice Stacking in 2D ResUNet for High-Sensitivity Multiple Sclerosis Lesion Segmentation',
+    authors: 'Dhyey Desai, Jayesh Gangrade, Shweta Gangrade, Atef Gharbi, Yassine Daadaa, Dhouha Ben Noureddine',
+    venue: 'Diagnostics (MDPI), 16(16):2494',
+    year: '2026',
     status: 'Published',
     statusKind: 'published',
-    links: [{ label: 'Code', url: 'https://github.com/DHYEY166/Multiple_Sclerosis_Detection' }],
+    summary:
+      'A 2D U-Net with a ResNet50 encoder that stacks three consecutive FLAIR slices as a pseudo-RGB input. On the MSLesSeg2024 test set it reached Dice 0.714, IoU 0.657, and AUC 0.963, with Dice statistically comparable to a 3D nnU-Net baseline and the lowest false-negative rate of all ablations.',
+    links: [{ label: 'Paper (DOI)', url: 'https://doi.org/10.3390/diagnostics16162494' }],
   },
   {
     id: 'brain-stroke',
-    title: 'Brain Stroke Detection using ML Models',
-    venue: 'IEEE (IEEE Xplore)',
+    title: 'Supervised Machine Learning Approaches for Brain Stroke Detection',
+    authors: 'Dhyey V. Desai, Tarun Jain, Priyesh Tiwari',
+    venue: 'IEEE IEMECON 2023',
+    year: '2023',
     status: 'Published',
     statusKind: 'published',
     summary: 'Compares machine-learning models for brain-stroke detection; logistic regression reached 96% accuracy among the models compared.',
-    links: [{ label: 'Code', url: 'https://github.com/DHYEY166/brainstroke_detection' }],
+    links: [
+      { label: 'Paper (IEEE Xplore)', url: 'https://ieeexplore.ieee.org/abstract/document/10092374' },
+      { label: 'Code', url: 'https://github.com/DHYEY166/brainstroke_detection' },
+    ],
   },
 ];
