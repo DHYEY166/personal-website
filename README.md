@@ -6,7 +6,7 @@ A modern, interactive personal portfolio website showcasing Dhyey Desai's skills
 
 ### Sections
 - **About** - Background, current role, and education
-- **Skills** - Technical skills by category, with a radar overview
+- **Skills** - Technical skills as tags, grouped by category
 - **Projects** - Featured AI/ML projects, filterable, with an accessible details dialog
 - **Publications** - Peer-reviewed papers and workshop papers
 - **Certifications** - Professional certifications (newest first)

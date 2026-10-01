@@ -2,35 +2,12 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { skillCategories } from '../data/skillsData';
 import { glassCard, gradientText } from '../styles/theme';
-import RadarChart from '../components/ui/RadarChart';
 import ScrollReveal from '../components/ui/ScrollReveal';
 
-function ProficiencyDots({ level, color, theme }) {
-  if (!level) return null;
-  return (
-    <span
-      role="img"
-      aria-label={`${level} out of 5`}
-      style={{ display: 'inline-flex', gap: 3, marginLeft: 6 }}
-    >
-      {[1, 2, 3, 4, 5].map((dot) => (
-        <span
-          key={dot}
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: '50%',
-            background: dot <= level ? color : theme.name === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)',
-            display: 'inline-block',
-          }}
-        />
-      ))}
-    </span>
-  );
-}
+const totalSkills = skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0);
 
 export default function SkillsSection() {
-  const { theme } = useTheme();
+  const { theme, mode } = useTheme();
 
   return (
     <section
@@ -60,24 +37,16 @@ export default function SkillsSection() {
           }}>
             Technical Skills
           </h2>
-        </div>
-      </ScrollReveal>
-
-      <ScrollReveal delay={0.1}>
-        <div style={{
-          ...glassCard(theme),
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: 48,
-        }}>
-          <RadarChart categories={skillCategories} />
+          <p style={{ marginTop: 12, marginBottom: 0, fontSize: '0.95rem', color: theme.text.secondary }}>
+            {totalSkills} skills across {skillCategories.length} categories
+          </p>
         </div>
       </ScrollReveal>
 
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
           gap: 24,
         }}
       >
@@ -101,12 +70,28 @@ export default function SkillsSection() {
           >
             <div style={{ height: 4, background: cat.color, borderRadius: '20px 20px 0 0' }} />
             <div style={{ padding: 28 }}>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: theme.text.heading, marginBottom: 20 }}>
-                {cat.title}
-              </h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                {cat.skills.map((skill, j) => (
-                  <span key={j} style={{
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 20 }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: theme.text.heading, margin: 0 }}>
+                  {cat.title}
+                </h3>
+                <span
+                  aria-label={`${cat.skills.length} skills`}
+                  style={{
+                    flexShrink: 0,
+                    padding: '2px 10px',
+                    borderRadius: 999,
+                    background: mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)',
+                    color: theme.text.secondary,
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                  }}
+                >
+                  {cat.skills.length}
+                </span>
+              </div>
+              <ul style={{ display: 'flex', flexWrap: 'wrap', gap: 10, listStyle: 'none', margin: 0, padding: 0 }}>
+                {cat.skills.map((skill) => (
+                  <li key={skill.name} style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     padding: '6px 12px',
@@ -118,10 +103,9 @@ export default function SkillsSection() {
                     fontWeight: 500,
                   }}>
                     {skill.name}
-                    <ProficiencyDots level={skill.proficiency} color={skill.color} theme={theme} />
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </motion.div>
         ))}
