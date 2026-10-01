@@ -5,8 +5,8 @@ import {
   technicalSkills,
   experience,
   resumeProjects,
-  publications,
   achievements,
+  RESUME_PDF_PATH,
 } from '../data/resumeData';
 import { glassCard, gradientText } from '../styles/theme';
 import ScrollReveal from '../components/ui/ScrollReveal';
@@ -45,6 +45,16 @@ export default function ResumeSection() {
     color: theme.text.muted,
   };
 
+  const tagStyle = (highlight) => ({
+    padding: '3px 10px',
+    borderRadius: 6,
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    color: highlight ? '#fff' : theme.text.secondary,
+    background: highlight ? theme.accent.gradient : theme.glass.background,
+    border: highlight ? 'none' : theme.glass.border,
+  });
+
   const bulletStyle = {
     color: theme.text.secondary,
     fontSize: '0.92rem',
@@ -80,6 +90,29 @@ export default function ResumeSection() {
           }}>
             Resume
           </h2>
+          <a
+            href={RESUME_PDF_PATH}
+            download="Dhyey_Desai_Resume.pdf"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              marginTop: 28,
+              padding: '12px 28px',
+              borderRadius: 12,
+              background: theme.accent.gradient,
+              color: '#fff',
+              fontWeight: 600,
+              fontSize: '0.95rem',
+              textDecoration: 'none',
+              boxShadow: theme.accent.glow,
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14" />
+            </svg>
+            Download Resume (PDF)
+          </a>
         </div>
       </ScrollReveal>
 
@@ -160,12 +193,27 @@ export default function ResumeSection() {
               style={{
                 fontSize: '0.9rem',
                 color: theme.accent.text,
-                fontWeight: 500,
-                marginBottom: 12,
+                fontWeight: 600,
+                marginBottom: 6,
               }}
             >
               {exp.company}
+              {exp.location && (
+                <span style={{ color: theme.text.secondary, fontWeight: 500 }}> · {exp.location}</span>
+              )}
             </p>
+            {(exp.label || exp.current) && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+                {exp.current && <span style={tagStyle(true)}>Current</span>}
+                {exp.label && <span style={tagStyle(false)}>{exp.label}</span>}
+              </div>
+            )}
+            {exp.project && (
+              <p style={{ fontSize: '0.9rem', color: theme.text.primary, marginBottom: 10 }}>
+                <span style={{ fontWeight: 600 }}>Project: </span>
+                {exp.project}
+              </p>
+            )}
             <ul style={{ paddingLeft: 20, margin: 0 }}>
               {exp.bullets.map((bullet, j) => (
                 <li key={j} style={bulletStyle}>
@@ -173,6 +221,23 @@ export default function ResumeSection() {
                 </li>
               ))}
             </ul>
+            {exp.stack && (
+              <p style={{ fontSize: '0.85rem', color: theme.text.secondary, marginTop: 6 }}>
+                <span style={{ fontWeight: 600, color: theme.text.primary }}>Stack: </span>
+                {exp.stack}
+              </p>
+            )}
+            {exp.link && (
+              <a
+                href={exp.link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: 'inline-block', marginTop: 8, color: theme.accent.text, fontSize: '0.85rem', fontWeight: 600 }}
+              >
+                {exp.link.label}
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            )}
           </div>
         ))}
       </SectionBlock>
@@ -192,9 +257,16 @@ export default function ResumeSection() {
               }}
             >
               <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: theme.text.heading, margin: 0 }}>
-                {proj.name}
+                {proj.link ? (
+                  <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationColor: `${theme.accent.primary}80`, textUnderlineOffset: 4 }}>
+                    {proj.name}
+                    <span className="sr-only"> on GitHub (opens in a new tab)</span>
+                  </a>
+                ) : (
+                  proj.name
+                )}
               </h4>
-              <span style={labelStyle}>{proj.period}</span>
+              {proj.period && <span style={labelStyle}>{proj.period}</span>}
             </div>
             <ul style={{ paddingLeft: 20, margin: 0 }}>
               {proj.bullets.map((bullet, j) => (
@@ -207,33 +279,8 @@ export default function ResumeSection() {
         ))}
       </SectionBlock>
 
-      {/* Publications */}
-      <SectionBlock title="Publications" theme={theme} delay={0.2}>
-        {publications.map((pub, i) => (
-          <div key={i}>
-            <h4
-              style={{
-                fontSize: '1.05rem',
-                fontWeight: 700,
-                color: theme.text.heading,
-                marginBottom: 12,
-              }}
-            >
-              {pub.title}
-            </h4>
-            <ul style={{ paddingLeft: 20, margin: 0 }}>
-              {pub.bullets.map((bullet, j) => (
-                <li key={j} style={bulletStyle}>
-                  {bullet}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </SectionBlock>
-
       {/* Achievements */}
-      <SectionBlock title="Achievements" theme={theme} delay={0.25}>
+      <SectionBlock title="Achievements" theme={theme} delay={0.2}>
         <ul style={{ paddingLeft: 20, margin: 0 }}>
           {achievements.map((achievement, i) => (
             <li key={i} style={bulletStyle}>

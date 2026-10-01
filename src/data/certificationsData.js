@@ -1,10 +1,20 @@
+// Within each year, certifications are shown newest first (sorted in CertificationsSection).
 export const certifications = {
+  2026: [
+    {
+      title: 'AWS Certified AI Practitioner',
+      institution: 'Amazon Web Services Training and Certification',
+      date: '2026',
+      hasVerification: false,
+      badge: 'Certification \u2013 Foundational',
+      color: '#ff9900'
+    }
+  ],
   2025: [
     {
       title: 'AWS Certified Cloud Practitioner',
       institution: 'Amazon Web Services Training and Certification',
-      date: 'November 21, 2025',
-      expires: 'November 21, 2028',
+      date: '2025',
       hasVerification: true,
       verificationLink: 'https://www.credly.com/badges/f0d1aa9a-498e-4810-adbc-1df67bbe0e05/linked_in_profile',
       badge: 'Certification \u2013 Foundational',

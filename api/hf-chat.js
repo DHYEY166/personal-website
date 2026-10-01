@@ -8,7 +8,7 @@ const ROUTER_BASE = 'https://router.huggingface.co/v1';
 
 /** Hard limits so the route cannot be used as a cheap general-purpose LLM proxy. */
 const MAX_OUTPUT_TOKENS = 512;
-const MAX_INPUT_CHARS = 16000; // system prompt + portfolio facts + question
+const MAX_INPUT_CHARS = 20000; // system prompt + portfolio facts (~12k today) + question
 const MAX_QUESTION_CHARS = 1000;
 
 const PRODUCTION_ORIGIN = 'https://personal-website-dun-eta-72.vercel.app';

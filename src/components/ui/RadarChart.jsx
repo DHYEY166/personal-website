@@ -18,7 +18,9 @@ export default function RadarChart({ categories }) {
   });
 
   const avgProficiency = categories.map((cat) => {
-    const avg = cat.skills.reduce((sum, s) => sum + s.proficiency, 0) / cat.skills.length;
+    const rated = cat.skills.filter((s) => typeof s.proficiency === 'number');
+    if (rated.length === 0) return 0;
+    const avg = rated.reduce((sum, s) => sum + s.proficiency, 0) / rated.length;
     return avg / 5;
   });
 

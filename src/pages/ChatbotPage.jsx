@@ -8,10 +8,10 @@ import { usePageMeta } from '../hooks/usePageMeta';
 const HF_CHAT_PATH = '/api/hf-chat';
 
 const quickQuestions = [
-  "What are Dhyey's skills?",
-  "Tell me about his education",
+  "What is Dhyey's current role?",
+  "What has he published?",
   "What projects has he worked on?",
-  "What's his work experience?",
+  "What are his technical skills?",
   "How can I contact him?",
 ];
 

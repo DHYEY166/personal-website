@@ -4,6 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useScrollSpy } from '../../hooks/useScrollSpy';
 import { sectionLinks, socialLinks } from '../../data/navigation';
+import { RESUME_PDF_PATH } from '../../data/resumeData';
 import ThemeToggle from '../ui/ThemeToggle';
 import { gradientText } from '../../styles/theme';
 
@@ -218,6 +219,20 @@ export default function TopNavigation() {
             />
           </a>
         ))}
+
+        <a
+          href={RESUME_PDF_PATH}
+          download="Dhyey_Desai_Resume.pdf"
+          title="Download resume (PDF)"
+          aria-label="Download resume (PDF)"
+          style={socialIconStyle}
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+            <path d="M14 3v5h5" />
+            <path d="M12 11v6m0 0l-2.5-2.5M12 17l2.5-2.5" />
+          </svg>
+        </a>
 
         <ThemeToggle />
 

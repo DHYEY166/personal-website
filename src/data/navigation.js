@@ -2,6 +2,7 @@ export const sectionLinks = [
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
   { id: 'projects', label: 'Projects' },
+  { id: 'publications', label: 'Publications' },
   { id: 'certifications', label: 'Certifications' },
   { id: 'resume', label: 'Resume' },
   { id: 'contact', label: 'Contact' },
