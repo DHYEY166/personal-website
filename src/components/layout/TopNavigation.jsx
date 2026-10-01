@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useScrollSpy } from '../../hooks/useScrollSpy';
 import { sectionLinks, socialLinks } from '../../data/navigation';
 import ThemeToggle from '../ui/ThemeToggle';
+import { gradientText } from '../../styles/theme';
+
+const SECTION_IDS = sectionLinks.map((l) => l.id);
 
 export default function TopNavigation() {
   const { theme } = useTheme();
   const isMobile = useIsMobile();
   const location = useLocation();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const isHome = location.pathname === '/';
   const isChatbot = location.pathname === '/chatbot';
-  const activeSection = useScrollSpy(sectionLinks.map(l => l.id));
+  const activeSection = useScrollSpy(SECTION_IDS, isHome);
 
-  const handleNavClick = (id) => {
+  const handleNavClick = (e, id) => {
+    e.preventDefault();
     setMenuOpen(false);
-    if (location.pathname === '/') {
+    if (isHome) {
       const el = document.getElementById(id);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
+        window.history.replaceState(null, '', `#${id}`);
       }
+    } else {
+      // HomePage scrolls to the hash after it mounts.
+      navigate(`/#${id}`);
     }
   };
 
@@ -46,10 +56,7 @@ export default function TopNavigation() {
   const logoStyle = {
     fontSize: 28,
     fontWeight: 800,
-    background: theme.accent.textGradient,
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
+    ...gradientText(theme.accent.textGradient),
     textDecoration: 'none',
     letterSpacing: '-0.02em',
   };
@@ -150,38 +157,25 @@ export default function TopNavigation() {
     }
 
     return sectionLinks.map((link) => {
-      const isActive = activeSection === link.id;
-      if (location.pathname === '/') {
-        return (
-          <a
-            key={link.id}
-            href={`#${link.id}`}
-            style={linkBaseStyle(isActive)}
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick(link.id);
-            }}
-          >
-            {link.label}
-          </a>
-        );
-      }
+      const isActive = isHome && activeSection === link.id;
       return (
-        <Link
+        <a
           key={link.id}
-          to={`/#${link.id}`}
+          href={`/#${link.id}`}
           style={linkBaseStyle(isActive)}
+          aria-current={isActive ? 'location' : undefined}
+          onClick={(e) => handleNavClick(e, link.id)}
         >
           {link.label}
-        </Link>
+        </a>
       );
     });
   };
 
   return (
-    <nav style={navStyle}>
+    <nav style={navStyle} aria-label="Main">
       {/* Left: Logo */}
-      <Link to="/" style={logoStyle}>
+      <Link to="/" style={logoStyle} aria-label="Dhyey Desai – home">
         DD
       </Link>
 
@@ -201,6 +195,7 @@ export default function TopNavigation() {
             target="_blank"
             rel="noopener noreferrer"
             title={social.name}
+            aria-label={`${social.name} (opens in a new tab)`}
             style={socialIconStyle}
             onMouseOver={(e) => {
               e.currentTarget.style.background = social.hoverBg;
@@ -218,6 +213,7 @@ export default function TopNavigation() {
               height="18"
               fill="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
               dangerouslySetInnerHTML={{ __html: social.svg }}
             />
           </a>
@@ -230,7 +226,9 @@ export default function TopNavigation() {
           <button
             style={hamburgerStyle}
             onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label="Toggle menu"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav-menu"
           >
             <span style={hamburgerLineStyle(0)} />
             <span style={hamburgerLineStyle(1)} />
@@ -241,7 +239,7 @@ export default function TopNavigation() {
 
       {/* Mobile dropdown */}
       {isMobile && menuOpen && (
-        <div style={dropdownStyle}>
+        <div id="mobile-nav-menu" style={dropdownStyle}>
           {isChatbot ? (
             <Link
               to="/"
@@ -254,12 +252,9 @@ export default function TopNavigation() {
             sectionLinks.map((link) => (
               <a
                 key={link.id}
-                href={`#${link.id}`}
+                href={`/#${link.id}`}
                 style={{ ...linkBaseStyle(false), padding: '10px 14px' }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(link.id);
-                }}
+                onClick={(e) => handleNavClick(e, link.id)}
               >
                 {link.label}
               </a>

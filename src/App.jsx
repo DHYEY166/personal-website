@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import TopNavigation from './components/layout/TopNavigation';
 import HomePage from './pages/HomePage';
 import ChatbotPage from './pages/ChatbotPage';
+import NotFoundPage from './pages/NotFoundPage';
 import ScrollProgressBar from './components/ui/ScrollProgressBar';
 import ScrollToTop from './components/ui/ScrollToTop';
 import CustomCursor from './components/ui/CustomCursor';
@@ -21,6 +22,7 @@ function AppContent() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<HomePage />} />
         <Route path="/chatbot" element={<ChatbotPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ScrollToTop />
     </div>

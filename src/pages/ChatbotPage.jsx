@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { buildHuggingFaceInputs, getFallbackResponse } from '../data/qaContext';
+import { useTheme } from '../context/ThemeContext';
+import { gradientText } from '../styles/theme';
 
 /** Same-origin proxy on Vercel (`/api/hf-chat`) — HF Inference API blocks browser CORS */
 const HF_CHAT_PATH = '/api/hf-chat';
-import { useTheme } from '../context/ThemeContext';
 
 const quickQuestions = [
   "What are Dhyey's skills?",
@@ -244,10 +245,7 @@ export default function ChatbotPage() {
           style={{
             fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
             fontWeight: 800,
-            background: theme.accent.textGradient,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
+            ...gradientText(theme.accent.textGradient),
             marginBottom: 8,
           }}
         >

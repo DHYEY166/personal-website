@@ -61,7 +61,7 @@ export const certifications = {
       institution: 'University of Michigan / Coursera',
       date: 'June 6, 2023',
       hasVerification: true,
-      verificationLink: 'https://coursera.org/verify/RRR3EV7682N\u0391',
+      verificationLink: 'https://coursera.org/verify/RRR3EV7682NA',
       color: '#00274c'
     },
     {

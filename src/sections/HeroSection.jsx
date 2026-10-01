@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { heroText } from '../data/aboutData';
@@ -7,6 +8,15 @@ import { useIsMobile } from '../hooks/useMediaQuery';
 import TypeWriter from '../components/ui/TypeWriter';
 
 const HeroScene = lazy(() => import('../components/three/HeroScene'));
+const MotionLink = motion.create(Link);
+
+function scrollToSection(e, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  e.preventDefault();
+  el.scrollIntoView({ behavior: 'smooth' });
+  window.history.replaceState(null, '', `#${id}`);
+}
 
 function MeshFallback({ theme }) {
   return (
@@ -115,7 +125,8 @@ export default function HeroSection() {
             style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}
           >
             <motion.a
-              href="#about"
+              href="#projects"
+              onClick={(e) => scrollToSection(e, 'projects')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.3 }}
@@ -134,8 +145,8 @@ export default function HeroSection() {
               Explore My Work
             </motion.a>
 
-            <motion.a
-              href="/chatbot"
+            <MotionLink
+              to="/chatbot"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               transition={{ duration: 0.3 }}
@@ -154,7 +165,7 @@ export default function HeroSection() {
               }}
             >
               Chat with AI
-            </motion.a>
+            </MotionLink>
           </div>
         </div>
       </div>

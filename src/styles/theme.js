@@ -95,9 +95,14 @@ export const glassCard = (theme) => ({
   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
 });
 
+// Uses the backgroundImage longhand on purpose: when the theme changes, React updates
+// only the properties whose values changed. Setting the `background` shorthand would
+// reset background-clip to border-box, and React would not re-apply the unchanged
+// clip value, turning gradient headings into solid blocks after a theme toggle.
 export const gradientText = (gradient) => ({
-  background: gradient,
+  backgroundImage: gradient,
   WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  color: 'transparent',
 });
