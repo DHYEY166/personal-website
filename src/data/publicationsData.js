@@ -28,14 +28,14 @@ export const publications = [
   },
   {
     id: 'brain-stroke',
-    brief: 'Compared ML models; logistic regression reached 96% accuracy.',
+    brief: 'Compared ML models; logistic regression reached 97% accuracy.',
     title: 'Supervised Machine Learning Approaches for Brain Stroke Detection',
     authors: 'Dhyey V. Desai, Tarun Jain, Priyesh Tiwari',
     venue: 'IEEE IEMECON 2023',
     year: '2023',
     status: 'Published',
     statusKind: 'published',
-    summary: 'Compares machine-learning models for brain-stroke detection; logistic regression reached 96% accuracy among the models compared.',
+    summary: 'Compares machine-learning models for brain-stroke detection; logistic regression reached 97% accuracy among the models compared.',
     links: [
       { label: 'Paper (IEEE Xplore)', url: 'https://ieeexplore.ieee.org/abstract/document/10092374' },
       { label: 'Code', url: 'https://github.com/DHYEY166/brainstroke_detection' },
