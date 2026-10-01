@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
-import { glassCard, gradientText } from '../styles/theme';
+import { useTheme } from '../styles/useTheme';
+import { panel } from '../styles/theme';
 
 export default function NotFoundPage() {
   const { theme } = useTheme();
@@ -34,38 +34,27 @@ export default function NotFoundPage() {
         padding: '96px clamp(16px, 4vw, 24px) 48px',
       }}
     >
-      <div style={{ ...glassCard(theme), maxWidth: 520, width: '100%', textAlign: 'center' }}>
+      <div style={{ ...panel(theme), maxWidth: 520, width: '100%', textAlign: 'center', padding: 'clamp(28px, 6vw, 48px)' }}>
         <p
           style={{
-            fontSize: 'clamp(3.5rem, 12vw, 5.5rem)',
-            fontWeight: 800,
+            fontFamily: theme.font.serif,
+            fontSize: 'clamp(3.5rem, 12vw, 5rem)',
+            fontWeight: 600,
             lineHeight: 1,
             marginBottom: 12,
-            ...gradientText(theme.accent.textGradient),
+            color: theme.accent.text,
           }}
           aria-hidden="true"
         >
           404
         </p>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: theme.text.heading, marginBottom: 12 }}>
+        <h1 style={{ fontSize: 28, marginBottom: 12 }}>
           Page not found
         </h1>
         <p style={{ color: theme.text.secondary, marginBottom: 28 }}>
           The page you are looking for doesn&apos;t exist or has moved.
         </p>
-        <Link
-          to="/"
-          style={{
-            display: 'inline-block',
-            padding: '12px 28px',
-            borderRadius: 12,
-            background: theme.accent.gradient,
-            color: '#fff',
-            fontWeight: 600,
-            textDecoration: 'none',
-            boxShadow: theme.accent.glow,
-          }}
-        >
+        <Link to="/" className="btn btn--primary">
           Back to home
         </Link>
       </div>

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../styles/useTheme';
 import { contactItems } from '../data/contactData';
-import { glassCard, gradientText } from '../styles/theme';
+import { panel, sectionStyle } from '../styles/theme';
 import FloatingLabelInput from '../components/ui/FloatingLabelInput';
 import ScrollReveal from '../components/ui/ScrollReveal';
+import SectionHeader from '../components/ui/SectionHeader';
 
 const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
@@ -66,191 +66,101 @@ export default function ContactSection() {
   };
 
   return (
-    <section
-      id="contact"
-      style={{
-        maxWidth: 1200,
-        margin: '0 auto',
-        padding: 'clamp(60px, 10vw, 100px) clamp(16px, 4vw, 24px)',
-      }}
-    >
-      <ScrollReveal>
-        <div style={{ textAlign: 'center', marginBottom: 60 }}>
-          <p style={{
-            fontSize: '0.85rem',
-            color: theme.text.muted,
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            marginBottom: 12,
-          }}>
-            REACH OUT
-          </p>
-          <h2 style={{
-            fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-            fontWeight: 800,
-            ...gradientText(theme.accent.textGradient),
-            marginBottom: 0,
-          }}>
-            Let's Connect!
-          </h2>
-        </div>
-      </ScrollReveal>
+    <section id="contact" aria-labelledby="contact-title" style={sectionStyle}>
+      <div style={{ borderTop: theme.border.default, paddingTop: 'clamp(40px, 6vw, 64px)' }}>
+        <SectionHeader id="contact-title" kicker="REACH OUT" title="Let's Connect!" />
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: 24,
-        maxWidth: 900,
-        margin: '0 auto 60px',
-      }}>
-        {contactItems.map((item, i) => {
-          const color = typeof item.color === 'string' ? item.color : item.color[theme.name];
-          return (
-          <motion.a
-            key={i}
-            href={item.link}
-            target={item.link.startsWith('mailto') ? undefined : '_blank'}
-            rel={item.link.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            whileHover={{
-              y: -8,
-              boxShadow: theme.glass.shadowHover,
-              borderColor: 'rgba(102,126,234,0.2)',
-            }}
-            style={{
-              ...glassCard(theme),
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 20,
-              cursor: 'pointer',
-            }}
-          >
-            <div style={{
-              width: 52,
-              height: 52,
-              borderRadius: 14,
-              background: `${color}20`,
-              border: `1px solid ${color}40`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              color,
-              fontWeight: 800,
-              fontSize: '1.1rem',
-            }} aria-hidden="true">
-              {item.icon}
-            </div>
-            <div>
-              <p style={{
-                fontSize: '0.8rem',
-                color: theme.text.muted,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                marginBottom: 4,
-              }}>
-                {item.title}
-              </p>
-              <p style={{ fontSize: '1rem', color: theme.text.primary, fontWeight: 500 }}>
-                {item.value}
-              </p>
-            </div>
-          </motion.a>
-          );
-        })}
-      </div>
+        <ScrollReveal>
+          <div className="contact-grid">
+            <ul style={{ listStyle: 'none', borderTop: `2px solid ${theme.text.primary}`, alignSelf: 'start' }}>
+              {contactItems.map((item) => {
+                const external = !item.link.startsWith('mailto');
+                return (
+                  <li key={item.title} style={{ padding: '14px 0', borderBottom: theme.border.default }}>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 600,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        color: theme.text.muted,
+                        marginBottom: 2,
+                      }}
+                    >
+                      {item.title}
+                    </p>
+                    <a
+                      href={item.link}
+                      target={external ? '_blank' : undefined}
+                      rel={external ? 'noopener noreferrer' : undefined}
+                      className="text-link"
+                      style={{ fontSize: 17, overflowWrap: 'anywhere' }}
+                    >
+                      {item.value}
+                      {external && <span className="sr-only"> (opens in a new tab)</span>}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
 
-      <ScrollReveal delay={0.2}>
-        <div style={{ ...glassCard(theme), maxWidth: 600, margin: '0 auto' }}>
-          <h3 style={{
-            fontSize: '1.3rem',
-            fontWeight: 700,
-            color: theme.text.heading,
-            marginBottom: 32,
-            textAlign: 'center',
-          }}>
-            Send a Message
-          </h3>
+            <div style={panel(theme)}>
+              <h3 style={{ fontSize: 22, marginBottom: 24 }}>Send a Message</h3>
 
-          {submitted ? (
-            <motion.div
-              role="status"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              style={{ textAlign: 'center', padding: '40px 0' }}
-            >
-              <div style={{ fontSize: 48, marginBottom: 16 }} aria-hidden="true">✓</div>
-              <p style={{ color: theme.accent.text, fontSize: '1.1rem', fontWeight: 600 }}>
-                Message sent successfully!
-              </p>
-              <p style={{ color: theme.text.muted, fontSize: '0.9rem', marginTop: 8 }}>
-                Thank you for reaching out.
-              </p>
-            </motion.div>
-          ) : (
-            <form onSubmit={handleSubmit} noValidate aria-label="Send a message">
-              <FloatingLabelInput
-                label="Name"
-                name="name"
-                autoComplete="name"
-                required
-                value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                error={errors.name}
-              />
-              <FloatingLabelInput
-                label="Email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                error={errors.email}
-              />
-              <FloatingLabelInput
-                label="Message"
-                name="message"
-                multiline
-                required
-                value={form.message}
-                onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                error={errors.message}
-              />
-              {sendError && (
-                <p role="alert" style={{ color: theme.text.error, fontSize: '0.85rem', marginBottom: 16, textAlign: 'center' }}>
-                  {sendError}
-                </p>
+              {submitted ? (
+                <div role="status" style={{ padding: '32px 0' }}>
+                  <div style={{ fontSize: 40, lineHeight: 1, color: theme.accent.text, marginBottom: 12 }} aria-hidden="true">✓</div>
+                  <p style={{ color: theme.text.primary, fontSize: 18, fontWeight: 600 }}>
+                    Message sent successfully!
+                  </p>
+                  <p style={{ color: theme.text.muted, fontSize: 15, marginTop: 6 }}>
+                    Thank you for reaching out.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate aria-label="Send a message">
+                  <FloatingLabelInput
+                    label="Name"
+                    name="name"
+                    autoComplete="name"
+                    required
+                    value={form.name}
+                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                    error={errors.name}
+                  />
+                  <FloatingLabelInput
+                    label="Email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={form.email}
+                    onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                    error={errors.email}
+                  />
+                  <FloatingLabelInput
+                    label="Message"
+                    name="message"
+                    multiline
+                    required
+                    value={form.message}
+                    onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                    error={errors.message}
+                  />
+                  {sendError && (
+                    <p role="alert" style={{ color: theme.text.error, fontSize: 15, marginBottom: 16 }}>
+                      {sendError}
+                    </p>
+                  )}
+                  <button type="submit" disabled={sending} className="btn btn--primary">
+                    {sending ? 'Sending...' : 'Send Message'}
+                  </button>
+                </form>
               )}
-              <motion.button
-                type="submit"
-                disabled={sending}
-                whileHover={sending ? {} : { scale: 1.02 }}
-                whileTap={sending ? {} : { scale: 0.98 }}
-                style={{
-                  width: '100%',
-                  padding: '14px 32px',
-                  borderRadius: 12,
-                  background: theme.accent.gradient,
-                  color: '#fff',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  border: 'none',
-                  cursor: sending ? 'not-allowed' : 'pointer',
-                  boxShadow: theme.accent.glow,
-                  opacity: sending ? 0.7 : 1,
-                }}
-              >
-                {sending ? 'Sending...' : 'Send Message'}
-              </motion.button>
-            </form>
-          )}
-        </div>
-      </ScrollReveal>
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
     </section>
   );
 }

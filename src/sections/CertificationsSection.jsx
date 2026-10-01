@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../styles/useTheme';
+import { sectionStyle } from '../styles/theme';
 import { certifications } from '../data/certificationsData';
-import { glassCard, gradientText } from '../styles/theme';
 import ScrollReveal from '../components/ui/ScrollReveal';
+import SectionHeader from '../components/ui/SectionHeader';
 
 export default function CertificationsSection() {
   const { theme } = useTheme();
@@ -16,158 +16,57 @@ export default function CertificationsSection() {
     ]);
 
   return (
-    <section
-      id="certifications"
-      style={{
-        maxWidth: 1200,
-        margin: '0 auto',
-        padding: 'clamp(60px, 10vw, 100px) clamp(16px, 4vw, 24px)',
-      }}
-    >
-      <ScrollReveal>
-        <div style={{ textAlign: 'center', marginBottom: 60 }}>
-          <p style={{
-            fontSize: '0.85rem',
-            color: theme.text.muted,
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            marginBottom: 12,
-          }}>
-            CREDENTIALS
-          </p>
-          <h2 style={{
-            fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-            fontWeight: 800,
-            ...gradientText(theme.accent.textGradient),
-            marginBottom: 0,
-          }}>
-            Certifications
-          </h2>
-        </div>
-      </ScrollReveal>
+    <section id="certifications" aria-labelledby="certifications-title" style={sectionStyle}>
+      <div style={{ borderTop: theme.border.default, paddingTop: 'clamp(40px, 6vw, 64px)' }}>
+        <SectionHeader id="certifications-title" kicker="CREDENTIALS" title="Certifications" />
 
-      {/* Year Sections */}
-      {yearEntries.map(([year, certs]) => (
-        <div key={year} style={{ marginBottom: 48 }}>
-          <h3
-            style={{
-              fontSize: '1.4rem',
-              fontWeight: 700,
-              color: theme.accent.text,
-              marginBottom: 20,
-              paddingLeft: 4,
-            }}
-          >
-            {year}
-          </h3>
+        <ScrollReveal>
+          <div style={{ borderTop: `2px solid ${theme.text.primary}` }}>
+            {yearEntries.map(([year, certs]) => (
+              <div key={year} className="cert-group">
+                <h3 style={{ fontSize: 22, color: theme.text.primary, paddingTop: 18 }}>{year}</h3>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: 20,
-            }}
-          >
-            {certs.map((cert, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                whileHover={{
-                  y: -8,
-                  boxShadow: theme.glass.shadowHover,
-                  borderColor: 'rgba(102,126,234,0.2)',
-                }}
-                style={{
-                  ...glassCard(theme),
-                  overflow: 'hidden',
-                  padding: 0,
-                }}
-              >
-                {/* Colored Top Bar */}
-                <div
-                  style={{
-                    height: 4,
-                    background: cert.color,
-                    borderRadius: '20px 20px 0 0',
-                  }}
-                />
+                <ul style={{ listStyle: 'none' }}>
+                  {certs.map((cert) => (
+                    <li key={`${cert.title}-${cert.date}`} className="cert-row">
+                      <div style={{ minWidth: 0 }}>
+                        <h4 style={{ fontFamily: theme.font.sans, fontSize: 17, fontWeight: 600, lineHeight: 1.4, marginBottom: 2 }}>
+                          {cert.title}
+                        </h4>
+                        <p style={{ fontSize: 15, color: theme.text.secondary }}>
+                          {cert.institution}
+                        </p>
+                        <p style={{ fontSize: 14, color: theme.text.muted }}>
+                          {cert.date}
+                          {cert.expires && ` | Expires: ${cert.expires}`}
+                          {cert.badge && (
+                            <>
+                              <span aria-hidden="true"> · </span>
+                              {cert.badge}
+                            </>
+                          )}
+                        </p>
+                      </div>
 
-                <div style={{ padding: 24 }}>
-                  <h4
-                    style={{
-                      fontSize: '1rem',
-                      fontWeight: 700,
-                      color: theme.text.heading,
-                      marginBottom: 8,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {cert.title}
-                  </h4>
-
-                  <p
-                    style={{
-                      fontSize: '0.85rem',
-                      color: theme.text.secondary,
-                      marginBottom: 4,
-                    }}
-                  >
-                    {cert.institution}
-                  </p>
-
-                  <p
-                    style={{
-                      fontSize: '0.8rem',
-                      color: theme.text.muted,
-                      marginBottom: 12,
-                    }}
-                  >
-                    {cert.date}
-                    {cert.expires && ` | Expires: ${cert.expires}`}
-                  </p>
-
-                  <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                    {cert.badge && (
-                      <span
-                        style={{
-                          padding: '3px 10px',
-                          borderRadius: 6,
-                          background: `${cert.color}20`,
-                          border: `1px solid ${cert.color}40`,
-                          color: cert.color,
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                        }}
-                      >
-                        {cert.badge}
-                      </span>
-                    )}
-
-                    {cert.hasVerification && cert.verificationLink && (
-                      <a
-                        href={cert.verificationLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          color: theme.accent.text,
-                          fontSize: '0.8rem',
-                          fontWeight: 600,
-                          textDecoration: 'none',
-                        }}
-                      >
-                        Verify<span className="sr-only"> {cert.title} (opens in a new tab)</span>
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
+                      {cert.hasVerification && cert.verificationLink && (
+                        <a
+                          href={cert.verificationLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-link"
+                          style={{ fontSize: 15, whiteSpace: 'nowrap' }}
+                        >
+                          Verify<span className="sr-only"> {cert.title} (opens in a new tab)</span>
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
-        </div>
-      ))}
+        </ScrollReveal>
+      </div>
     </section>
   );
 }

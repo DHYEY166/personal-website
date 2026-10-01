@@ -15,9 +15,9 @@ A modern, interactive personal portfolio website showcasing Dhyey Desai's skills
 - **AI Chatbot** (`/chatbot`) - Q&A about Dhyey's background, answered by an LLM through a serverless route
 
 ### Technical Features
-- Responsive layout with light/dark themes (persisted in `localStorage`)
+- Responsive, light-only editorial design (warm off-white background, one terracotta accent, Source Serif 4 + Source Sans 3)
 - Framer Motion animations that respect `prefers-reduced-motion`
-- Lazily loaded 3D hero scene (React Three Fiber) and lazily loaded routes
+- Lazily loaded routes
 - Hash links (`/#projects`, etc.) that work from any page, plus a catch-all 404 page
 - SEO basics: meta description, canonical URL, Open Graph/Twitter cards, favicon, `robots.txt`, and `sitemap.xml`
 - Serverless chat proxy (`api/hf-chat.js`) with an origin allowlist, input-size limits, an output-token cap, and a per-visitor rate limit (10/min, 40/day per IP)
@@ -26,8 +26,8 @@ A modern, interactive personal portfolio website showcasing Dhyey Desai's skills
 ## Tech Stack
 
 - **Frontend:** React 19, Vite 7, React Router 7
-- **Animation / 3D:** Framer Motion, Three.js, React Three Fiber, Drei
-- **Styling:** Theme objects with inline styles (`src/styles/theme.js`) plus global CSS (`src/index.css`)
+- **Animation:** Framer Motion (subtle fades only)
+- **Styling:** Design tokens with inline styles (`src/styles/theme.js`) plus global CSS (`src/index.css`)
 - **AI Integration:** Groq (preferred) or Hugging Face Inference Providers, called via a Vercel serverless function
 - **Deployment:** Vercel
 
@@ -101,13 +101,12 @@ personal-website/
 │   ├── App.jsx             # Routes (/, /chatbot, 404) and providers
 │   ├── main.jsx            # React entry point
 │   ├── index.css           # Global styles
-│   ├── components/         # Layout, UI, and 3D components
-│   ├── context/            # Theme context
+│   ├── components/         # Layout and UI components
 │   ├── data/               # Site content (resume, projects, publications, skills, chatbot context)
 │   ├── hooks/              # Scroll spy, media queries, page meta, etc.
 │   ├── pages/              # HomePage, ChatbotPage, NotFoundPage
 │   ├── sections/           # Home page sections
-│   └── styles/             # Theme tokens
+│   └── styles/             # Design tokens and useTheme hook
 ├── index.html              # HTML template, meta tags, and fonts
 ├── eslint.config.js
 ├── vite.config.js

@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../styles/useTheme';
 
 const FOCUSABLE = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
@@ -60,36 +60,34 @@ export default function ProjectModal({ project, onClose }) {
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0,0,0,0.7)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
+          background: 'rgba(31, 27, 22, 0.45)',
           zIndex: 1000,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 24,
+          padding: 'clamp(12px, 4vw, 24px)',
         }}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 30 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8 }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
           ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
           onClick={e => e.stopPropagation()}
           style={{
-            background: theme.name === 'dark' ? '#121230' : '#fff',
-            borderRadius: 24,
-            border: theme.glass.border,
-            boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
+            background: theme.bg.surface,
+            borderRadius: theme.radius.lg,
+            border: theme.border.default,
+            boxShadow: '0 12px 32px rgba(31, 27, 22, 0.12)',
             maxWidth: 700,
             width: '100%',
             maxHeight: '85vh',
             overflowY: 'auto',
-            padding: 40,
+            padding: 'clamp(24px, 5vw, 40px)',
             position: 'relative',
           }}
         >
@@ -99,55 +97,23 @@ export default function ProjectModal({ project, onClose }) {
             type="button"
             onClick={onClose}
             aria-label="Close project details"
-            style={{
-              position: 'absolute',
-              top: 16,
-              right: 16,
-              width: 36,
-              height: 36,
-              borderRadius: '50%',
-              background: theme.glass.background,
-              border: theme.glass.border,
-              color: theme.text.secondary,
-              fontSize: 18,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="icon-btn"
+            style={{ position: 'absolute', top: 12, right: 12, fontSize: 18 }}
           >
             <span aria-hidden="true">✕</span>
           </button>
 
-          {/* Gradient bar */}
-          <div style={{
-            height: 4,
-            background: project.gradient,
-            borderRadius: 4,
-            marginBottom: 24,
-          }} />
+          {project.badge && (
+            <p style={{ color: theme.accent.text, fontSize: 14, fontWeight: 600, marginBottom: 6 }}>
+              {project.badge.text}
+            </p>
+          )}
 
-          <h2 id={titleId} style={{ fontSize: '1.6rem', fontWeight: 800, color: theme.text.heading, marginBottom: 8 }}>
+          <h2 id={titleId} style={{ fontSize: 'clamp(24px, 4vw, 30px)', marginBottom: 16, paddingRight: 32 }}>
             {project.title}
           </h2>
 
-          {project.badge && (
-          <span style={{
-            display: 'inline-block',
-            padding: '4px 12px',
-            borderRadius: 6,
-            background: `${project.badge.color}25`,
-            border: `1px solid ${project.badge.color}50`,
-            color: project.badge.color,
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            marginBottom: 20,
-          }}>
-            {project.badge.text}
-          </span>
-          )}
-
-          <p style={{ color: theme.text.secondary, fontSize: '0.95rem', lineHeight: 1.8, marginBottom: 24 }}>
+          <p style={{ color: theme.text.secondary, lineHeight: 1.7, marginBottom: 24 }}>
             {project.description}
           </p>
 
@@ -156,56 +122,28 @@ export default function ProjectModal({ project, onClose }) {
             { label: 'Challenge', value: project.challenge },
             { label: 'Outcome', value: project.outcome },
           ].filter((item) => item.value).map((item, i) => (
-            <p key={i} style={{ fontSize: '0.9rem', marginBottom: 8 }}>
-              <span style={{ color: theme.accent.text, fontWeight: 700 }}>{item.label}: </span>
+            <p key={i} style={{ fontSize: 16, marginBottom: 8 }}>
+              <span style={{ color: theme.text.primary, fontWeight: 600 }}>{item.label}: </span>
               <span style={{ color: theme.text.secondary }}>{item.value}</span>
             </p>
           ))}
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '20px 0' }}>
             {project.tech.map((t, j) => (
-              <span key={j} style={{
-                padding: '5px 12px',
-                borderRadius: 8,
-                background: 'rgba(102,126,234,0.12)',
-                border: '1px solid rgba(102,126,234,0.25)',
-                color: theme.text.muted,
-                fontSize: '0.82rem',
-                fontWeight: 500,
-              }}>
+              <span key={j} className="tag">
                 {t}
               </span>
             ))}
           </div>
 
-          <div style={{ display: 'flex', gap: 16, marginTop: 24 }}>
+          <div style={{ display: 'flex', gap: 12, marginTop: 24, flexWrap: 'wrap' }}>
             {project.github && (
-              <a href={project.github} target="_blank" rel="noopener noreferrer"
-                style={{
-                  padding: '10px 24px',
-                  borderRadius: 10,
-                  background: theme.glass.background,
-                  border: theme.glass.border,
-                  color: theme.accent.text,
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
-                  textDecoration: 'none',
-                }}>
+              <a href={project.github} target="_blank" rel="noopener noreferrer" className="btn btn--secondary">
                 GitHub<span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
             {project.website && (
-              <a href={project.website} target="_blank" rel="noopener noreferrer"
-                style={{
-                  padding: '10px 24px',
-                  borderRadius: 10,
-                  background: theme.accent.gradient,
-                  color: '#fff',
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
-                  textDecoration: 'none',
-                  boxShadow: theme.accent.glow,
-                }}>
+              <a href={project.website} target="_blank" rel="noopener noreferrer" className="btn btn--primary">
                 {project.websiteLabel ? `Read the ${project.websiteLabel}` : 'Visit Website'}<span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
