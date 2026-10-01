@@ -56,6 +56,7 @@ npm run dev
 # Lint and build for production
 npm run lint
 npm run build
+npm test          # renderer + mocked chat API tests (no network)
 npm run preview
 ```
 

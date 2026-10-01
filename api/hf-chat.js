@@ -314,10 +314,7 @@ async function routerPost(path, token, body) {
   return { hfRes, raw, parsed };
 }
 
-async function tryGroqChat(groqKey, inputs, maxTokens, temperature, topP) {
-  const model =
-    (process.env.GROQ_MODEL_ID || 'openai/gpt-oss-20b').trim() ||
-    'openai/gpt-oss-20b';
+async function groqRequest(groqKey, model, inputs, maxTokens, temperature, topP) {
   // GPT-OSS models reason before answering; keep it light so the answer fits in max_tokens.
   const reasoningParams = /gpt-oss/i.test(model)
     ? { reasoning_effort: 'low', include_reasoning: false }
@@ -344,21 +341,38 @@ async function tryGroqChat(groqKey, inputs, maxTokens, temperature, topP) {
   } catch {
     parsed = null;
   }
-  const textOut =
-    gr.ok && !parsed?.error ? extractChatText(parsed) : '';
-  if (gr.ok && !textOut) {
-    console.warn(
-      `[hf-chat] Groq returned no content (finish_reason=${parsed?.choices?.[0]?.finish_reason ?? 'unknown'})`,
-    );
+  const textOut = gr.ok && !parsed?.error ? extractChatText(parsed) : '';
+  return { gr, raw, parsed, textOut, finishReason: parsed?.choices?.[0]?.finish_reason ?? null };
+}
+
+async function tryGroqChat(groqKey, inputs, maxTokens, temperature, topP) {
+  const model =
+    (process.env.GROQ_MODEL_ID || 'openai/gpt-oss-20b').trim() ||
+    'openai/gpt-oss-20b';
+  let r = await groqRequest(groqKey, model, inputs, maxTokens, temperature, topP);
+  // Reasoning tokens count toward max_tokens, so a small budget can run out before any answer
+  // text is produced. Retry once with the full output cap.
+  if (r.gr.ok && !r.textOut && r.finishReason === 'length' && maxTokens < MAX_OUTPUT_TOKENS) {
+    console.warn(`[hf-chat] Groq ran out of tokens at max_tokens=${maxTokens}; retrying at ${MAX_OUTPUT_TOKENS}`);
+    r = await groqRequest(groqKey, model, inputs, MAX_OUTPUT_TOKENS, temperature, topP);
+  }
+  if (r.gr.ok && !r.textOut) {
+    console.warn(`[hf-chat] Groq returned no content (finish_reason=${r.finishReason ?? 'unknown'})`);
   }
   return {
-    textOut,
-    retryAfter: gr.headers.get('retry-after'),
-    lastParsed: parsed,
-    lastRaw: raw,
+    textOut: r.textOut,
+    retryAfter: r.gr.headers.get('retry-after'),
+    lastParsed: r.parsed,
+    lastRaw: r.raw,
     // Keep the real HTTP status on failures (e.g. 429) so callers can react to it.
-    lastStatus: gr.ok ? (parsed?.error ? 400 : gr.status) : gr.status,
+    lastStatus: r.gr.ok ? (r.parsed?.error ? 400 : r.gr.status) : r.gr.status,
   };
+}
+
+/** Upstream details (raw bodies, request ids, usage) are logged here and never sent to the client. */
+function logUpstreamFailure(base, lastRaw, context) {
+  console.error(`[hf-chat] all backends failed (${context}): ${String(base).slice(0, 300)}`);
+  if (lastRaw) console.error(`[hf-chat] last upstream body: ${String(lastRaw).slice(0, 1500)}`);
 }
 
 export default async function handler(req, res) {
@@ -397,11 +411,10 @@ export default async function handler(req, res) {
   const groqKey = process.env.GROQ_API_KEY?.trim();
 
   if (!hfToken && !groqKey) {
-    console.error('[hf-chat] no GROQ_API_KEY or HUGGINGFACE_API_KEY configured');
-    res.status(500).json({
-      error:
-        'Missing GROQ_API_KEY or HUGGINGFACE_API_KEY on server. Add GROQ_API_KEY from https://console.groq.com/keys (easiest), or fix HF Inference Providers and use HUGGINGFACE_API_KEY.',
-    });
+    console.error(
+      '[hf-chat] no GROQ_API_KEY or HUGGINGFACE_API_KEY configured. Add GROQ_API_KEY from https://console.groq.com/keys (easiest), or fix HF Inference Providers and use HUGGINGFACE_API_KEY.',
+    );
+    res.status(500).json({ error: 'The chatbot is not configured right now.', code: 'not_configured' });
     return;
   }
 
@@ -437,7 +450,8 @@ export default async function handler(req, res) {
   ).trim();
 
   if (explicitModel && !isValidModelId(explicitModel)) {
-    res.status(500).json({ error: 'Invalid HUGGINGFACE_MODEL_ID' });
+    console.error(`[hf-chat] invalid HUGGINGFACE_MODEL_ID "${explicitModel}"`);
+    res.status(500).json({ error: 'The chatbot is not configured right now.', code: 'not_configured' });
     return;
   }
 
@@ -532,24 +546,28 @@ export default async function handler(req, res) {
           : '') ||
         lastRaw.slice(0, 800) ||
         'Empty model output';
-      const errMsg = /not supported by any provider/i.test(base)
-        ? `${base} ${PROVIDER_SETUP_HINT}`
-        : base;
-      const outStatus =
-        lastStatus >= 400 ? lastStatus : hfPayloadIsError(lastParsed) ? 400 : 502;
-      console.error(
-        `[hf-chat] all backends failed (groq: ${groqKey ? 'configured' : 'not set'}, ` +
-          `hf models tried: ${modelAttempts.length}) status=${outStatus}: ${base.slice(0, 300)}`,
+      const hint = /not supported by any provider/i.test(base) ? ` ${PROVIDER_SETUP_HINT}` : '';
+      const upstreamHadError = lastStatus >= 400 || hfPayloadIsError(lastParsed);
+      logUpstreamFailure(
+        `${base}${hint}`,
+        lastRaw,
+        `groq: ${groqKey ? 'configured' : 'not set'}, hf models tried: ${modelAttempts.length}, upstream status: ${lastStatus}`,
       );
-      res.status(outStatus).json({ error: errMsg });
+      // The visitor gets a short, fixed message; the client falls back to its offline answers.
+      res.status(502).json(
+        upstreamHadError
+          ? { error: 'The AI service could not answer right now. Please try again shortly.', code: 'upstream_error' }
+          : { error: 'The AI service returned an empty answer. Please try rephrasing your question.', code: 'empty_output' },
+      );
       return;
     }
 
     res.status(200).json([{ generated_text: textOut }]);
   } catch (e) {
-    console.error('[hf-chat] proxy request failed:', e instanceof Error ? e.message : e);
+    console.error('[hf-chat] proxy request failed:', e instanceof Error ? e.stack || e.message : e);
     res.status(502).json({
-      error: e instanceof Error ? e.message : 'Proxy request failed',
+      error: 'The AI service could not be reached. Please try again shortly.',
+      code: 'proxy_error',
     });
   }
 }

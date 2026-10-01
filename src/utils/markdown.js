@@ -3,7 +3,8 @@
 // The parser returns plain data (blocks and inline tokens); ChatMarkdown renders it with React
 // elements, so model output is never injected as HTML. Supported: paragraphs and line breaks,
 // headings (rendered as bold lines), bullet and numbered lists, simple pipe tables, fenced code,
-// **bold**, *italic*, `inline code`, [links](https://...), bare URLs, and email addresses.
+// **bold**, *italic*, `inline code`, [links](https://...), <autolinks>, bare URLs, email
+// addresses, and site-relative paths such as /#contact or /Dhyey_Desai_Resume.pdf.
 
 const SAFE_URL = /^(https?:\/\/|mailto:|\/(?!\/))/i;
 
@@ -13,15 +14,27 @@ export function safeHref(url) {
   return SAFE_URL.test(u) ? u : null;
 }
 
+const EMAIL_SOURCE = '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}';
+
+/**
+ * Site-relative path: `/#section`, `/route`, or `/file.pdf`, optionally with a #fragment. Only at
+ * the start of the text or after whitespace / an opening bracket, so "and/or", "24/7", and
+ * "github.com/user" are left alone, and never `//host` (protocol-relative).
+ */
+const SITE_PATH_SOURCE =
+  '(?<![^\\s(\\[])\\/(?:#[A-Za-z][\\w-]*|[A-Za-z0-9_-]+(?:\\/[A-Za-z0-9_-]+)*(?:\\.[A-Za-z0-9]{2,5})?\\/?(?:#[A-Za-z][\\w-]*)?)(?![\\w/.-]*[\\w/])';
+
 const INLINE_SOURCE = new RegExp(
   [
     '(`[^`\\n]+`)', // 1 inline code
     '(\\*\\*(?=\\S)[^\\n]+?\\*\\*|__(?=\\S)[^\\n]+?__)', // 2 bold
     '(\\[[^\\]\\n]+\\]\\([^)\\s]+\\))', // 3 [text](url)
     "(https?:\\/\\/[^\\s<>()\\[\\]]*[^\\s<>()\\[\\].,;:!?'\"])", // 4 bare URL
-    '([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,})', // 5 email
+    `(${EMAIL_SOURCE})`, // 5 email
     '((?<![\\w*])\\*(?=\\S)[^*\\n]+?\\*(?![\\w*])|(?<![\\w])_(?=\\S)[^_\\n]+?_(?![\\w]))', // 6 italic
     '(<br\\s*\\/?>)', // 7 literal <br> (models use it inside table cells)
+    `(<(?:https?:\\/\\/[^\\s<>]+|mailto:${EMAIL_SOURCE}|${EMAIL_SOURCE})>)`, // 8 <autolink>
+    `(${SITE_PATH_SOURCE})`, // 9 site-relative path
   ].join('|'),
   'g',
 ).source;
@@ -36,7 +49,7 @@ export function parseInline(text) {
   let m;
   while ((m = re.exec(src)) !== null) {
     if (m.index > last) out.push({ type: 'text', text: src.slice(last, m.index) });
-    const [whole, code, strong, mdLink, url, email, em, br] = m;
+    const [whole, code, strong, mdLink, url, email, em, br, autolink, sitePath] = m;
     if (code) {
       out.push({ type: 'code', text: code.slice(1, -1) });
     } else if (strong) {
@@ -54,6 +67,15 @@ export function parseInline(text) {
       out.push({ type: 'em', children: parseInline(em.slice(1, -1)) });
     } else if (br) {
       out.push({ type: 'br' });
+    } else if (autolink) {
+      const target = autolink.slice(1, -1);
+      const isEmail = !/^(https?:|mailto:)/i.test(target);
+      const href = safeHref(isEmail ? `mailto:${target}` : target);
+      const label = target.replace(/^mailto:/i, '');
+      out.push(href ? { type: 'link', href, children: [{ type: 'text', text: label }] } : { type: 'text', text: label });
+    } else if (sitePath) {
+      const href = safeHref(sitePath);
+      out.push(href ? { type: 'link', href, children: [{ type: 'text', text: sitePath }] } : { type: 'text', text: sitePath });
     } else {
       out.push({ type: 'text', text: whole });
     }
