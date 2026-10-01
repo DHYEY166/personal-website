@@ -3,9 +3,25 @@ import { buildHuggingFaceInputs, getFallbackResponse } from '../data/qaContext';
 import { useTheme } from '../context/ThemeContext';
 import { gradientText } from '../styles/theme';
 import { usePageMeta } from '../hooks/usePageMeta';
+import ChatMarkdown from '../components/ui/ChatMarkdown';
 
 /** Same-origin proxy on Vercel (`/api/hf-chat`) — HF Inference API blocks browser CORS */
 const HF_CHAT_PATH = '/api/hf-chat';
+
+/** Friendly text for HTTP 429 from /api/hf-chat (visitor limit or the upstream model's limit). */
+function rateLimitMessage(body, retryAfterHeader) {
+  const seconds = Number(body?.retryAfter ?? retryAfterHeader) || 60;
+  const wait =
+    seconds < 90
+      ? 'in a minute'
+      : seconds < 3600
+        ? `in about ${Math.ceil(seconds / 60)} minutes`
+        : 'tomorrow';
+  if (body?.code === 'upstream_rate_limited') {
+    return `The AI service is getting a lot of questions right now. Please try again ${wait}. In the meantime, everything is also on the [home page](/#about).`;
+  }
+  return `You've asked a lot of questions, thank you for the interest! Please try again ${wait}. You can also reach Dhyey directly via the [contact form](/#contact).`;
+}
 
 const quickQuestions = [
   "What is Dhyey's current role?",
@@ -46,7 +62,7 @@ export default function ChatbotPage() {
         body: JSON.stringify({
           inputs,
           parameters: {
-            max_new_tokens: 384,
+            max_new_tokens: 300,
             temperature: 0.35,
             top_p: 0.9,
             do_sample: true,
@@ -54,6 +70,20 @@ export default function ChatbotPage() {
           },
         }),
       });
+
+      if (res.status === 429) {
+        let body = null;
+        try {
+          body = await res.json();
+        } catch {
+          body = null;
+        }
+        setMessages((msgs) => [
+          ...msgs,
+          { from: 'bot', text: rateLimitMessage(body, res.headers.get('Retry-After')) },
+        ]);
+        return;
+      }
 
       if (!res.ok) {
         const errBody = await res.text();
@@ -186,7 +216,8 @@ export default function ChatbotPage() {
       ? '0 6px 20px rgba(102, 126, 234, 0.3)'
       : theme.glass.shadow,
     animation: 'fadeIn 0.3s ease-out',
-    whiteSpace: 'pre-line',
+    whiteSpace: isUser ? 'pre-line' : 'normal',
+    overflowWrap: 'anywhere',
   });
 
   const inputStyle = {
@@ -277,7 +308,9 @@ export default function ChatbotPage() {
         >
           {messages.map((message, index) => (
             <div key={index} style={messageStyle(message.from === 'user')}>
-              <div style={bubbleStyle(message.from === 'user')}>{message.text}</div>
+              <div style={bubbleStyle(message.from === 'user')}>
+                {message.from === 'user' ? message.text : <ChatMarkdown text={message.text} />}
+              </div>
             </div>
           ))}
 
