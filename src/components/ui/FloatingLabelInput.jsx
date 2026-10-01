@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../styles/useTheme';
 
 export default function FloatingLabelInput({
   label,
@@ -21,7 +21,7 @@ export default function FloatingLabelInput({
   const Tag = multiline ? 'textarea' : 'input';
 
   return (
-    <div style={{ position: 'relative', marginBottom: 24 }}>
+    <div style={{ position: 'relative', marginBottom: 20 }}>
       <Tag
         id={id}
         name={name}
@@ -35,36 +35,18 @@ export default function FloatingLabelInput({
         aria-required={required || undefined}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
-        style={{
-          width: '100%',
-          padding: '20px 16px 8px',
-          fontSize: '0.95rem',
-          background: theme.glass.background,
-          backdropFilter: theme.glass.blur,
-          WebkitBackdropFilter: theme.glass.blur,
-          border: focused
-            ? `2px solid ${theme.accent.primary}`
-            : error
-            ? `2px solid ${theme.text.error}`
-            : theme.glass.border,
-          borderRadius: 12,
-          outline: 'none',
-          color: theme.text.primary,
-          transition: 'all 0.3s ease',
-          resize: multiline ? 'vertical' : 'none',
-          fontFamily: 'inherit',
-          boxSizing: 'border-box',
-        }}
+        className="field"
+        style={{ resize: multiline ? 'vertical' : 'none', display: 'block' }}
       />
       <label
         htmlFor={id}
         style={{
           position: 'absolute',
-          left: 16,
-          top: isActive ? 6 : 14,
-          fontSize: isActive ? '0.7rem' : '0.95rem',
-          color: focused ? theme.accent.text : error ? theme.text.error : theme.text.muted,
-          transition: 'all 0.2s ease',
+          left: 15,
+          top: isActive ? 5 : 15,
+          fontSize: isActive ? 12 : 16,
+          color: error ? theme.text.error : focused ? theme.accent.text : theme.text.muted,
+          transition: 'top 0.15s ease, font-size 0.15s ease, color 0.15s ease',
           pointerEvents: 'none',
           fontWeight: isActive ? 600 : 400,
         }}
@@ -72,7 +54,7 @@ export default function FloatingLabelInput({
         {label}
       </label>
       {error && (
-        <p id={errorId} style={{ color: theme.text.error, fontSize: '0.78rem', marginTop: 4, paddingLeft: 4 }}>
+        <p id={errorId} style={{ color: theme.text.error, fontSize: 14, marginTop: 4 }}>
           {error}
         </p>
       )}

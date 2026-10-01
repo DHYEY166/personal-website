@@ -1,19 +1,16 @@
 import { motion } from 'framer-motion';
 
-export default function ScrollReveal({ children, direction = 'up', delay = 0, duration = 0.6, distance = 40, once = true }) {
-  const directions = {
-    up: { y: distance },
-    down: { y: -distance },
-    left: { x: distance },
-    right: { x: -distance },
-  };
-
+/**
+ * Gentle fade-in when a block scrolls into view: opacity plus a small upward shift.
+ * Kept deliberately subtle; MotionConfig reducedMotion="user" disables the shift.
+ */
+export default function ScrollReveal({ children, delay = 0, duration = 0.45, distance = 12, once = true }) {
   return (
     <motion.div
-      initial={{ opacity: 0, ...directions[direction] }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once, margin: '-60px' }}
-      transition={{ duration, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      initial={{ opacity: 0, y: distance }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once, margin: '-40px' }}
+      transition={{ duration, delay, ease: 'easeOut' }}
     >
       {children}
     </motion.div>

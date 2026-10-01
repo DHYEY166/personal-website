@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { buildHuggingFaceInputs, getFallbackResponse } from '../data/qaContext';
-import { useTheme } from '../context/ThemeContext';
-import { gradientText } from '../styles/theme';
+import { useTheme } from '../styles/useTheme';
 import { usePageMeta } from '../hooks/usePageMeta';
 import ChatMarkdown from '../components/ui/ChatMarkdown';
 import { quickQuestions } from '../data/quickQuestions';
@@ -131,6 +130,8 @@ export default function ChatbotPage() {
   /* ---- styles ---- */
 
   const containerStyle = {
+    // width: 100% because auto margins stop the app's flex column from stretching this.
+    width: '100%',
     maxWidth: 900,
     margin: '0 auto',
     padding: '100px 24px 40px',
@@ -140,17 +141,13 @@ export default function ChatbotPage() {
   };
 
   const headerStyle = {
-    textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 20,
   };
 
   const chatContainerStyle = {
-    background: theme.glass.background,
-    backdropFilter: theme.glass.blur,
-    WebkitBackdropFilter: theme.glass.blur,
-    border: theme.glass.border,
-    borderRadius: 20,
-    boxShadow: theme.glass.shadow,
+    background: theme.bg.surface,
+    border: theme.border.default,
+    borderRadius: theme.radius.lg,
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
@@ -158,13 +155,12 @@ export default function ChatbotPage() {
   };
 
   const chatHeaderStyle = {
-    background: theme.accent.gradient,
-    color: '#fff',
-    padding: '18px 24px',
-    borderRadius: '20px 20px 0 0',
+    background: theme.bg.surface,
+    borderBottom: theme.border.default,
+    padding: '14px 24px',
     display: 'flex',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
   };
 
   const chatBodyStyle = {
@@ -174,15 +170,14 @@ export default function ChatbotPage() {
     display: 'flex',
     flexDirection: 'column',
     gap: 14,
+    background: theme.bg.page,
   };
 
   // Footer = quick-question chips + input row. It sits below the scrolling log (not inside or
   // over it), so the chips never cover messages.
   const chatFooterStyle = {
-    background: theme.glass.background,
-    backdropFilter: theme.glass.blur,
-    WebkitBackdropFilter: theme.glass.blur,
-    borderTop: theme.glass.border,
+    background: theme.bg.surface,
+    borderTop: theme.border.default,
     padding: '12px 24px 16px',
     display: 'flex',
     flexDirection: 'column',
@@ -191,7 +186,7 @@ export default function ChatbotPage() {
 
   const chatInputContainerStyle = {
     display: 'flex',
-    gap: 12,
+    gap: 10,
     alignItems: 'center',
   };
 
@@ -201,24 +196,16 @@ export default function ChatbotPage() {
     marginBottom: 4,
   });
 
+  // User: solid accent. Assistant: light surface with a hairline border. No shadows.
   const bubbleStyle = (isUser) => ({
     maxWidth: '75%',
-    padding: '14px 20px',
-    borderRadius: isUser ? '20px 20px 6px 20px' : '20px 20px 20px 6px',
-    background: isUser
-      ? theme.accent.gradient
-      : theme.glass.background,
-    backdropFilter: isUser ? 'none' : theme.glass.blur,
-    WebkitBackdropFilter: isUser ? 'none' : theme.glass.blur,
-    border: isUser ? 'none' : theme.glass.border,
-    color: isUser ? '#fff' : theme.text.primary,
-    fontSize: 14,
+    padding: '12px 16px',
+    borderRadius: isUser ? '10px 10px 2px 10px' : '10px 10px 10px 2px',
+    background: isUser ? theme.accent.primary : theme.bg.surface,
+    border: isUser ? `1px solid ${theme.accent.primary}` : theme.border.default,
+    color: isUser ? theme.text.onAccent : theme.text.primary,
+    fontSize: 15,
     lineHeight: 1.6,
-    fontWeight: 500,
-    boxShadow: isUser
-      ? '0 6px 20px rgba(102, 126, 234, 0.3)'
-      : theme.glass.shadow,
-    animation: 'fadeIn 0.3s ease-out',
     whiteSpace: isUser ? 'pre-line' : 'normal',
     overflowWrap: 'anywhere',
   });
@@ -228,57 +215,20 @@ export default function ChatbotPage() {
     // Inputs have an intrinsic min width; without this the row overflows narrow phones and
     // pushes the Send button past the card edge.
     minWidth: 0,
-    padding: '12px 18px',
-    border: theme.glass.border,
-    borderRadius: 12,
-    outline: 'none',
-    fontSize: 14,
-    transition: 'all 0.3s ease',
-    background: theme.glass.background,
-    backdropFilter: theme.glass.blur,
-    WebkitBackdropFilter: theme.glass.blur,
-    color: theme.text.primary,
+    padding: '11px 14px',
+    fontSize: 15,
   };
 
-  const sendButtonStyle = {
-    background: theme.accent.gradient,
-    color: '#fff',
-    border: 'none',
-    borderRadius: 12,
-    padding: '12px 24px',
-    cursor: 'pointer',
-    fontWeight: 600,
-    fontSize: 14,
-    transition: 'all 0.3s ease',
-    boxShadow: theme.accent.glow,
-  };
-
-  // Chip colours come from the theme through CSS variables; layout, hover, focus, disabled, and
-  // the mobile single-line scroller live in index.css (.quick-chips / .quick-chip).
-  const quickChipVars = {
-    '--chip-bg': theme.glass.background,
-    '--chip-border': `${theme.accent.primary}40`,
-    '--chip-color': theme.accent.text,
-    '--chip-hover-bg': theme.accent.gradient,
-    '--chip-focus': theme.accent.text,
-  };
-
+  /* ---- render ---- */
   /* ---- render ---- */
 
   return (
     <main id="main" style={containerStyle}>
       <div style={headerStyle}>
-        <h1
-          style={{
-            fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
-            fontWeight: 800,
-            ...gradientText(theme.accent.textGradient),
-            marginBottom: 8,
-          }}
-        >
+        <h1 style={{ fontSize: 'clamp(28px, 4vw, 36px)', marginBottom: 6 }}>
           Ask Dhyey AI
         </h1>
-        <p style={{ fontSize: 16, color: theme.text.secondary, fontWeight: 400 }}>
+        <p style={{ fontSize: 17, color: theme.text.secondary }}>
           Get instant answers about Dhyey's background, skills, and experience
         </p>
       </div>
@@ -286,7 +236,11 @@ export default function ChatbotPage() {
       <div style={chatContainerStyle}>
         {/* Header bar */}
         <div style={chatHeaderStyle}>
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Chat with AI</h2>
+          <span
+            aria-hidden="true"
+            style={{ width: 8, height: 8, borderRadius: '50%', background: theme.accent.primary, flexShrink: 0 }}
+          />
+          <h2 style={{ margin: 0, fontSize: 18 }}>Chat with AI</h2>
         </div>
 
         {/* Messages */}
@@ -307,7 +261,7 @@ export default function ChatbotPage() {
 
           {loading && (
             <div style={messageStyle(false)}>
-              <div style={{ ...bubbleStyle(false), opacity: 0.7 }}>
+              <div style={bubbleStyle(false)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div
                     style={{
@@ -345,7 +299,7 @@ export default function ChatbotPage() {
 
         <div style={chatFooterStyle}>
           {/* Quick questions: always available; disabled while a reply is loading. */}
-          <div className="quick-chips" role="group" aria-label="Quick questions" style={quickChipVars}>
+          <div className="quick-chips" role="group" aria-label="Quick questions">
             {quickQuestions.map((question) => (
               <button
                 key={question}
@@ -368,30 +322,15 @@ export default function ChatbotPage() {
               placeholder="Ask me anything about Dhyey..."
               aria-label="Ask a question about Dhyey"
               maxLength={500}
+              className="field"
               style={inputStyle}
               disabled={loading}
-              onFocus={(e) => (e.target.style.borderColor = theme.accent.primary)}
-              onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.08)')}
             />
             <button
               type="button"
               onClick={() => handleSend()}
               disabled={loading || !input.trim()}
-              style={{
-                ...sendButtonStyle,
-                opacity: loading || !input.trim() ? 0.5 : 1,
-                cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
-              }}
-              onMouseOver={(e) => {
-                if (!loading && input.trim()) {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = theme.accent.glowStrong;
-                }
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = theme.accent.glow;
-              }}
+              className="btn btn--primary"
             >
               {loading ? 'Sending...' : 'Send'}
             </button>

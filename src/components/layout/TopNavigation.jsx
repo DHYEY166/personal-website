@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../styles/useTheme';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useScrollSpy } from '../../hooks/useScrollSpy';
 import { sectionLinks, socialLinks } from '../../data/navigation';
 import { RESUME_PDF_PATH } from '../../data/resumeData';
-import ThemeToggle from '../ui/ThemeToggle';
-import { gradientText } from '../../styles/theme';
 
 const SECTION_IDS = sectionLinks.map((l) => l.id);
 
@@ -42,87 +40,40 @@ export default function TopNavigation() {
     left: 0,
     right: 0,
     zIndex: 100,
-    background: theme.nav.bg,
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderBottom: theme.nav.border,
-    padding: '0 24px',
+    background: theme.bg.page,
+    borderBottom: theme.border.default,
+    padding: '0 clamp(16px, 3vw, 32px)',
     height: 64,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    transition: 'background 0.3s ease',
   };
 
   const logoStyle = {
-    fontSize: 28,
-    fontWeight: 800,
-    ...gradientText(theme.accent.textGradient),
-    textDecoration: 'none',
-    letterSpacing: '-0.02em',
+    fontFamily: theme.font.serif,
+    fontSize: 24,
+    fontWeight: 600,
+    color: theme.text.primary,
+    letterSpacing: '-0.01em',
   };
 
-  const centerLinksStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 4,
-  };
-
-  const linkBaseStyle = (isActive) => ({
-    padding: '6px 14px',
-    borderRadius: 8,
-    fontSize: 14,
+  const linkStyle = (isActive) => ({
+    padding: '6px 10px',
+    fontSize: 15,
     fontWeight: isActive ? 600 : 500,
-    color: isActive ? theme.accent.text : theme.text.secondary,
-    background: isActive ? `${theme.accent.primary}15` : 'transparent',
-    textDecoration: 'none',
-    transition: 'all 0.2s ease',
-    cursor: 'pointer',
-    border: 'none',
+    // Active state: accent colour plus a thin underline (set via aria-current in CSS colour).
+    textDecoration: isActive ? 'underline' : 'none',
+    textUnderlineOffset: 6,
+    textDecorationThickness: 1,
   });
-
-  const socialIconContainerStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-  };
-
-  const socialIconStyle = {
-    width: 35,
-    height: 35,
-    borderRadius: '50%',
-    background: theme.name === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.3s ease',
-    border: theme.name === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.08)',
-    color: theme.text.secondary,
-    textDecoration: 'none',
-  };
-
-  const hamburgerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 5,
-    width: 36,
-    height: 36,
-    cursor: 'pointer',
-    background: 'none',
-    border: 'none',
-    padding: 4,
-    borderRadius: 8,
-  };
 
   const hamburgerLineStyle = (index) => {
     const base = {
-      width: 22,
+      width: 20,
       height: 2,
       background: theme.text.primary,
-      borderRadius: 2,
-      transition: 'all 0.3s ease',
+      borderRadius: 1,
+      transition: 'transform 0.2s ease, opacity 0.2s ease',
     };
     if (menuOpen) {
       if (index === 0) return { ...base, transform: 'rotate(45deg) translate(5px, 5px)' };
@@ -132,38 +83,27 @@ export default function TopNavigation() {
     return base;
   };
 
-  const dropdownStyle = {
-    position: 'absolute',
-    top: 64,
-    left: 0,
-    right: 0,
-    background: theme.nav.bg,
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderBottom: theme.nav.border,
-    padding: '12px 24px 16px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-    animation: 'fadeIn 0.2s ease-out',
-  };
-
-  const renderCenterLinks = () => {
+  const renderLinks = (mobile) => {
     if (isChatbot) {
       return (
-        <Link to="/" style={linkBaseStyle(false)}>
+        <Link
+          to="/"
+          className="quiet-link"
+          style={{ ...linkStyle(false), ...(mobile ? { padding: '10px 4px' } : {}) }}
+          onClick={() => setMenuOpen(false)}
+        >
           Home
         </Link>
       );
     }
-
     return sectionLinks.map((link) => {
-      const isActive = isHome && activeSection === link.id;
+      const isActive = !mobile && isHome && activeSection === link.id;
       return (
         <a
           key={link.id}
           href={`/#${link.id}`}
-          style={linkBaseStyle(isActive)}
+          className="quiet-link"
+          style={{ ...linkStyle(isActive), ...(mobile ? { padding: '10px 4px' } : {}) }}
           aria-current={isActive ? 'location' : undefined}
           onClick={(e) => handleNavClick(e, link.id)}
         >
@@ -175,20 +115,17 @@ export default function TopNavigation() {
 
   return (
     <nav style={navStyle} aria-label="Main">
-      {/* Left: Logo */}
       <Link to="/" style={logoStyle} aria-label="Dhyey Desai – home">
         DD
       </Link>
 
-      {/* Center: Section Links (desktop only) */}
       {!isMobile && (
-        <div style={centerLinksStyle}>
-          {renderCenterLinks()}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {renderLinks(false)}
         </div>
       )}
 
-      {/* Right: Social Icons + ThemeToggle placeholder */}
-      <div style={socialIconContainerStyle}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         {socialLinks.map((social) => (
           <a
             key={social.name}
@@ -197,17 +134,7 @@ export default function TopNavigation() {
             rel="noopener noreferrer"
             title={social.name}
             aria-label={`${social.name} (opens in a new tab)`}
-            style={socialIconStyle}
-            onMouseOver={(e) => {
-              e.currentTarget.style.background = social.hoverBg;
-              e.currentTarget.style.color = '#fff';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.background = theme.name === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)';
-              e.currentTarget.style.color = theme.text.secondary;
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
+            className="icon-btn"
           >
             <svg
               width="18"
@@ -225,21 +152,19 @@ export default function TopNavigation() {
           download="Dhyey_Desai_Resume.pdf"
           title="Download resume (PDF)"
           aria-label="Download resume (PDF)"
-          style={socialIconStyle}
+          className="icon-btn"
         >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
             <path d="M14 3v5h5" />
             <path d="M12 11v6m0 0l-2.5-2.5M12 17l2.5-2.5" />
           </svg>
         </a>
 
-        <ThemeToggle />
-
-        {/* Hamburger (mobile only) */}
         {isMobile && (
           <button
-            style={hamburgerStyle}
+            className="icon-btn"
+            style={{ flexDirection: 'column', gap: 4 }}
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
@@ -252,29 +177,22 @@ export default function TopNavigation() {
         )}
       </div>
 
-      {/* Mobile dropdown */}
       {isMobile && menuOpen && (
-        <div id="mobile-nav-menu" style={dropdownStyle}>
-          {isChatbot ? (
-            <Link
-              to="/"
-              style={linkBaseStyle(false)}
-              onClick={() => setMenuOpen(false)}
-            >
-              Home
-            </Link>
-          ) : (
-            sectionLinks.map((link) => (
-              <a
-                key={link.id}
-                href={`/#${link.id}`}
-                style={{ ...linkBaseStyle(false), padding: '10px 14px' }}
-                onClick={(e) => handleNavClick(e, link.id)}
-              >
-                {link.label}
-              </a>
-            ))
-          )}
+        <div
+          id="mobile-nav-menu"
+          style={{
+            position: 'absolute',
+            top: 64,
+            left: 0,
+            right: 0,
+            background: theme.bg.page,
+            borderBottom: theme.border.default,
+            padding: '8px 20px 16px',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {renderLinks(true)}
         </div>
       )}
     </nav>

@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../styles/useTheme';
 import {
   education,
   technicalSkills,
@@ -8,33 +7,18 @@ import {
   achievements,
   RESUME_PDF_PATH,
 } from '../data/resumeData';
-import { glassCard, gradientText } from '../styles/theme';
+import { sectionStyle } from '../styles/theme';
 import ScrollReveal from '../components/ui/ScrollReveal';
+import SectionHeader from '../components/ui/SectionHeader';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
-function SectionBlock({ title, theme, children, delay = 0 }) {
+// CV-style row: block title in a narrow left column, entries on the right.
+function SectionBlock({ title, children }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.5, delay }}
-      style={{ ...glassCard(theme), marginBottom: 28 }}
-    >
-      <h3
-        style={{
-          fontSize: '1.3rem',
-          fontWeight: 700,
-          color: theme.accent.text,
-          marginBottom: 24,
-          paddingBottom: 12,
-          borderBottom: `1px solid rgba(102, 126, 234, 0.15)`,
-        }}
-      >
-        {title}
-      </h3>
-      {children}
-    </motion.div>
+    <div className="cv-block">
+      <h3 style={{ fontSize: 22 }}>{title}</h3>
+      <div style={{ minWidth: 0 }}>{children}</div>
+    </div>
   );
 }
 
@@ -44,85 +28,52 @@ export default function ResumeSection() {
   const stackSkills = useMediaQuery('(max-width: 600px)');
 
   const labelStyle = {
-    fontSize: '0.85rem',
+    fontSize: 15,
     color: theme.text.muted,
+    whiteSpace: 'nowrap',
   };
 
   const tagStyle = (highlight) => ({
-    padding: '3px 10px',
-    borderRadius: 6,
-    fontSize: '0.75rem',
+    padding: '1px 8px',
+    borderRadius: theme.radius.sm,
+    fontSize: 13,
     fontWeight: 600,
-    color: highlight ? '#fff' : theme.text.secondary,
-    background: highlight ? theme.accent.gradient : theme.glass.background,
-    border: highlight ? 'none' : theme.glass.border,
+    color: highlight ? theme.accent.text : theme.text.secondary,
+    background: highlight ? theme.accent.soft : theme.bg.subtle,
+    border: `1px solid ${highlight ? '#E9CFC4' : theme.border.color}`,
   });
 
   const bulletStyle = {
     color: theme.text.secondary,
-    fontSize: '0.92rem',
-    marginBottom: 8,
-    lineHeight: 1.7,
+    fontSize: 16,
+    marginBottom: 6,
+    lineHeight: 1.65,
   };
 
   return (
-    <section
-      id="resume"
-      style={{
-        maxWidth: 1200,
-        margin: '0 auto',
-        padding: 'clamp(60px, 10vw, 100px) clamp(16px, 4vw, 24px)',
-      }}
-    >
-      <ScrollReveal>
-        <div style={{ textAlign: 'center', marginBottom: 60 }}>
-          <p style={{
-            fontSize: '0.85rem',
-            color: theme.text.muted,
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            marginBottom: 12,
-          }}>
-            MY BACKGROUND
-          </p>
-          <h2 style={{
-            fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-            fontWeight: 800,
-            ...gradientText(theme.accent.textGradient),
-            marginBottom: 0,
-          }}>
-            Resume
-          </h2>
-          <a
-            href={RESUME_PDF_PATH}
-            download="Dhyey_Desai_Resume.pdf"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              marginTop: 28,
-              padding: '12px 28px',
-              borderRadius: 12,
-              background: theme.accent.gradient,
-              color: '#fff',
-              fontWeight: 600,
-              fontSize: '0.95rem',
-              textDecoration: 'none',
-              boxShadow: theme.accent.glow,
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14" />
-            </svg>
-            Download Resume (PDF)
-          </a>
-        </div>
-      </ScrollReveal>
+    <section id="resume" aria-labelledby="resume-title" style={sectionStyle}>
+      <div style={{ borderTop: theme.border.default, paddingTop: 'clamp(40px, 6vw, 64px)' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '0 24px' }}>
+        <SectionHeader id="resume-title" kicker="MY BACKGROUND" title="Resume" />
+        <a
+          href={RESUME_PDF_PATH}
+          download="Dhyey_Desai_Resume.pdf"
+          className="btn btn--primary"
+          style={{ marginBottom: 'clamp(28px, 4vw, 40px)' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14" />
+          </svg>
+          Download Resume (PDF)
+        </a>
+      </div>
 
+      <ScrollReveal>
+      <div style={{ borderTop: `2px solid ${theme.text.primary}` }}>
       {/* Education */}
-      <SectionBlock title="Education" theme={theme} delay={0}>
+      <SectionBlock title="Education">
         {education.map((edu, i) => (
-          <div key={i} style={{ marginBottom: i < education.length - 1 ? 24 : 0 }}>
+          <div key={i}>
             <div
               style={{
                 display: 'flex',
@@ -133,18 +84,18 @@ export default function ResumeSection() {
                 marginBottom: 4,
               }}
             >
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: theme.text.heading, margin: 0 }}>
+              <h4 style={{ fontFamily: theme.font.sans, fontSize: 18, fontWeight: 600, margin: 0 }}>
                 {edu.school}
               </h4>
               <span style={labelStyle}>{edu.period}</span>
             </div>
-            <p style={{ fontSize: '0.95rem', color: theme.text.primary, marginBottom: 4 }}>
+            <p style={{ fontSize: 16, color: theme.text.primary, marginBottom: 4 }}>
               {edu.degree}
             </p>
-            <p style={{ fontSize: '0.85rem', color: theme.accent.text, fontWeight: 600, marginBottom: 4 }}>
+            <p style={{ fontSize: 15, color: theme.text.secondary, fontWeight: 600, marginBottom: 4 }}>
               {edu.gpa}
             </p>
-            <p style={{ fontSize: '0.85rem', color: theme.text.muted }}>
+            <p style={{ fontSize: 15, color: theme.text.muted }}>
               <span style={{ fontWeight: 600 }}>Coursework: </span>
               {edu.coursework}
             </p>
@@ -153,7 +104,7 @@ export default function ResumeSection() {
       </SectionBlock>
 
       {/* Technical Skills */}
-      <SectionBlock title="Technical Skills" theme={theme} delay={0.05}>
+      <SectionBlock title="Technical Skills">
         {/* One grid for all rows: a shared label column sized to the longest label, and a value
             column that wraps within the card (minmax(0, 1fr) lets long text shrink). */}
         <dl
@@ -163,7 +114,7 @@ export default function ResumeSection() {
             columnGap: 24,
             rowGap: stackSkills ? 0 : 14,
             margin: 0,
-            fontSize: '0.9rem',
+            fontSize: 16,
             lineHeight: 1.6,
           }}
         >
@@ -172,7 +123,7 @@ export default function ResumeSection() {
               <dt
                 style={{
                   fontWeight: 600,
-                  color: theme.accent.text,
+                  color: theme.text.primary,
                   marginTop: stackSkills && i > 0 ? 14 : 0,
                 }}
               >
@@ -193,9 +144,9 @@ export default function ResumeSection() {
       </SectionBlock>
 
       {/* Professional Experience */}
-      <SectionBlock title="Professional Experience" theme={theme} delay={0.1}>
+      <SectionBlock title="Professional Experience">
         {experience.map((exp, i) => (
-          <div key={i} style={{ marginBottom: i < experience.length - 1 ? 28 : 0 }}>
+          <div key={i}>
             <div
               style={{
                 display: 'flex',
@@ -206,16 +157,16 @@ export default function ResumeSection() {
                 marginBottom: 4,
               }}
             >
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: theme.text.heading, margin: 0 }}>
+              <h4 style={{ fontFamily: theme.font.sans, fontSize: 18, fontWeight: 600, margin: 0 }}>
                 {exp.role}
               </h4>
               <span style={labelStyle}>{exp.period}</span>
             </div>
             <p
               style={{
-                fontSize: '0.9rem',
-                color: theme.accent.text,
-                fontWeight: 600,
+                fontSize: 16,
+                color: theme.text.primary,
+                fontWeight: 500,
                 marginBottom: 6,
               }}
             >
@@ -231,7 +182,7 @@ export default function ResumeSection() {
               </div>
             )}
             {exp.project && (
-              <p style={{ fontSize: '0.9rem', color: theme.text.primary, marginBottom: 10 }}>
+              <p style={{ fontSize: 16, color: theme.text.primary, marginBottom: 10 }}>
                 <span style={{ fontWeight: 600 }}>Project: </span>
                 {exp.project}
               </p>
@@ -244,7 +195,7 @@ export default function ResumeSection() {
               ))}
             </ul>
             {exp.stack && (
-              <p style={{ fontSize: '0.85rem', color: theme.text.secondary, marginTop: 6 }}>
+              <p style={{ fontSize: 15, color: theme.text.secondary, marginTop: 6 }}>
                 <span style={{ fontWeight: 600, color: theme.text.primary }}>Stack: </span>
                 {exp.stack}
               </p>
@@ -254,7 +205,8 @@ export default function ResumeSection() {
                 href={exp.link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display: 'inline-block', marginTop: 8, color: theme.accent.text, fontSize: '0.85rem', fontWeight: 600 }}
+                className="text-link"
+                style={{ display: 'inline-block', marginTop: 8, fontSize: 15 }}
               >
                 {exp.link.label}
                 <span className="sr-only"> (opens in a new tab)</span>
@@ -265,9 +217,9 @@ export default function ResumeSection() {
       </SectionBlock>
 
       {/* Projects */}
-      <SectionBlock title="Projects" theme={theme} delay={0.15}>
+      <SectionBlock title="Projects">
         {resumeProjects.map((proj, i) => (
-          <div key={i} style={{ marginBottom: i < resumeProjects.length - 1 ? 28 : 0 }}>
+          <div key={i}>
             <div
               style={{
                 display: 'flex',
@@ -278,9 +230,9 @@ export default function ResumeSection() {
                 marginBottom: 12,
               }}
             >
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: theme.text.heading, margin: 0 }}>
+              <h4 style={{ fontFamily: theme.font.sans, fontSize: 18, fontWeight: 600, margin: 0 }}>
                 {proj.link ? (
-                  <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationColor: `${theme.accent.primary}80`, textUnderlineOffset: 4 }}>
+                  <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline', textDecorationColor: theme.border.strongColor, textUnderlineOffset: 4 }}>
                     {proj.name}
                     <span className="sr-only"> on GitHub (opens in a new tab)</span>
                   </a>
@@ -302,7 +254,7 @@ export default function ResumeSection() {
       </SectionBlock>
 
       {/* Achievements */}
-      <SectionBlock title="Achievements" theme={theme} delay={0.2}>
+      <SectionBlock title="Achievements">
         <ul style={{ paddingLeft: 20, margin: 0 }}>
           {achievements.map((achievement, i) => (
             <li key={i} style={bulletStyle}>
@@ -311,6 +263,9 @@ export default function ResumeSection() {
           ))}
         </ul>
       </SectionBlock>
+      </div>
+      </ScrollReveal>
+      </div>
     </section>
   );
 }
