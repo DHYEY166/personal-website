@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { buildHuggingFaceInputs, getFallbackResponse } from '../data/qaContext';
 import { useTheme } from '../context/ThemeContext';
 import { gradientText } from '../styles/theme';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 /** Same-origin proxy on Vercel (`/api/hf-chat`) — HF Inference API blocks browser CORS */
 const HF_CHAT_PATH = '/api/hf-chat';
@@ -16,6 +17,7 @@ const quickQuestions = [
 
 export default function ChatbotPage() {
   const { theme } = useTheme();
+  usePageMeta({ title: 'Ask Dhyey AI | Dhyey Desai', path: '/chatbot' });
   const [messages, setMessages] = useState([
     { from: 'bot', text: "Hi! I'm Dhyey's AI assistant. Ask me anything about his background, skills, projects, or experience!" },
   ]);
